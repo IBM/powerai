@@ -1,0 +1,96 @@
+#!/usr/bin/env python
+# IBM_PROLOG_BEGIN_TAG
+# 
+# Copyright 2003,2016 IBM International Business Machines Corp.
+# 
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#           http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+#  implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# 
+#  IBM_PROLOG_END_TAG
+
+# Script to upload a file to a dataset
+#
+# Usage: createCategory DsId fileName
+#
+
+from __future__ import print_function
+import sys
+import os
+import os.path
+import logging
+import json
+import argparse
+
+import requests
+import vapi_core as vapi
+
+
+def uploadFile(ds_id, filepath, cat_id, cat_name):
+    result = None
+    
+    url = vapi.cfg["baseUrl"] + "/datasets/" + ds_id + "/files"
+    data = {"category_id" : cat_id, "scenario" : "" , "category_name" : cat_name}
+    files = {'files': open(filepath, 'rb') }
+    logging.info("url is " , url)
+    logging.info("data is " , data)
+    logging.info("files is " , files)
+
+    rsp = vapi.post(url, data=data, files=files)
+
+    if (vapi.rspOk(rsp)):
+        result = rsp.json()
+        
+    else:
+        vapi.eprint("ERR: Failed to upload zip file to dataset; {}".format(rsp.status_code))
+        print(json.dumps(rsp.json(), indent=2))
+    return result
+
+
+# Uses arparse to parse commandline optionsl
+# Additional validation may be done in the future.
+#
+# argparse "results" class is returned
+#
+def getInputs():
+    parser = argparse.ArgumentParser(description="Tool to upload files to powerai vision")
+    parser.add_argument('--dsid', action="store", dest="dsid", required=True,
+                        help="ID of the dataset to upload into")
+    parser.add_argument('--catid', action="store", dest="catid", required=True,
+                        help="ID of the category to which the file belongs")
+    parser.add_argument('--catname', action="store", dest="catname", required=True,
+                        help="Name of category for '--catid'")
+    parser.add_argument('--filepath', action='store', dest='filepath', required=True,
+                        help="path to file to upload.")
+
+    try:
+        results = parser.parse_args()
+        if not os.path.isfile(results.filepath):
+            raise argparse.ArgumentTypeError("File '{}' does not exist.".format(results.filepath)) 
+    except argparse.ArgumentTypeError as e:
+        vapi.eprint("\n", e.args, "\n")
+        parser.print_help(sys.stderr);
+        results = None
+        
+    return results
+
+if (__name__ == '__main__'):
+    args = getInputs()
+
+    if args != None:
+        if vapi.loadCfgInfo() == 0:
+
+            uploadFile(args.dsid, args.filepath, args.catid, args.catname)
+        else:
+            exit(2)
+    else:
+        exit(1)

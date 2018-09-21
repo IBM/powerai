@@ -1,0 +1,242 @@
+#! /usr/bin/env python
+# IBM_PROLOG_BEGIN_TAG
+# 
+# Copyright 2003,2016 IBM International Business Machines Corp.
+# 
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#           http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+#  implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# 
+#  IBM_PROLOG_END_TAG
+#-----------------------------------------------------------
+# Script to classify all jpeg.s in a directory and create a
+# csv file of the results that identifies the input file and
+# the class that vision thinks the image belongs to. We could
+# include additional information if we want (such as confidence
+# level).
+# Author: Carl Bender
+#
+from __future__ import print_function
+import os
+import sys
+import logging
+import argparse
+import requests
+import json
+import csv
+import collections
+import re
+import time
+
+
+cfg = {}
+csvResult = {}
+
+
+#------------------------------------
+# Eases printing to STDERR
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+
+# ------------------------------------
+# Checks if result from Vision API succeeded
+# (Current API returns failure indication in the JSON body)
+def rspOk(rsp):
+    logging.debug("status_code: {}, OK={}.".format(rsp.status_code, rsp.ok))
+
+    if rsp.ok:
+        try:
+            jsonBody = rsp.json()
+            if ("result" in jsonBody) and (jsonBody["result"] == "fail"):
+                result = False
+                logging.info(json.dumps(jsonBody, indent=2))
+            else:
+                result = True
+        except ValueError:
+            result = True
+            logging.info("good status_code, but no data")
+    else:
+        result = False
+
+    return result
+
+
+#------------------------------------
+# local post function to hide common parameters
+#
+def post(url, **kwargs):
+    if "Auth" in cfg:
+        authInfo = tuple(cfg["Auth"])
+    else:
+        authInfo = None
+    return requests.post(url, verify=False, auth=authInfo, **kwargs)
+
+
+#-------------------------------------
+# sets up the API access
+#
+def setupAPIAccess(url, user, passwd):
+    global cfg
+    cfg["url"] = url
+    if user is not None and passwd is not None:
+        cfg["Auth"] = (user, passwd)
+
+    # Disable warning messages about SSL certs
+    requests.packages.urllib3.disable_warnings()
+
+
+#-------------------------------------
+# parse commandline options -- using argparse
+#
+# argparse "results" class is returned
+#
+def getInputs():
+    parser = argparse.ArgumentParser(description="Tool to classify all images in a directory")
+    parser.add_argument('--file', action="store", dest="file", required=True,
+                        help="name of the output CSV file")
+    parser.add_argument('--dir', action="store", dest="directory", required=True,
+                        help="directory containing the images to classify")
+    parser.add_argument('--url', action="store", dest="url", required=True,
+                        help="classifier URL")
+    parser.add_argument('--user', action="store", dest="user", required=False,
+                        help="user id for classifier endpoint")
+    parser.add_argument('--passwd', action="store", dest="passwd", required=False,
+                        help="passwd for classifier user")
+    parser.add_argument('--normalize', action="store_true", default=False, required=False,
+                        help="groom classification output for easier readability")
+
+    try:
+        results = parser.parse_args()
+
+    except argparse.ArgumentTypeError as e:
+        logging.error(e.args)
+        parser.print_help(sys.stderr)
+        results = None
+
+    return results
+
+
+#------------------------------------
+# classify files in directory and save results in dict
+# returns dict upon completion
+def classifyFiles(directory, normalize):
+    results = {}
+    totalFiles = 0
+    skippedFiles = 0
+    processedFiles = 0
+    classifiedFiles = 0
+    unclassifiedFiles = 0
+    problemFiles = 0
+
+    # Use regular expression to only classify JPG or PNG images
+    filetype = re.compile("jpg$|jpeg$|png$", re.IGNORECASE)
+    # To help track millisecond time for each inference
+    current_milli_time = lambda: int(round(time.time() * 1000))
+
+    for filename in os.listdir(directory):
+        totalFiles += 1
+        if filetype.search(filename):
+            #logging.info("classifying {}".format(filename))
+
+            processedFiles += 1
+            filepath = os.path.join(directory, filename)
+            files = {'files': open(filepath, 'rb')}
+
+            startMilli = current_milli_time()
+            rsp = post(cfg["url"], files=files)
+            stopMilli = current_milli_time()
+            duration = stopMilli - startMilli
+            logging.info("classified {} in {} millis".format(filename, duration))
+            if rspOk(rsp):
+                result = rsp.json()
+                logging.debug("json={}".format(json.dumps(result)))
+                if "classified" in result:
+                    classification = result["classified"]
+                    logging.debug("classification = {}".format(json.dumps(classification)))
+                    for classname in classification.keys():
+                        confidence = classification[classname]
+
+                        if classname == "negative":
+                            unclassifiedFiles += 1
+                            if normalize:
+                                # translate 'negative' to 'non-classified' for better clarity
+                                classname = "unclassified"
+                                confidence = 0
+                        else:
+                            classifiedFiles += 1
+
+                        logging.debug("Saving result {}, {}, {}".format(filename, classname, confidence))
+                        results[filename] = {"filename": filename,
+                                             "classification": classname,
+                                             "confidence": confidence,
+                                             "duration": duration}
+                else:
+                    problemFiles += 1
+                    results[filename] = {"filename": filename,
+                                         "classification": "None",
+                                         "confidence": "",
+                                         "duration": duration}
+                    logging.info("No classification for {}".format(filename))
+            else:
+                problemFiles += 1
+                logging.warning("Error result from server for {}".format(filename))
+        else:
+            skippedFiles += 1
+            logging.debug("skipping non-image file {}".format(filename))
+
+    logging.info("TotalFiles: {}, ProcessedFiles: {}, classifiedFiles: {}, unclassifiedFiles: {}, skippedFiles: {}, problemFiles: {}".
+                 format(totalFiles, processedFiles, classifiedFiles, unclassifiedFiles, skippedFiles, problemFiles))
+    return results
+
+
+#-------------------------------------
+# Generate CSV from dictionary
+#
+def generateCSV(filename, classifications, fieldnames=None):
+    if fieldnames is None:
+        fieldnames = ['filename', 'classification', 'confidence', 'duration']
+
+    # Generate minimal info CSV
+    with open(filename, 'w', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames, extrasaction='ignore')
+        writer.writeheader()
+        od = collections.OrderedDict(sorted(classifications.items()))
+        for key, row in od.items():
+            writer.writerow(row)
+
+
+if __name__ == '__main__':
+    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
+                        datefmt='%H:%M:%S',
+                        level=10)
+
+    args = getInputs()
+
+    if args is not None:
+        if os.path.exists(args.directory) and os.path.isdir(args.directory):
+            setupAPIAccess(args.url, args.user, args.passwd)
+            logging.info("Start classifying")
+            classifications = classifyFiles(args.directory, args.normalize)
+            logging.info("Classification Complete")
+            generateCSV(args.file + "minimal.csv", classifications,
+                        fieldnames=['filename', 'classification'])
+            generateCSV(args.file + "confidence.csv", classifications,
+                        fieldnames=['filename', 'classification', 'confidence'])
+            generateCSV(args.file + ".csv", classifications)
+            logging.info("CSV done")
+        else:
+            eprint("ERROR: directory{} does exist".format(args.directory))
+            exit(2)
+        pass
+    else:
+        exit(1)
