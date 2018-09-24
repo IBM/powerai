@@ -8,18 +8,19 @@ endpoint output.
 
 Unfortunately, this approach does not make them very user friendly. Not only are parameters
 not validated, but tools are not task based. For example, deplopyed models are
-manipulated/managed via the `*WebApi` tools. To deploy a model, the `createWebApi` tools is used. 
+manipulated/managed via the `*WebApi` tools. To deploy a model, the `createWebApi` tool is used. 
 
 Even though the tools have usability shortcomings, they are being shared at this time to provide
 examples of how the API can be accessed using Python.
 
 The API documentation is included in this repo in the file `vision/docs/powerai-vision-api.html` or
-at [this link] (http://htmlpreview.github.io/?https://github.com/IBM/powerai/blob/master/vision/doc/powerai-vision-api.html).
+at [this Link](http://htmlpreview.github.io/?https://github.com/IBM/powerai/blob/master/vision/doc/powerai-vision-api.html)
+to get the rendered html.
 
 # Usage
 ## Setup
 The tools require the Python `requests` package. Other than that, all other packages are part
-of the base Python Install.
+of the base Python installation.
 
 You must set `PYTHONPATH` to include the directory containing `vapi_core.py` as this file is
 imported by all commands.
@@ -59,7 +60,7 @@ if the `VAPI_TOKEN` environment variable (described previously) is not found.
 
 The file path to the config file can be identified via the `VAPI_CFG` environment variable or the file 
 `$HOME/vapi.cfg` is the default file path. Use of the envirnment variable makes it easier to access different
-PowerAI Vision Servers.
+_PowerAI Vision_ Servers.
 
 ## Logging
 The tools use the Pthon logging facility. The level is controled via an optional field in the 
@@ -72,6 +73,8 @@ The tools use the Pthon logging facility. The level is controled via an optional
   * CRITICAL -- 50 (this level is not used in the tools)
 
 Currently logging goes to STDERR which can be redirected on the command line.
+
+Note that to see more details about the interaction the API endpoints, setting `logLevel` to `10`.
 
 ## Input Limitations for Creating Objects
 In the current form, each "_create_" command requires a JSON string as input. This string
@@ -86,7 +89,7 @@ Try the command with no parameters or with `--help` to get a usage statement.
 ## getVisionTokenPass
 `getVisionTokenPass` is the tool that will get an access token given a user name
 and password as input. As mentioned previously, a token is required to access the
-PowerAI Vision API endpoints in versions 1.1.1.0 and later. 
+_PowerAI Vision_ API endpoints in versions 1.1.1.0 and later. 
 
 ## Inference Tools
 More information and documentation on doing inferences is being worked. For now, the best
@@ -147,8 +150,8 @@ user@my-mac:~/projects/vision/tools$ ./getDatasets
 ```
 
 ## Upload a File
-There are 2 ways to upload files. One `uploadFile` allows uploading a single file.
-This tool was the original written to do uploads. The second is `uploadFiles`.
+There are 2 ways to upload files. Using `uploadFile` allows uploading a single file.
+This tool was the original written to do uploads. The second method is `uploadFiles`.
 It supports uploading multiple files at a time. Both of these tools now support
 input args.
 
@@ -169,6 +172,7 @@ optional arguments:
   --dsid DSID        ID of the dataset to upload into
   --catid CATID      ID of the category to which the file belon
 ```
+
 `uploadFiles` example:
 
 ```
@@ -177,6 +181,7 @@ user@my-mac:~/projects/vision/tools$ ./uploadFiles --dsid fc57acb4-1a05-4cc6-999
 ```
 
 ## Change File Category
+
 ```
 user@my-mac:~/projects/vision/tools$ ./chgFileCategory fc57acb4-1a05-4cc6-9998-0ec48d7f5724 5f6b2958-c0d6-47b0-a053-ecb1a6927650 37d390a9-d975-4e25-accf-c9c8bb22fea3
 {
@@ -217,7 +222,7 @@ the file be specified in the save operation. In other words, _PowerAI Vision_ ca
 "_add_" one or more labels to an existing set of labels. 
 
 This requirement means that if one wants to add an additional label to an existing set,
-they have to
+they have perform the following sets
 
  1. Get the current labels for the file from _PowerAI Vision_ (via `getFileLabels`).
  2. Add the new label(s) to that returned set of labels (either via a script or
@@ -226,6 +231,7 @@ they have to
  Note that only the array of labels need be in the file passed to `saveFileLabels`.
  
 ### Getting file labels
+
 ```
 $ ./getFileLabels b0e03bdf-3bf1-4927-9753-a8b9ecaaebba "0c0a0dbb-6bbb-4917-83f2-39fada2c092c"
 
@@ -260,6 +266,9 @@ $ ./getFileLabels b0e03bdf-3bf1-4927-9753-a8b9ecaaebba "0c0a0dbb-6bbb-4917-83f2-
 ```
 
 ### Updating the label list
+Edit the saved labels to add (in this case) the new label(s). The resulting file should should
+only contain the label array as shown below.
+
 ```
  [
     {
@@ -295,6 +304,8 @@ $ ./getFileLabels b0e03bdf-3bf1-4927-9753-a8b9ecaaebba "0c0a0dbb-6bbb-4917-83f2-
 ```
 
 ### Saving the updated label list
+Use the `saveFileLabels` tool to save the modified label list.
+
 ```
 $ ./saveFileLabels --ds  b0e03bdf-3bf1-4927-9753-a8b9ecaaebba --file "0c0a0dbb-6bbb-4917-83f2-39fada2c092c" --lab /tmp/labels
 {
@@ -303,6 +314,8 @@ $ ./saveFileLabels --ds  b0e03bdf-3bf1-4927-9753-a8b9ecaaebba --file "0c0a0dbb-6
 ```
 
 ### Checking that the labels are saved
+For peace of mind, you can get the labels again to ensure that they have been updated.
+
 ```
 16:51 $ ./getFileLabels b0e03bdf-3bf1-4927-9753-a8b9ecaaebba "0c0a0dbb-6bbb-4917-83f2-39fada2c092c"
 {

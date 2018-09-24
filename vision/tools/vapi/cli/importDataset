@@ -18,7 +18,7 @@
 # 
 #  IBM_PROLOG_END_TAG
 
-# Script to upload a file to a dataset
+# Script to import a dataset
 #
 
 from __future__ import print_function
