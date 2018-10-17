@@ -1,0 +1,6 @@
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH_BACKUP}
+unset LD_LIBRARY_PATH_BACKUP
+
+if [ -z ${LD_LIBRARY_PATH} ]; then
+    unset LD_LIBRARY_PATH
+fi
