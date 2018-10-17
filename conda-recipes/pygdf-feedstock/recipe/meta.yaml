@@ -11,7 +11,8 @@ source:
     folder: libgdf 
     patches: 
       - libgdf_cmake.patch
-  - git_url: https://github.com/apache/arrow.git 
+  - git_rev: apache-arrow-0.11.0 
+    git_url: https://github.com/apache/arrow.git 
     folder: repos/arrow 
 
 build:
