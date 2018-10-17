@@ -30,7 +30,6 @@ requirements:
     - make
     - cython
     - boost 
-    - pthread-stubs
     - py 
     - cffi
     - gfortran_impl_linux-ppc64le 

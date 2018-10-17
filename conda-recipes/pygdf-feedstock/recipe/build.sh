@@ -19,7 +19,7 @@ export HASH_JOIN=ON
     cmake .. -DHASH_JOIN=${HASH_JOIN}
     make -j install
     make copy_python
-    python setup.py install
+    python setup.py install --single-version-externally-managed --record=record.txt
     cd ../..
 
 # Arrow build install
@@ -41,12 +41,12 @@ export LD_LIBRARY_PATH=${PREFIX}/repos/dist/lib:$LD_LIBRARY_PATH
     # pyArrow build install
     cd repos/arrow/python
     python setup.py build_ext --build-type=$ARROW_BUILD_TYPE --inplace
-    python setup.py install
+    python setup.py install --single-version-externally-managed --record=record.txt
     cd ../../.. 
 
 # PyGDF build/install
     cd pygdf
-    python setup.py install 
+    python setup.py install --single-version-externally-managed --record=record.txt
     cd .. 
 
 # ensure that pygdf library path is set correctly during runtime

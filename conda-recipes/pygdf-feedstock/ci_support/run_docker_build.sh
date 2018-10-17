@@ -41,17 +41,18 @@ cat << EOF | docker run -i \
                         nvidia/cuda-ppc64le:9.2-cudnn7-devel-ubuntu16.04 \
                         bash || exit 1
 
-set -e -x
+set -e
 
 apt-get update
 apt-get install -y curl
 curl -s -L https://repo.continuum.io/miniconda/Miniconda3-4.5.11-Linux-ppc64le.sh > miniconda.sh
 chmod 755 miniconda.sh 
 bash miniconda.sh -b -p /opt/conda
-conda install --yes --quiet conda-build
 
 export PYTHONUNBUFFERED=1
 export PATH=/opt/conda/bin:$PATH
+
+conda install --yes --quiet conda-build
 
 echo "$config" > ~/.condarc
 # A lock sometimes occurs with incomplete builds. The lock file is stored in build_artefacts.
