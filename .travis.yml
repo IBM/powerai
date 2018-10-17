@@ -36,5 +36,6 @@ install:
       sudo apt-get install -y docker-ce
 
 script:
+    -  cd conda-recipes/pygdf-feedstock
     -  ./ci_support/run_docker_build.sh pygdf-0.1.0a3-py${CONDA_PY}
     -  ./ci_support/ftp_upload.sh # Upload build_artifacts to UNICAMP FTP
