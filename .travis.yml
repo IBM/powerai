@@ -1,0 +1,36 @@
+# This file was generated automatically from conda-smithy. To update this configuration,
+# update the conda-forge.yml and/or the recipe/meta.yaml.
+
+language: generic
+
+os: linux-ppc64le
+
+env:
+  matrix:
+    - CONDA_PY=36
+
+before_install:
+    # Fast finish the PR..
+    - sudo apt-get -qq update
+    - sudo apt-get install  lftp
+    - |
+      (curl https://raw.githubusercontent.com/conda-forge/conda-forge-ci-setup-feedstock/master/recipe/ff_ci_pr_build.py | \
+          python - -v --ci "travis" "${TRAVIS_REPO_SLUG}" "${TRAVIS_BUILD_NUMBER}" "${TRAVIS_PULL_REQUEST}") || exit 1
+    # Remove homebrew.
+    - |
+      echo ""
+      echo "Removing homebrew from Travis CI to avoid conflicts."
+      curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall > ~/uninstall_homebrew
+      chmod +x ~/uninstall_homebrew
+      ~/uninstall_homebrew -fq
+      rm ~/uninstall_homebrew
+
+install:
+    # Install Docker.
+    - |
+      echo deb http://ftp.unicamp.br/pub/ppc64el/ubuntu/16_04/docker-17.06.2-ce-ppc64el/ xenial main > /etc/apt/sources.list.d/xenial-docker.list
+      sudo apt-get update
+      sudo apt-get install -y docker-ce
+
+script:
+    -  ./conda-recipes/pygdf-feedstock/ci_support/run_docker_build.sh pygdf-0.1.0a3-py${CONDA_PY}
