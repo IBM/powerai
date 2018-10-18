@@ -12,6 +12,6 @@ lftp -f "
 set dns:order "inet"
 open ftp://$FTP_HOST
 user $FTP_USER $FTP_PASSWORD
-mirror -R --continue --reverse --no-empty-dirs -i \.tar.bz2$ $LOCALPATH $REMOTEPATH
+mirror -R --continue --reverse --no-empty-dirs --no-perms -i \.tar.bz2$ $LOCALPATH $REMOTEPATH
 bye
 "
