@@ -1,0 +1,61 @@
+{% set name = "cupy" %}
+{% set version = "4.1.0" %}
+{% set commit = "cab3aca68cc7ce8728f22976df51561f4e12df75" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  # use git for source as the sdist does not include the tests
+  git_url: https://github.com/cupy/cupy.git
+  git_tag: {{ commit }}
+
+build:
+  number: 0
+  skip: True # [not linux64 and not win64 and not ppc64le]
+  skip: True # [win64 and py27]
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - git
+
+  host:
+    # GPU requirements
+    - nccl   # [linux]
+    # other requirements
+    - python
+    - numpy
+    - setuptools
+    - cython >=0.24.0
+    - fastrlock >=0.3
+
+  run:
+    # GPU requirements
+    - nccl   # [linux]
+    # other requirements
+    - python
+    - setuptools
+    - {{ pin_compatible('numpy') }}
+    - six >=1.9
+    - fastrlock >=0.3
+
+test:
+  imports:
+    - cupy
+  # TODO: run full test suite
+  #requires:
+  #  - pytest
+  #  - mock
+  #source_files:
+  #  - tests
+  #commands:
+  #  - CUPY_TEST_GPU_LIMIT=1 python -m pytest tests/cupy_tests
+
+about:
+  home: https://cupy.chainer.org/
+  license: MIT
+  license_family: MIT
+  summary: CuPy is an implementation of a NumPy-compatible multi-dimensional array on CUDA.
