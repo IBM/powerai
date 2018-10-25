@@ -1,0 +1,42 @@
+# This file was generated automatically from conda-smithy. To update this configuration,
+# update the conda-forge.yml and/or the recipe/meta.yaml.
+
+language: generic
+
+os: linux-ppc64le
+
+env:
+  global:
+    - secure: "NUiHEGt+lMQzO9sKAHS3snQD/PLX3yJxXnRBNB8wo8gXkupOleBy8saD4D09FvRSQAiUm/gBwzXWUxj9e/z+QUZTontmLH5/2dw1Ff6Er6BeXd1RV5/CxvjTqWfUHSVM95POmflvfKqUoFpAtzUtEYID5mHnzTRTCSJmP6amCkZjWlbOR88X8zGIYna2PM/kg/18Po73lk0nDvi2HJmJ+//SGYg1tWCTr11D2uomx9o78CGI66az0AqIiRQGgpSYh6edHyeWn/zegNMPrSFVDw57/ZPGTDu5YM/Oo4CKs24bnYqrCjLIaTVMywDaUQ9PFA7Tw7RO8d4FsmEVxw04iSniZO9bvvbQ3dRFGAEZN2Me/U8abMMrGP1DjaOeGbeD0QuW2yOu0Rsabic76tDYHKhenrCdq7Ig+o3Z3IDlehBGca+xr9rm9QxhgazOS5YWfXD2wv7J4JHVdEG1Mv2Apr0VF99UvxC0wRz/x5GJeENTSy4cexSznfdfPtMFpl+Nv6avX8SAXHelgKgceTxQTdHXEStPQzJi3lGXJbT3QyllAuy3xrJeZldA3FC+itkGmN8qd8t9tVTvYxqlDuLVGqLagrtO1ZC8MwHOcvpqxDbcNLhnXoHN0jYOz+b6qE5h9953Bqq09N9pEUFzUwQHsXsrzs3s6QlxYWPm0k6PGb0="
+    - secure: "Hq8U71ydPN3+uYE4SsPt6zzf1XfSPJCABUuzsoS6DlyoJSCenl8DnhuyAate2ivD7/6lomPakWiJFo8gpSVHX7rNrVAVsREGVI530MDp8ZhWYg9HqRlG3SgdI78hAAx6fEWUEMID1hZjBz5dusWakVTqycG24o7+W13laOuYIWto8vu03mwQQ3jGm4/SabOMYswUHAm5DYNp5KAyfB7BQ99U/rAIQaCcnCzXq50ALgKAzVi7a76wU4uVh+UyLZeQtVQT40diK2TnmTFswXoKtqVc3RR4kOER0XThZ0ndstIo2k6Avz0RF3mdCv0zBo5MBz+W630fDwq6jiY1mh7MxasW82ANF7wirnwOIJNiOJIIof0bfEpGSMDgotcyzEZc+uhnidXH3vqieBj1zg2jyjnQrb39lxgMG1p6rf84PhHdi4moiy2EuQGNaQNCV9Gm6NLyPb5jOoND8Q9Ti40rLljjaEdt8kHwam48gCod5bQorg6wBbDr4p2S3bAz0n/nt4ptoNVrTLHCxUKrICPKsDGPK3/ccFqSVMGjOygrYz/PAwNhQnHOcsyP2/7p29G+QUos1hkOqti7c1fFITVaFNcJayZYyTfCEUkE3t9Q9g8/+cbBIVRKz0yTu0zSuEy/XEDw/Il0yQHAxOQwdwxrOMgxpVAWYth18rKyBeE3xLE="
+  matrix:
+    - CONDA_PY=27
+    - CONDA_PY=35
+    - CONDA_PY=36
+
+before_install:
+    # Fast finish the PR..
+    - sudo apt-get -qq update
+    - sudo apt-get install  lftp
+    - |
+      (curl https://raw.githubusercontent.com/conda-forge/conda-forge-ci-setup-feedstock/master/recipe/ff_ci_pr_build.py | \
+          python - -v --ci "travis" "${TRAVIS_REPO_SLUG}" "${TRAVIS_BUILD_NUMBER}" "${TRAVIS_PULL_REQUEST}") || exit 1
+    # Remove homebrew.
+    - |
+      echo ""
+      echo "Removing homebrew from Travis CI to avoid conflicts."
+      curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall > ~/uninstall_homebrew
+      chmod +x ~/uninstall_homebrew
+      ~/uninstall_homebrew -fq
+      rm ~/uninstall_homebrew
+
+install:
+    # Install Docker.
+    - |
+      echo deb http://ftp.unicamp.br/pub/ppc64el/ubuntu/16_04/docker-17.06.2-ce-ppc64el/ xenial main > /etc/apt/sources.list.d/xenial-docker.list
+      sudo apt-get update
+      sudo apt-get install -y docker-ce
+
+script:
+    -  ./ci_support/run_docker_build.sh cupy-4.1.0-py${CONDA_PY}
+    -  ./ci_support/ftp_upload.sh # Upload build_artifacts to UNICAMP FTP
