@@ -38,5 +38,5 @@ install:
       sudo apt-get install -y docker-ce
 
 script:
-    -  ./ci_support/run_docker_build.sh cupy-4.1.0-py${CONDA_PY}
+    -  ./conda-recipes/cupy-feedstock/ci_support/run_docker_build.sh cupy-4.1.0-py${CONDA_PY}
 #    -  ./ci_support/ftp_upload.sh # Upload build_artifacts to UNICAMP FTP
