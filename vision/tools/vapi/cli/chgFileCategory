@@ -1,0 +1,58 @@
+#!/usr/bin/env python
+# IBM_PROLOG_BEGIN_TAG
+# 
+# Copyright 2003,2016 IBM International Business Machines Corp.
+# 
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#           http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+#  implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# 
+#  IBM_PROLOG_END_TAG
+
+# script to change/set the category with which a file is associated
+
+from __future__ import print_function
+import sys
+import logging
+import json
+
+import vapi_core as vapi
+
+
+def chgFileCategory(dsId, fileId, targetCategoryId):
+    result = None
+
+    headers = {"Content-type": "application/json"}
+    body = {"action" : "change_category", "target_category_id" : targetCategoryId}
+    url = vapi.cfg["baseUrl"] + "/datasets/" + dsId + "/files/" + fileId + "/action"
+    logging.debug("URL: {}".format(url));
+    
+    rsp = vapi.post(url, headers=headers, data=json.dumps(body))
+    if vapi.rspOk(rsp):
+        result = rsp.json()
+        print(json.dumps(rsp.json(), indent=2))
+
+    return result
+
+
+if __name__ == '__main__':
+    if len(sys.argv) == 4:
+        if vapi.loadCfgInfo() == 0:
+            chgFileCategory(sys.argv[1], sys.argv[2], sys.argv[3])
+        else:
+            vapi.eprint("ERR: could not read cfg info")
+            exit(2)
+    else:
+        vapi.eprint("ERR: You must specify a dataset id, file id, and category Id")
+        vapi.eprint("Usage: chgFileCategory <dsId> <fileId> <targetCategoryId>");
+        exit(1)
+

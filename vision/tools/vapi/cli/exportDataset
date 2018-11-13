@@ -1,0 +1,127 @@
+#!/usr/bin/env python -u
+# IBM_PROLOG_BEGIN_TAG
+# 
+# Copyright 2003,2016 IBM International Business Machines Corp.
+# 
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#           http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+#  implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# 
+#  IBM_PROLOG_END_TAG
+
+# script to export a dataset.
+
+from __future__ import print_function
+import sys
+import logging
+import argparse
+import re
+
+import vapi_core as vapi
+
+
+def exportDataset(dsId, fname, status=False):
+    rc = 1
+
+    url = vapi.cfg["baseUrl"] + "/datasets/" + dsId + "/export"
+    logging.info("exportDataset: URL={}; fname={}".format(url, fname));
+
+    rsp = vapi.get(url, stream=True)
+
+    # Cannot use rspOk() function with 'stream=True', so check directly
+    if rsp.ok:
+        logging.info("Waiting for content-info to download")
+        if not fname:
+            disp = rsp.headers['content-disposition']
+            fname = re.findall("filename=(.+)", disp)[0]
+            if not fname:
+                fname = "visionDsExport.zip"
+        logging.info("Saving to {}".format(fname))
+        if status:
+            print("Saving file to file {}".format(fname))
+
+        cnt = 0
+        i = 0
+        interval = 512 * 1024
+        with open(fname, 'wb') as handle:
+            for block in rsp.iter_content(1024):
+                handle.write(block)
+                cnt += 1024
+                if cnt % interval == 0:
+                    logging.debug("saved {} bytes".format(cnt))
+                    if status:
+                        i += 1
+                        print("{}".format(i % 10), end="")
+                        sys.stdout.flush()
+                        if cnt % (interval * 100) == 0:
+                            print()
+        if status:
+            print()
+            sys.stdout.flush()
+        rc = 0
+    else:
+        logging.warning("exportDataset: API failed; status = {}; msg = {}".format(rsp.status_code, rsp.text))
+        vapi.eprint("Error: http status = {}, msg = [{}]".format(rsp.status_code, rsp.text))
+    return rc
+
+
+# Uses arparse to parse commandline options
+#
+# argparse "results" class is returned
+#
+def getInputs():
+    parser = argparse.ArgumentParser(description="Tool to export powerai vision datasets")
+    parser.add_argument('--file', action="store", dest="file", required=False,
+                        help="name of the output file")
+    #    parser.add_argument('--dir', action="store", dest="outDir",
+    #                        help="directory into which the exported file is to be saved")
+    parser.add_argument('--status', action="store_true", dest="status",
+                        help="Show progress status information")
+    parser.add_argument('dsId',
+                        help="id of the dataset to export")
+
+    try:
+        results = parser.parse_args()
+        # Set defaults and ensure a dataset was specified
+        if results.status is None:
+            results.status = False
+
+        if results.dsId is None:
+            vapi.eprint("You must specify a dataset id to export")
+            parser.print_usage()
+            results = None
+
+    except argparse.ArgumentTypeError as e:
+        vapi.eprint("\n", e.args, "\n")
+        parser.print_help(sys.stderr)
+        results = None
+
+    return results
+
+
+if __name__ == '__main__':
+    args = getInputs()
+
+    if args is not None:
+        if vapi.loadCfgInfo() == 0:
+            if args.file:
+                fname = args.file
+            else:
+                fname = None
+            exit(exportDataset(args.dsId, fname, status=args.status))
+        else:
+            vapi.eprint("ERR: could not read cfg info")
+            exit(2)
+    else:
+        vapi.eprint("ERR: You must specify a dataset id; output file is optional")
+        vapi.eprint("Usage: exportDataset <dsId> [<output_fname>]");
+        exit(1)

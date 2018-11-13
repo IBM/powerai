@@ -1,0 +1,127 @@
+#! /usr/bin/env python
+# IBM_PROLOG_BEGIN_TAG
+# 
+# Copyright 2003,2016 IBM International Business Machines Corp.
+# 
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#           http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+#  implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# 
+#  IBM_PROLOG_END_TAG
+#
+# Script to monitor the powerai-vision event stream.
+# Events will be printed.
+#
+
+from collections import namedtuple, deque
+from pprint import pprint
+import logging
+from threading import Condition, Thread
+
+import vapi_core as vapi
+
+Event = namedtuple('Event', ['id', 'type', 'data'])
+eQueue = deque()
+gotEvent = Condition()
+stop = False
+
+
+def convertEvents():
+    global stop
+
+    eid = None
+    etype = None
+    data = []
+    retry = None
+    dispatch = False
+
+    url = vapi.cfg["baseUrl"] + "/events/"
+    rsp = vapi.get(url, stream=True)
+
+    try:
+        for line in rsp.iter_lines():
+            line = line.decode("utf-8")
+
+            logging.info("RCV LINE: length={}; line={}".format(len(line), line))
+
+            # Empty line denotes end of event
+            if not line:
+                # Put data into newline separated string
+                if data:
+                    data = '\n'.join(data)
+
+                if retry:
+                    etype, data = 'retry', retry
+
+                logging.debug("Queueing event...")
+                e = Event(eid, etype, data)
+
+                with gotEvent:
+                    eQueue.append(e)
+                    gotEvent.notifyAll()
+
+                eid = None
+                etype = None
+                data = []
+                retry = None
+            else:
+                # Split line on ":" (no ":" means field name only)
+                if not ':' in line:
+                    field, value = line, ''
+                else:
+                    field, value = line.split(':', 1)
+
+                # If 1st character of value is space, remove it
+                if value and value[0] == ' ':
+                    value = value[1:]
+
+                # update variables based upon field name.
+                if field == 'data':
+                    data.append(value)
+                elif field == 'event':
+                    etype = value
+                elif field == 'id':
+                    eid = value
+                elif field == 'retry':
+                    retry = int(value)
+
+            logging.debug("dispatch={}, etype={}, eid={}, data={}".format(dispatch, etype, eid, data))
+
+    except ValueError as vErr:
+        print("Exception while waiting for event lines; ignoring...")
+        stop = True
+
+    return None
+
+
+def getEvent():
+    with gotEvent:
+        while len(eQueue) == 0 and not stop:
+            gotEvent.wait()
+        event = eQueue.popleft()
+
+    return event
+
+
+if __name__ == '__main__':
+    if vapi.loadCfgInfo() == 0:
+        eventConverter = Thread(target=convertEvents)
+        eventConverter.start()
+
+        while not stop:
+            event = getEvent()
+            if event is not None:
+                pprint(event)
+            else:
+                break
+    else:
+        exit(2)

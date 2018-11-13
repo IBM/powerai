@@ -1,0 +1,85 @@
+#!/usr/bin/env python
+# IBM_PROLOG_BEGIN_TAG
+# 
+# Copyright 2003,2016 IBM International Business Machines Corp.
+# 
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#           http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+#  implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# 
+#  IBM_PROLOG_END_TAG
+
+# Script to create a web api
+
+from __future__ import print_function
+import sys
+import logging
+import json
+import argparse
+import vapi_core as vapi
+
+
+def createWebApi(modelid, usage):
+    wapi = None
+
+    msg = {
+        "trained_model_id": modelid,
+        "usage": usage,
+    }
+    headers = {'Content-type': 'application/json'}
+    url = vapi.cfg["baseUrl"] + "/webapis"
+    logging.debug("URL: {}".format(url));
+    
+    rsp = vapi.post(url, headers=headers, data=json.dumps(msg))
+
+    if vapi.rspOk(rsp):
+        wapi = rsp.json()
+
+    return wapi
+
+
+# Uses arparse to parse commandline options
+#
+# argparse "results" class is returned
+#
+def getInputs():
+    parser = argparse.ArgumentParser(description="Tool to deploy a trained model to a web api")
+    parser.add_argument('--modelid',  action='store', dest='modelid', required=True,
+                        help="Id of the model to deploy")
+    parser.add_argument('--usage', action='store', dest='usage', required=True,
+                        help="'cic' or 'cod'")
+
+    try:
+        args = parser.parse_args()
+        
+    except argparse.ArgumentTypeError as e:
+        vapi.eprint("\n", e.args, "\n")
+        parser.print_help(sys.stderr);
+        args = None
+        
+    return args
+
+
+if __name__ == '__main__':
+    if vapi.loadCfgInfo() == 0:
+        args = getInputs()
+
+        if args is not None:
+            vapi.eprint(args)
+            wapi = createWebApi(args.modelid, args.usage)
+            if wapi is not None:
+                print(json.dumps(wapi, indent=2))
+        else:
+            exit(2)
+    else:
+        exit(1)
+

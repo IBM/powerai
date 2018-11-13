@@ -1,0 +1,94 @@
+#!/usr/bin/env python
+# IBM_PROLOG_BEGIN_TAG
+# 
+# Copyright 2003,2016 IBM International Business Machines Corp.
+# 
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#           http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+#  implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# 
+#  IBM_PROLOG_END_TAG
+
+# Script to delete one of more files in a dataset
+#
+# usage -- deleteFiles.py --help
+#
+
+from __future__ import print_function
+import sys
+import os
+import os.path
+import json
+import logging
+import argparse
+
+import requests
+import vapi_core as vapi
+
+
+def deleteFiles(ds_id, filepaths, cat_id, cat_name):
+    result = None
+
+    logging.debug("filepaths={}".format(filepaths))
+    
+    files = []
+    for filepath in filepaths:
+        files.append(('files', open(filepath, 'rb')))
+
+    url = vapi.cfg["baseUrl"] + "/datasets/" + ds_id + "/files"
+    data = {"category_id" : cat_id, "scenario" : "" , "category_name" : cat_name}
+
+    logging.debug("url={}, data={},files={}\n".format(url, data, files))
+    rsp = vapi.post(url, data=data, files=files)
+
+    if vapi.rspOk(rsp):
+        result = rsp.json()
+    else:
+        vapi.eprint("ERR: One or more files failed to delete; {}".format(rsp.status_code))
+
+    logging.info(json.dumps(rsp.json(), indent=2))
+    return result
+
+
+# Uses arparse to parse commandline options
+#
+# argparse "results" class is returned
+#
+def getInputs():
+    parser = argparse.ArgumentParser(description="Tool to delete files from a dataset")
+    parser.add_argument('--dsid', action="store", dest="dsid", required=True,
+                        help="ID of the dataset to delete into")
+    parser.add_argument('filepaths', nargs="+",
+                        help="space separated list of paths to delete.")
+
+    try:
+        results = parser.parse_args()
+
+    except argparse.ArgumentTypeError as e:
+        vapi.eprint("\n", e.args, "\n")
+        parser.print_help(sys.stderr);
+        results = None
+        
+    return results
+
+
+if __name__ == '__main__':
+    args = getInputs()
+
+    if args is not None:
+        if vapi.loadCfgInfo() == 0:
+
+            deleteFiles(args.dsid, args.filepaths, args.catid, args.catname)
+        else:
+            exit(2)
+    else:
+        exit(1)

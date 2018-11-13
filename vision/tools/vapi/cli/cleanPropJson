@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+# Script to cleanup the quoting in the prop.json file in a dataset export zip file.
+
+cat ${1:-/dev/stdin} | sed -e 's/\\"/"/g' -e 's/"\[/[/g' -e 's/]"/]/g' | python -m json.tool

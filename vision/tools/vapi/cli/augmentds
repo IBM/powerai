@@ -1,0 +1,138 @@
+#!/usr/bin/env python
+# IBM_PROLOG_BEGIN_TAG
+# 
+# Copyright 2003,2016 IBM International Business Machines Corp.
+# 
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#           http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+#  implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# 
+#  IBM_PROLOG_END_TAG
+
+# Script to augment a dataset
+# originally by written Steve Cprek
+#
+
+import sys
+import argparse
+import logging
+import json
+import uuid
+
+import vapi_core as vapi
+
+def augmentDataset(args):
+
+    argsDict = {}
+
+    # Static parameters for data augmentation
+    argsDict["action"] = "preprocess"
+    # Get first 8 digits of random uuid
+    argsDict["dataset_name"] = str(uuid.uuid4())[0:8]
+    argsDict["detector"] = "data_augmentation"
+
+    dataset_id = ""
+    argsDict['parameters'] = {}
+    for arg in vars(args):
+        value = getattr(args, arg)
+        if value is not None:
+            if arg == 'dsId':
+                dataset_id = value
+            elif arg == 'color':
+                # For simplicity just replicate the color parameter
+                argsDict['parameters']['color'] = {}
+                argsDict['parameters']['color']['brightness'] = value
+                argsDict['parameters']['color']['contrast'] = value
+                argsDict['parameters']['color']['hue'] = value
+                argsDict['parameters']['color']['saturation'] = value
+            else:
+                argsDict['parameters'][arg] = {}
+                argsDict['parameters'][arg]['max'] = value
+
+    rc = 1
+    url = vapi.cfg["baseUrl"] + "/datasets/" + dataset_id + "/action"
+    logging.info("augmentDataset: URL={}, data={};".format(url, argsDict))
+
+    rsp = vapi.post(url, data=json.dumps(argsDict))
+    # Cannot use rspOk() function with 'stream=True', so check directly
+    if rsp.ok:
+        rc = 0
+    else:
+        logging.warning("augmentDataset: API failed; status = {}; msg = {}".format(rsp.status_code, rsp.text))
+        vapi.eprint("Error: http status = {}, msg = [{}]".format(rsp.status_code, rsp.text))
+    return rc
+
+
+# Uses argparse to parse commandline options
+#
+# argparse "results" class is returned
+#
+def getInputs():
+    parser = argparse.ArgumentParser(description="Tool to augment images in a powerai vision dataset")
+
+    # Required params
+    parser.add_argument('--dsId', action="store", dest="dsId", required=True,
+                        help="id of the dataset to augment")
+
+    # Image manipulation optional params
+    parser.add_argument('--color', required=False,
+                        help="augment by randomly changing the colors of images")
+    parser.add_argument('--crop', required=False,
+                        help="augment by randomly cropping images")
+    parser.add_argument('--flip_horizontal', required=False,
+                        help="augment by flipping images left-to-right")
+    parser.add_argument('--flip_vertical', required=False,
+                        help="augment by flipping images top-to-bottom images")
+    parser.add_argument('--focus-blur', required=False,
+                        help="augment by applying random gaussian/focus changes to images")
+    parser.add_argument('--motion-blur', required=False,
+                        help="augment by applying random motion blur changes to images")
+    parser.add_argument('--noise', required=False,
+                        help="augment by randomly adding noise to images")
+    parser.add_argument('--rotation', required=False,
+                        help="augment by randomly rotating images")
+    parser.add_argument('--sharpness', required=False,
+                        help="augment by randomly adding sharpness to images")
+
+    results = parser.parse_args()
+
+    try:
+        results = parser.parse_args()
+        # Set defaults and ensure a dataset was specified
+        if results is None:
+            vapi.eprint("You must specify at least 1 augmentation method")
+            parser.print_help(sys.stderr)
+            results = None
+
+    except argparse.ArgumentTypeError as e:
+        vapi.eprint("\n", e.args, "\n")
+        parser.print_help(sys.stderr)
+        results = None
+
+    return results
+
+
+if __name__ == '__main__':
+    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
+                        datefmt='%H:%M:%S',
+                        level=logging.INFO)
+
+    args = getInputs()
+
+    if args is not None:
+        if vapi.loadCfgInfo() == 0:
+            exit(augmentDataset(args))
+        else:
+            vapi.eprint("ERR: could not read cfg info")
+            exit(2)
+    else:
+        exit(1)

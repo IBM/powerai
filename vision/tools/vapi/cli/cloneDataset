@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+# IBM_PROLOG_BEGIN_TAG
+# 
+# Copyright 2003,2016 IBM International Business Machines Corp.
+# 
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#           http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+#  implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# 
+#  IBM_PROLOG_END_TAG
+
+# Script to clone a dataset
+
+from __future__ import print_function
+import sys
+import logging
+import json
+import vapi_core as vapi
+
+                        
+def cloneDataset(dsId, newName):
+    dataset = None
+    msg = {
+        "name": newName,
+        "action": "clone",
+    }
+
+    headers = {'Content-type': 'application/json'}
+    url = vapi.cfg["baseUrl"] + "/datasets/" + dsId + "/action"
+    rsp = vapi.post(url, data=json.dumps(msg))
+    logging.debug("url={}, json={}".format(url, msg))
+
+    if vapi.rspOk(rsp):
+        dataset = rsp.json()
+    else:
+        vapi.eprint("ERR: Failed to clone dataset; {}".format(rsp.status_code))
+
+    return dataset
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        vapi.eprint("ERR: You must provide the existing dataset id and the new name for the new dataset")
+        exit(1)
+    if vapi.loadCfgInfo() == 0:
+        dataset = cloneDataset(sys.argv[1], sys.argv[2])
+        if dataset is not None:
+            print(json.dumps(dataset, indent=2))
+    else:
+        vapi.eprint("ERR: Failed to load cfgInfo");
+
