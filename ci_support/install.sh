@@ -10,6 +10,7 @@ echo 'PATH =' $PATH
 conda config --set always_yes yes
 conda info -a
 
+
 # Install conda build
 conda install conda-build
 
