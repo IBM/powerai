@@ -156,3 +156,23 @@ jobs:
           -  cd conda-recipes/cupy-feedstock # cd to cupy dir
           -  ./ci_support/run_docker_build.sh cupy-4.1.0-py${CONDA_PY}
           -  'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./ci_support/ftp_upload.sh; fi' # Upload build_artifacts to UNICAMP FTP
+          
+    # Zip Recipe
+    - stage: zip
+      language: generic
+
+      os: linux-ppc64le
+
+      install:
+
+          - ./ci_support/install.sh
+
+          # Build conda package
+          - cd conda-recipes/zip-feedstock
+          - conda build .
+
+      script:
+          # Upload built conda package to UNICAMP FTP
+          - ls $HOME/miniconda/conda-bld/linux-ppc64le/*.tar.bz2
+          - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./ci_support/ftp_upload.sh # Upload build_artifacts to UNICAMP FTP
+
