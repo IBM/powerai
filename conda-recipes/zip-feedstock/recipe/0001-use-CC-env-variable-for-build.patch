@@ -1,0 +1,23 @@
+From aabae89e0e6f8fcfafc0cb5b5482602e803d82b8 Mon Sep 17 00:00:00 2001
+From: Jonathan Helmus <jjhelmus@gmail.com>
+Date: Wed, 18 Oct 2017 13:58:22 -0500
+Subject: [PATCH] use CC env variable for build
+
+---
+ unix/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/unix/Makefile b/unix/Makefile
+index abd0c44..5ade7be 100644
+--- a/unix/Makefile
++++ b/unix/Makefile
+@@ -22,7 +22,6 @@ SHELL = /bin/sh
+ LN = ln -s
+ 
+ # (to use the GNU compiler, change cc to gcc in CC)
+-CC = cc
+ BIND = $(CC)
+ AS = $(CC) -c
+ CPP = /lib/cpp
+-- 
+2.7.4
