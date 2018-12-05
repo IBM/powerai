@@ -9,6 +9,6 @@
       which is not found on Java 8 and lower because the overloaded methods with covariant return types don't exist.
       The solution is to cast ByteBuffer instances to Buffer before calling the method.
 
-2018-11-16(18.323)  Douglas Lehr  <dllehr@us.ibm.com>
+2018-11-16 (18.323)  Douglas Lehr  <dllehr@us.ibm.com>
 
     * Initial build of PowerAI 1.5.4
