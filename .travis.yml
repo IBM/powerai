@@ -160,19 +160,27 @@ jobs:
     # Zip Recipe
     - stage: zip
       language: generic
-
       os: linux-ppc64le
 
       install:
-
-          - ./ci_support/install.sh
-
-          # Build conda package
-          - cd conda-recipes/zip-feedstock
-          - conda build .
+          # Install necessary packages and build recipe  
+          - ./ci_support/install.sh zip-feedstock
 
       script:
           # Upload built conda package to UNICAMP FTP
           - ls $HOME/miniconda/conda-bld/linux-ppc64le/*.tar.bz2
-          - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./ci_support/ftp_upload.sh # Upload build_artifacts to UNICAMP FTP
+ #         - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./ci_support/ftp_upload.sh # Upload build_artifacts to UNICAMP FTP
 
+    # openjdk1.8-headless Recipe
+    - stage: openjdk1.8-headless
+      language: generic
+      os: linux-ppc64le
+
+      install:
+          # Install necessary packages and build recipe  
+          - ./ci_support/install.sh openjdk1.8-headless-feedstock
+
+      script:
+          # Upload built conda package to UNICAMP FTP
+          - ls $HOME/miniconda/conda-bld/linux-ppc64le/*.tar.bz2
+ #         - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./ci_support/ftp_upload.sh # Upload build_artifacts to UNICAMP FTP
