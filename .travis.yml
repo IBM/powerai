@@ -169,7 +169,7 @@ jobs:
       script:
           # Upload built conda package to UNICAMP FTP
           - ls $HOME/miniconda/conda-bld/linux-ppc64le/*.tar.bz2
-          #- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./ci_support/ftp_upload.sh # Upload build_artifacts to UNICAMP FTP
+          - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./ci_support/ftp_upload.sh # Upload build_artifacts to UNICAMP FTP
 
     # openjdk1.8-headless Recipe
     - stage: openjdk1.8-headless
@@ -183,4 +183,4 @@ jobs:
       script:
           # Upload built conda package to UNICAMP FTP
           - ls $HOME/miniconda/conda-bld/linux-ppc64le/*.tar.bz2
-          #- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./ci_support/ftp_upload.sh # Upload build_artifacts to UNICAMP FTP
+          - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./ci_support/ftp_upload.sh # Upload build_artifacts to UNICAMP FTP
