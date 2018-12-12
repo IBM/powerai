@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#Save parameters
+PKG_VERSION=$1
+
+echo "Test Case: openjdk-headless-${PKG_VERSION}"
+
+# Remove the last chunk of the version we dont care about
+FRONT=$( echo "${PKG_VERSION}" | cut -d "-" -f 1)
+
+# Version is printed in version in N.N.N_N format but we get it from meta.yaml in N.N.N.N
+# Swap last '.' with '_'
+FIXED=$( sed 's/\./_/3' <<<"${FRONT}" )
+
+# Extract first 3 digits to look in the correct dir
+VERSION=$(echo "${FIXED}" | cut -d "_" -f 1)
+
+
+# Get java binary at designated location and make sure it is executable
+JAVA_BIN="${PREFIX}/powerpc64le-conda_cos7-linux-gnu/usr/lib/jvm/java-${VERSION}-openjdk-${PKG_VERSION}.ppc64le/jre/bin/java"
+if [[ ! -x "${JAVA_BIN}" ]]; then
+    echo "Java binary is not in expected path(${JAVA_BIN})";
+    exit 1
+fi
+
+# Get the java version from the binary
+JAVA_VER=$("${JAVA_BIN}" -version 2>&1)
+
+# Get the version substring enclosed in '"'
+JAVA_VERSION=$( echo "${JAVA_VER}" | grep "version" | cut -d '"' -f 2)
+
+# Version comparison
+if [ "${JAVA_VERSION}" != "${FIXED}" ]; then
+    echo "Java binary version is incorrect. Expected: ${FIXED} Actual: ${JAVA_VERSION}"
+    exit 1
+fi
