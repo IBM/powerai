@@ -1,3 +1,4 @@
+# Copyright 2018, 2019. IBM All Rights Reserved.
 # Copyright 2015 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -174,12 +175,12 @@ def main(_):
         print('step %d, training accuracy %g' % (i, train_accuracy))
       train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
 
-    # compute in batches to avoid OOM on GPUs 
+    # compute in batches to avoid OOM on GPUs
     accuracy_l = []
     for _ in range(20):
       batch = mnist.test.next_batch(500, shuffle=False)
-      accuracy_l.append(accuracy.eval(feed_dict={x: batch[0], 
-                                                 y_: batch[1], 
+      accuracy_l.append(accuracy.eval(feed_dict={x: batch[0],
+                                                 y_: batch[1],
                                                  keep_prob: 1.0}))
     print('test accuracy %g' % numpy.mean(accuracy_l))
 
