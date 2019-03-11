@@ -5,7 +5,7 @@ Large Model Support (TFLMS) v2 included in IBM PowerAI in the
 `tensorflow-large-model-support` conda package.
 
 ## Adjustable image resolution ResNet50
-The [Keras_ResNet50.py](Keras_ResNet50.py) file uses the ResNet50 from
+The [Keras_ResNet50.py](Keras_ResNet50.py) file uses the ResNet50 model from
 keras_applications to demonstrate how to enable TensorFlow Large Model
 Support (TFLMS) in a Keras model that cannot fit in GPU memory when
 using larger resolution data. It provides a convenient way to test out the
