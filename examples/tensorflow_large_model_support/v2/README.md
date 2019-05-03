@@ -11,9 +11,7 @@ Support (TFLMS) in a Keras model that cannot fit in GPU memory when
 using larger resolution data. It provides a convenient way to test out the
 capabilities of TFLMS. Command line parameters allow the user to change
 the size of the input image data, enable or disable TFLMS,
-and set TFLMS tunables. The `TF_LMS_SIMULATOR_MEM_RATIO` environment variable
-should be set to `0.8` when running this model to achieve the best results
-with auto tuning.
+and set TFLMS tunables.
 
 ## Session based training example
 The [mnist_deep_lms.py](mnist_deep_lms.py) file is an example of how to
