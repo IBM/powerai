@@ -1,4 +1,4 @@
-#  Copyright 2018, 2019. IBM All Rights Reserved.
+# Copyright 2018, 2019. IBM All Rights Reserved.
 # Copyright 2015 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -160,7 +160,7 @@ def main(_):
   # that TFLMS is not needed and disable it.
   lms_model = LMS(swapout_threshold=50, swapin_ahead=3, swapin_groupby=2)
   lms_model.excl_output_by_scopes = {'loss', 'accuracy', 'dropout'}
-  lms_model.run(tf.get_default_graph())
+  lms_model.run()
 
   graph_location = tempfile.mkdtemp()
   print('Saving graph to: %s' % graph_location)
