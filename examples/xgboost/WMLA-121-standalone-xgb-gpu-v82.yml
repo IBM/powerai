@@ -1,0 +1,11 @@
+name: xgb-gpu-v82
+channels:
+  - https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/
+  - defaults
+dependencies:
+  - conda
+  - jupyter
+  - tornado=5.1.1
+  - python=3.6.8
+  - pyyaml
+  - py-xgboost-gpu
