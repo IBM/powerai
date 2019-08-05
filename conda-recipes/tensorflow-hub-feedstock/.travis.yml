@@ -18,13 +18,13 @@ env:
     - secure: "Hq8U71ydPN3+uYE4SsPt6zzf1XfSPJCABUuzsoS6DlyoJSCenl8DnhuyAate2ivD7/6lomPakWiJFo8gpSVHX7rNrVAVsREGVI530MDp8ZhWYg9HqRlG3SgdI78hAAx6fEWUEMID1hZjBz5dusWakVTqycG24o7+W13laOuYIWto8vu03mwQQ3jGm4/SabOMYswUHAm5DYNp5KAyfB7BQ99U/rAIQaCcnCzXq50ALgKAzVi7a76wU4uVh+UyLZeQtVQT40diK2TnmTFswXoKtqVc3RR4kOER0XThZ0ndstIo2k6Avz0RF3mdCv0zBo5MBz+W630fDwq6jiY1mh7MxasW82ANF7wirnwOIJNiOJIIof0bfEpGSMDgotcyzEZc+uhnidXH3vqieBj1zg2jyjnQrb39lxgMG1p6rf84PhHdi4moiy2EuQGNaQNCV9Gm6NLyPb5jOoND8Q9Ti40rLljjaEdt8kHwam48gCod5bQorg6wBbDr4p2S3bAz0n/nt4ptoNVrTLHCxUKrICPKsDGPK3/ccFqSVMGjOygrYz/PAwNhQnHOcsyP2/7p29G+QUos1hkOqti7c1fFITVaFNcJayZYyTfCEUkE3t9Q9g8/+cbBIVRKz0yTu0zSuEy/XEDw/Il0yQHAxOQwdwxrOMgxpVAWYth18rKyBeE3xLE="
   matrix:
     include:
-    - env: CONFIG=linux_ppc64le_python2.7 UPLOAD_PACKAGES=False
+    - env: CONFIG=linux_ppc64le_python2.7 UPLOAD_PACKAGES=True
       os: linux-ppc64le
 
-    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=False
+    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True
       os: linux-ppc64le
 
-    - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=False
+    - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=True
       os: linux-ppc64le
 
 script:
