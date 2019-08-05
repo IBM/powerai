@@ -1,0 +1,34 @@
+{% set build_version = "0.5.0" %}
+
+# This is the recipe for the "gpu" variant of tensorflow-base
+package:
+  name: tensorflow-hub
+  version: {{ build_version }}
+
+source:
+  git_url: https://github.com/tensorflow/hub.git
+  git_rev: v0.5.0
+
+build:
+  number: 0
+  
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
+    - git >=2.2
+    - bazel
+    - python
+  run:
+    - python
+    - numpy >=1.12.0
+    - six >=1.10.0
+    - protobuf >=3.4.0
+    - tensorflow-base >=1.13.0
+
+about:
+  home: https://www.tensorflow.org/hub/
+  license: Apache-2.0
+  license_file: LICENSE
+  summary: "A library for transfer learning by reusing parts of TensorFlow models."
