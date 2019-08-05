@@ -29,7 +29,7 @@ jobs:
 
       os: linux-ppc64le
 
-      env: CONDA_PY=36 CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=False
+      env: CONDA_PY=36 CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True
 
       script:
           -  cd conda-recipes/tensorflow-hub-feedstock # cd to pygdf dir
