@@ -5,7 +5,7 @@ c_compiler_version:
 channel_sources:
 - conda-forge,defaults
 channel_targets:
-- powerai
+- powerai main
 docker_image:
 - condaforge/linux-anvil-ppc64le
 pin_run_as_build:
