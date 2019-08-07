@@ -54,7 +54,10 @@ docker run ${DOCKER_RUN_ARGS} \
                         -v "${RECIPE_ROOT}":/home/conda/recipe_root:ro,z \
                         -v "${FEEDSTOCK_ROOT}":/home/conda/feedstock_root:rw,z \
                         -e CONFIG \
+                        -e BINSTAR_TOKEN \
                         -e HOST_USER_ID \
+                        -e UPLOAD_PACKAGES \
+                        -e CI \
                         -e CONDA_PY="${CONDA_PY}" \
                         -a stdin -a stdout -a stderr \
                         condaforge/linux-anvil-ppc64le \
