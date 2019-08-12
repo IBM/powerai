@@ -6,7 +6,7 @@ Packages that are built are published to https://anaconda.org/powerai/
 
 Community PRs are welcome.
 
-### Package Requests
+### Recipe Requests
 To request a package recipe to be created and be built, open an issue with the following formatting.
 
  - Name of package: 
