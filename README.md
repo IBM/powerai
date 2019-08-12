@@ -19,3 +19,4 @@ CLI API documentation for IBM PowerAI Vision
 ## conda-recipes
 
 This directory holds conda recipes for the PowerAI supplementary channel. There is no support for these recipes or the supplementary channel. Community contributions will be considered.
+The supplementary channel is located on anaconda.org at https://anaconda.org/powerai/

@@ -1,4 +1,4 @@
-##PowerAI Supplementary Channel
+## PowerAI Supplementary Channel
 
 This directory contains community built recipes for additional conda packages often needed for running deep learning and machine learning python code on POWER. These recipes are automatically built on ppc64le arch from travis-ci.org (https://travis-ci.org/IBM/powerai). 
 
@@ -6,7 +6,19 @@ Packages that are built are published to https://anaconda.org/powerai/
 
 Community PRs are welcome.
 
-##How to add a recipe to the repo
+### Package Requests
+To request a package to be built, open an issue with the following formatting.
+
+ - Name of package: 
+ - URL of package source code: 
+ - License of package: 
+ - Short description of package and use case(s):
+
+Folks who would also like to see this pacakge in the supplementary channel, please thumbs-up so the developers can know which requests to prioritize.
+
+And if you'd like to contribute the pacakge (thank you!), see the instructions below.
+
+### How to add a recipe to the repo
 
 Recipes in this directory are modeled after the conda-forge build environment. Travis CI is used as the build service.
 
@@ -59,6 +71,5 @@ These defines are used to define the build envionment, source channels and uploa
 ### Building
 Travis is configured to build these recipes on Pull Requests. Packages will only be published, however, on code merges.
 travis-ci.org does have build limits current (around 50mins or so), so long building recipes may be aborted.
-
 
 
