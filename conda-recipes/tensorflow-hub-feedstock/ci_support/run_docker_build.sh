@@ -22,20 +22,6 @@ RECIPE_ROOT=$FEEDSTOCK_ROOT/recipe
 
 docker info
 
-config=$(cat <<CONDARC
-
-channels:
- - conda-forge
- - defaults
-
-conda-build:
- root-dir: /feedstock_root/build_artefacts
-
-show_channel_urls: true
-
-CONDARC
-)
-
 # In order for the conda-build process in the container to write to the mounted
 # volumes, we need to run with the same id as the host machine, which is
 # normally the owner of the mounted volumes, or at least has write permission
@@ -61,7 +47,6 @@ docker run ${DOCKER_RUN_ARGS} \
                         -e HOST_USER_ID \
                         -e UPLOAD_PACKAGES \
                         -e CI \
-                        -e CONDA_PY="${CONDA_PY}" \
                         -a stdin -a stdout -a stderr \
                         condaforge/linux-anvil-ppc64le \
                         bash \
