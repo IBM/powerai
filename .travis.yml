@@ -23,13 +23,13 @@ env:
 jobs:
   include:
 
-    # tensorflow-hub recipe CONDA_PY=36
+    # tensorflow-hub recipe
     - stage: tensorflow-hub
       language: generic
 
       os: linux-ppc64le
 
-      env: CONDA_PY="" CONFIG=linux_noarch UPLOAD_PACKAGES=True
+      env: CONFIG=linux_noarch UPLOAD_PACKAGES=True
 
       script:
           -  cd conda-recipes/tensorflow-hub-feedstock # cd to pygdf dir
