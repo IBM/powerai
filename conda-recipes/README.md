@@ -29,20 +29,21 @@ The top level travis.yml file (https://github.com/IBM/powerai/blob/master/.travi
 jobs:
   include:
 
-    # tensorflow-hub recipe CONDA_PY=36
-    - stage: tensorflow-hub
+    # tensorflow-metadata recipe
+    - stage: tensorflow-metadata
       language: generic
 
       os: linux-ppc64le
 
-      env: CONDA_PY=36 CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True
+      env: CONFIG=linux_noarch UPLOAD_PACKAGES=True
+
 
       script:
-          -  cd conda-recipes/tensorflow-hub-feedstock # cd to pygdf dir
-          -  ./ci_support/run_docker_build.sh tensorflow-hub-0.5-py${CONDA_PY}
+          -  cd conda-recipes/tensorflow-metadata-feedstock
+          -  ./ci_support/run_docker_build.sh
 ```
 
-This is a job list adding in package tensorflow-hub for py36 on ppc64le. The `script` section should change into your directory and execute the `run_docker_build.sh` script.
+This is a job list adding in noarch package tensorflow-metadata on ppc64le. The `script` section should change into your directory and execute the `run_docker_build.sh` script.
 Change this to only do your additional package (or fix). There is no need to run other recipes for publish if no changes are made there. Leave the secure tokens as is.
 
 Your new recipe should include a `ci_support` directory with a `run_docker_build.sh` script. The only thing that may change here is the condarc defines for channel enablement. This directory should also include a `build_steps.sh` script. This one should not change much from existing ones aside from perhaps some slight customization.
