@@ -1,0 +1,44 @@
+{% set name = "tensorflow-metadata" %}
+{% set version = "0.13.0" %}
+# This is the recipe for tensorflow-metadata
+package:
+   name: {{ name }}
+   version: {{ version }}
+
+source:
+  git_url: https://github.com/tensorflow/metadata.git
+  git_rev: master 
+  
+build:
+  number: 0
+  noarch: python
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
+    - bazel >=0.24.1
+    - python
+  run:
+    - python 
+    - googleapis-common-protos 
+    - protobuf >=3.7
+
+about:
+  home: https://github.com/tensorflow/metadata.git
+  license: Apache License 2.0
+  license_file: LICENSE
+  summary: "Utilities for passing TensorFlow-related metadata between tools"
+  description: |
+      TensorFlow Metadata provides standard representations for metadata
+      that are useful when training machine learning models with TensorFlow.
+      The metadata serialization formats include- 
+          - A schema describing tabular data (e.g., tf.Examples).
+          - A collection of summary statistics over such datasets.
+          - A problem statement quantifying the objectives of a model.
+      The metadata may be produced by hand or automatically during input data analysis,
+      and may be consumed for data validation, exploration, and transformation. 
+  dev_url: https://github.com/tensorflow/metadata.git
+  doc_url: https://github.com/tensorflow/metadata.git  
+
