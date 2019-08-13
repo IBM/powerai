@@ -23,8 +23,8 @@ env:
 jobs:
   include:
 
-    # tensorflow-metadata recipe
-    - stage: tensorflow-metadata
+    # promise recipe
+    - stage: promise
       language: generic
 
       os: linux-ppc64le
@@ -32,5 +32,5 @@ jobs:
       env: CONFIG=linux_noarch UPLOAD_PACKAGES=True
 
       script:
-          -  cd conda-recipes/tensorflow-metadata-feedstock
+          -  cd conda-recipes/promise-feedstock
           -  ./ci_support/run_docker_build.sh
