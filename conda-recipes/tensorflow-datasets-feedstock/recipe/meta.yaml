@@ -16,8 +16,7 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: {{ COMMIT_COUNT }}
-  string: py_{{ UPSTREAM_HASH }}_{{ COMMIT_COUNT|int + UPSTREAM_COMMIT_COUNT|int }}.{{ GIT_SHORT_HASH }}
+  number: 0 
   noarch: python
 
 requirements:
@@ -28,23 +27,23 @@ requirements:
   run:
    # conda build requirements
      - python
-     - absl-py {{ absl_py }}
-     - dill {{ dill }}
-     - future {{ future }}             # [py2k]
-     - numpy {{ numpy }}
-     - promise {{ promise }}
-     - protobuf >={{ protobuf }}
-     - psutil {{ psutil }}
-     - requests {{ requests }}
-     - six {{ six }}
-     - tensorflow-metadata {{ tensorflow_metadata }}
-     - termcolor {{ termcolor }}
-     - tqdm {{ tqdm }}
-     - wrapt {{ wrapt }}
+     - absl-py
+     - dill
+     - future             # [py2k]
+     - numpy
+     - promise
+     - protobuf >=3.6.1
+     - psutil
+     - requests
+     - six
+     - tensorflow-metadata
+     - termcolor
+     - tqdm
+     - wrapt
      - tensorflow-base >={{ tensorflow_version }}
-     - bz2file {{ bz2file }}           # [py2k]
-     - functools32 {{ functools32 }}   # [py2k]
-     - futures {{ futures }}           # [py2k]
+     - bz2file           # [py2k]
+     - functools32       # [py2k]
+     - futures           # [py2k]
 
 about:
   home: https://github.com/tensorflow/datasets
