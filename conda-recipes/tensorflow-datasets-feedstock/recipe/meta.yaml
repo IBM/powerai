@@ -1,0 +1,60 @@
+{% set version = "1.0.2" %}
+{% set name = "tensorflow-datasets" %}
+{% set sha256 = "a91eae12405dd73622c95f8bb9b6d2ccabcedba9b19b2d3c9fb64892d3399e30" %}
+{% set tensorflow_version = "1.12.0" %}
+
+# This is the recipe for tensorflow-datasets
+package:
+   name: {{ name }}
+   version: {{ version }}
+
+source:
+  fn: {{ name }}-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  #git_url: https://github.com/tensorflow/datasets.git
+  #git_rev: v1.0.2 
+  sha256: {{ sha256 }}
+
+build:
+  number: {{ COMMIT_COUNT }}
+  string: py_{{ UPSTREAM_HASH }}_{{ COMMIT_COUNT|int + UPSTREAM_COMMIT_COUNT|int }}.{{ GIT_SHORT_HASH }}
+  noarch: python
+
+requirements:
+  host:
+     - python
+  build:
+     - git >=2.2 
+  run:
+   # conda build requirements
+     - python
+     - absl-py {{ absl_py }}
+     - dill {{ dill }}
+     - future {{ future }}             # [py2k]
+     - numpy {{ numpy }}
+     - promise {{ promise }}
+     - protobuf >={{ protobuf }}
+     - psutil {{ psutil }}
+     - requests {{ requests }}
+     - six {{ six }}
+     - tensorflow-metadata {{ tensorflow_metadata }}
+     - termcolor {{ termcolor }}
+     - tqdm {{ tqdm }}
+     - wrapt {{ wrapt }}
+     - tensorflow-base >={{ tensorflow_version }}
+     - bz2file {{ bz2file }}           # [py2k]
+     - functools32 {{ functools32 }}   # [py2k]
+     - futures {{ futures }}           # [py2k]
+
+about:
+  home: https://github.com/tensorflow/datasets
+  license: Apache License 2.0
+  summary: "A collection of datasets ready to use with TensorFlow"
+  description: |
+      tensorflow-datasets is a library of public datasets ready to use with
+      TensorFlow. Each dataset definition contains the logic necessary to 
+      download and prepare the dataset, as well as to read it into a model using the
+      `tf.data.Dataset` API.
+      Usage outside of TensorFlow is also supported.
+  dev_url: https://github.com/tensorflow/datasets.git
+  doc_url: https://github.com/tensorflow/datasets.git 

@@ -23,8 +23,8 @@ env:
 jobs:
   include:
 
-    # tensorflow-hub recipe
-    - stage: tensorflow-hub
+    # tensorflow-datasets recipe
+    - stage: tensorflow-datasets
       language: generic
 
       os: linux-ppc64le
@@ -32,5 +32,5 @@ jobs:
       env: CONFIG=linux_noarch UPLOAD_PACKAGES=True
 
       script:
-          -  cd conda-recipes/tensorflow-hub-feedstock # cd to pygdf dir
+          -  cd conda-recipes/tensorflow-datasets-feedstock
           -  ./ci_support/run_docker_build.sh
