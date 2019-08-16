@@ -21,7 +21,7 @@ git clone https://github.com/tensorflow/datasets.git
 cd datasets
 
 echo ${PKG_VERSION}
-TAGNAME=$(git tag --list | grep "${PKG_VERSION}")
+TAGNAME=$(git tag --list | grep "v${PKG_VERSION}")
 git checkout ${TAGNAME}
 
 SYS_PYTHON_MAJOR=$(python -c "import sys;print(sys.version_info.major)")
