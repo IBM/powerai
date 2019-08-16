@@ -40,4 +40,4 @@ rm -rf datasets
 
 # Install the run examples scripts
 mkdir -p "${PREFIX}"/bin
-cp "${RECIPE_DIR}"/tensorflow-datasets-test "${PREFIX}"/bin
+cp "${RECIPE_ROOT}"/run_test.sh "${PREFIX}"/bin
