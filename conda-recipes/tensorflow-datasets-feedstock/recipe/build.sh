@@ -38,6 +38,6 @@ cp -R ./tensorflow_datasets/video/*.txt ${INSTALLED_DIR}/video/
 cd ..
 rm -rf datasets
 
-# Install the run examples scripts
+# Install the test script
 mkdir -p "${PREFIX}"/bin
 cp "${RECIPE_ROOT}"/run_test.sh "${PREFIX}"/bin
