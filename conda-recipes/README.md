@@ -4,7 +4,7 @@ This directory contains community built recipes for additional conda packages of
 
 Packages that are built are published to https://anaconda.org/powerai/
 
-Community PRs are welcome.
+Community PRs are welcome.  This is not an offical IBM product. Support is community based.
 
 ### Recipe Requests
 To request a package recipe to be created and be built, open an issue with the following formatting.
