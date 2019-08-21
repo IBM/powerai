@@ -28,8 +28,9 @@ requirements:
    # conda build requirements
      - python
      - absl-py
+     - attrs
      - dill
-     - future             # [py2k]
+     - future
      - numpy
      - promise
      - protobuf >=3.6.1
@@ -41,6 +42,7 @@ requirements:
      - tqdm
      - wrapt
      - tensorflow-base >={{ tensorflow_version }}
+     - mock              # [py2k]
      - bz2file           # [py2k]
      - functools32       # [py2k]
      - futures           # [py2k]
