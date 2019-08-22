@@ -1,6 +1,6 @@
-{% set version = "1.1.0" %}
+{% set version = "1.2.0" %}
 {% set name = "tensorflow-datasets" %}
-{% set sha256 = "375fda550ba7c44515809752060f1dd8e2d14f01159d8e772ccc73d8e7c92aca" %}
+{% set sha256 = "a3f2c0f9b553cf01f03bc42a84649c93c2acf668e5e82c0e4ce163692cf274d4" %}
 {% set tensorflow_version = "1.14.0" %}
 
 # This is the recipe for tensorflow-datasets
@@ -12,7 +12,7 @@ source:
   fn: {{ name }}-{{ version }}.tar.gz
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   #git_url: https://github.com/tensorflow/datasets.git
-  #git_rev: v1.0.2 
+  #git_rev: v1.2.0 
   sha256: {{ sha256 }}
 
 build:
@@ -35,7 +35,7 @@ requirements:
      - promise
      - protobuf >=3.6.1
      - psutil
-     - requests
+     - requests >=2.19.0
      - six
      - tensorflow-metadata
      - termcolor
