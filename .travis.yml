@@ -26,14 +26,14 @@ env:
 jobs:
   include:
 
-    # tensorflow-datasets recipe
-    - stage: tensorflow-datasets
+    # tktable recipe
+    - stage: tktable
       language: generic
 
       os: linux-ppc64le
 
-      env: CONFIG=linux_noarch UPLOAD_PACKAGES=True
+      env: CONFIG=linux_ UPLOAD_PACKAGES=True
 
       script:
-          -  cd conda-recipes/tensorflow-datasets-feedstock
+          -  cd conda-recipes/tktable-feedstock
           -  ./ci_support/run_docker_build.sh
