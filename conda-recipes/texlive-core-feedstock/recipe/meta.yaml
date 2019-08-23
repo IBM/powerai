@@ -30,9 +30,6 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     # These are needed for linking to cairo
-    #- {{ cdt('libxrender-devel') }}  # [linux]
-    #- {{ cdt('libxext-devel') }}     # [linux]
-    #- {{ cdt('libxau-devel') }}      # [linux]
     - xorg-libxrender
     - xorg-libxext
     - xorg-libxau
