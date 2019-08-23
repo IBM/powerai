@@ -26,14 +26,14 @@ env:
 jobs:
   include:
 
-    # tktable recipe
-    - stage: texlive-core
+    # libice recipe
+    - stage: libice
       language: generic
 
       os: linux-ppc64le
 
-      env: CONFIG=linux_ UPLOAD_PACKAGES=True
+      env: CONFIG=linux_ppc64le_ UPLOAD_PACKAGES=True
 
       script:
-          -  cd conda-recipes/texlive-core-feedstock
+          -  cd conda-recipes/libice-cos7-ppc64le-feedstock
           -  ./ci_support/run_docker_build.sh
