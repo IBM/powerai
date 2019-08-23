@@ -1,4 +1,4 @@
-ipackage:
+package:
   name: libsm-devel-cos7-ppc64le
   version: 1.2.2
 
