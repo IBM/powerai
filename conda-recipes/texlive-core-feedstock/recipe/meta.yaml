@@ -1,0 +1,92 @@
+{% set version = "20180414" %}
+
+package:
+  name: texlive-core
+  version: {{ version }}
+
+source:
+  - url: ftp://tug.org/texlive/historic/2018/texlive-{{ version }}-source.tar.xz
+    sha256: fe0036d5f66708ad973cdc4e413c0bb9ee2385224481f7b0fb229700a0891e4e
+    patches:
+      - texlive-20180414-source-upstream_fixes-3.patch
+
+  # 2.5GB download ..
+  # - url: ftp://tug.org/texlive/historic/2018/texlive-20180414-texmf.tar.xz
+  #   md5: 05330b3b5445ef60b08a0ed660c55c92
+  #   folder: texmf
+  # .. of which we need one file. I checked the sha256 against the one in
+  # texlive-20180414-texmf.tar.xz and they matched. File also included as
+  # part of the recipe, just in-case. In future will need updating.
+  - url: https://www.tug.org/texlive/devsrc/Master/texmf-dist/scripts/texlive/mktexlsr.pl
+    sha256: a1164518f96e76ed37766326da154a2656ab7bda94333049408dbe391bdae16c
+    folder: texmf/texmf-dist/scripts/texlive
+
+build:
+  number: 2
+  detect_binary_files_with_prefix: true
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    # These are needed for linking to cairo
+    #- xorg-libxrender
+    #- xorg-libxext
+    - {{ cdt('libxrender-devel') }}  # [linux]
+    - {{ cdt('libxext-devel') }}     # [linux]
+    - xorg-libxau
+    - pkg-config
+    - texinfo
+    - make
+    - patch  # [unix]
+  host:
+  # --with-system-cairo     use installed cairo headers and library (requires
+  # --with-system-freetype2 use installed freetype2 headers and library
+  # --with-system-gmp       use installed gmp headers and library
+  # --with-system-graphite2 use installed graphite2 headers and library
+  # --with-system-harfbuzz  use installed harfbuzz headers and library (requires
+  # --with-system-icu       use installed ICU headers and libraries (requires
+  # --with-system-libpng    use installed libpng headers and library (requires
+  # --with-system-mpfr      use installed mpfr headers and library
+  # --with-system-pixman    use installed pixman headers and library (requires
+  # --with-system-poppler   use installed poppler headers and library (requires
+  # --with-system-zlib      use installed zlib headers and library
+
+    - cairo
+    - freetype
+    - fontconfig
+    - gmp
+    - graphite2
+    - harfbuzz
+    - icu
+    - libpng
+    - mpfr
+    - pixman
+    - perl
+    - poppler
+    - zlib
+    - git
+    - wget
+
+test:
+  files:
+    - samplefile.tex
+  commands:
+    - kpsewhich -var-value=TEXMFROOT
+    - pdftex --version
+    - bibtex --version
+    # Test the symlinks.
+    - pdflatex --version
+    - latex --version
+    #- pdflatex samplefile.tex
+
+about:
+  home: https://www.tug.org/texlive/
+  license: GPL-2.0+ and GPL-2.0 and GPL-3.0 and LPPL-1.3c and LPPL-1.0 and Artistic-1.0 and Apache-2.0 and MIT and BSD-3-Clause
+  summary: 'An easy way to get up and running with the TeX document production system.'
+
+extra:
+  recipe-maintainers:
+    - jakirkham
+    - mingwandroid
+    - ocefpaf
