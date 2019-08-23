@@ -1,0 +1,10 @@
+c_compiler:
+- gcc
+c_compiler_version:
+- '8'
+channel_sources:
+- conda-forge,defaults,powerai
+channel_targets:
+- powerai main
+docker_image:
+- condaforge/linux-anvil-ppc64le
