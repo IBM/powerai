@@ -1,0 +1,33 @@
+ipackage:
+  name: libsm-devel-cos7-ppc64le
+  version: 1.2.2
+
+source:
+  - url: http://mirror.centos.org/altarch/7.6.1810/os/ppc64le/Packages/libSM-devel-1.2.2-2.el7.ppc64le.rpm
+    sha256: 0967d96cd46a7c47788fd2986dcb234e9fe1dfa21dc81bb44069c33c3cdbce60
+    folder: binary
+
+build:
+  number: 0
+  noarch: generic
+  missing_dso_whitelist:
+    - '*'
+
+requirements:
+  build:
+    - libsm-cos7-ppc64le ==1.2.2
+  run:
+    - libsm-cos7-ppc64le ==1.2.2
+
+test:
+  commands:
+    - test -d "${PREFIX}/ppc64le-conda_cos7-linux-gnu/sysroot"
+  requires:
+    - zlib
+
+about:
+  home:
+  license: LGPLv2/GPLv2
+  license_family: GPL2
+  summary:
+  description: |
