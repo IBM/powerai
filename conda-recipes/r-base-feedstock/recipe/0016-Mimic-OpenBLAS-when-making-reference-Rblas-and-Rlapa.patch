@@ -1,0 +1,60 @@
+From 0597d76fc66adb0f622eb06268da28eacf461176 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Mon, 11 Jun 2018 00:24:44 +0100
+Subject: [PATCH 16/17] Mimic OpenBLAS when making 'reference' Rblas and
+ Rlapack dylibs
+
+---
+ configure    | 12 +++++++++---
+ configure.ac | 12 +++++++++---
+ 2 files changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/configure b/configure
+index 20da6d5dbb..913d095010 100755
+--- a/configure
++++ b/configure
+@@ -28183,9 +28183,15 @@ case "${host_os}" in
+     dylib_ldflags="${darwin_dylib_ldflags}"
+     MAJR_VERSION=`echo "${PACKAGE_VERSION}" | sed  -e "s/[\.][1-9]$/.0/"`
+     LIBR_LDFLAGS="-install_name libR.dylib -compatibility_version ${MAJR_VERSION}  -current_version ${PACKAGE_VERSION}  -headerpad_max_install_names"
+-    RLAPACK_LDFLAGS="-install_name libRlapack.dylib -compatibility_version ${MAJR_VERSION} -current_version ${PACKAGE_VERSION}  -headerpad_max_install_names"
+-    ## don't use version in libRblas so we can replace it with any BLAS implementation
+-    RBLAS_LDFLAGS="-install_name libRblas.dylib -headerpad_max_install_names"
++    if true; then
++      # Be very explicit to mimic OpenBLAS dylibs
++      RLAPACK_LDFLAGS="-install_name @rpath/libopenblas.dylib -compatibility_version 0.0.0  -current_version 0.0.0  -headerpad_max_install_names"
++      RBLAS_LDFLAGS="-install_name @rpath/libopenblas.dylib -compatibility_version 0.0.0  -current_version 0.0.0  -headerpad_max_install_names"
++    else
++      RLAPACK_LDFLAGS="-install_name libRlapack.dylib -compatibility_version ${MAJR_VERSION} -current_version ${PACKAGE_VERSION}  -headerpad_max_install_names"
++      ## don't use version in libRblas so we can replace it with any BLAS implementation
++      RBLAS_LDFLAGS="-install_name libRblas.dylib -headerpad_max_install_names"
++    fi
+     ;;
+   hpux*)
+     ## Needs to avoid embedding a relative path ../../../bin.
+diff --git a/configure.ac b/configure.ac
+index 5e31a157b2..fb335e893f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1654,9 +1654,15 @@ case "${host_os}" in
+     dylib_ldflags="${darwin_dylib_ldflags}"
+     MAJR_VERSION=`echo "${PACKAGE_VERSION}" | sed  -e "s/[[\.]][[1-9]]$/.0/"` 
+     LIBR_LDFLAGS="-install_name libR.dylib -compatibility_version ${MAJR_VERSION}  -current_version ${PACKAGE_VERSION}  -headerpad_max_install_names"
+-    RLAPACK_LDFLAGS="-install_name libRlapack.dylib -compatibility_version ${MAJR_VERSION} -current_version ${PACKAGE_VERSION}  -headerpad_max_install_names"
+-    ## don't use version in libRblas so we can replace it with any BLAS implementation
+-    RBLAS_LDFLAGS="-install_name libRblas.dylib -headerpad_max_install_names"
++    if true; then
++      # Be very explicit to mimic OpenBLAS dylibs
++      RLAPACK_LDFLAGS="-install_name @rpath/libopenblas.dylib -compatibility_version 0.0.0  -current_version 0.0.0  -headerpad_max_install_names"
++      RBLAS_LDFLAGS="-install_name @rpath/libopenblas.dylib -compatibility_version 0.0.0  -current_version 0.0.0  -headerpad_max_install_names"
++    else
++      RLAPACK_LDFLAGS="-install_name libRlapack.dylib -compatibility_version ${MAJR_VERSION} -current_version ${PACKAGE_VERSION}  -headerpad_max_install_names"
++      ## don't use version in libRblas so we can replace it with any BLAS implementation
++      RBLAS_LDFLAGS="-install_name libRblas.dylib -headerpad_max_install_names"
++    fi
+     ;;
+   hpux*)
+     ## Needs to avoid embedding a relative path ../../../bin.
+-- 
+2.18.0
+

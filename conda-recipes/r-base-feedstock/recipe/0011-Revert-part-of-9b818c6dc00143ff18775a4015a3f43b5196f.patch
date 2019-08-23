@@ -1,0 +1,41 @@
+From 38c2dc59bc227b5173d750f12933c4c744345ad6 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Sun, 29 Apr 2018 19:27:02 +0100
+Subject: [PATCH 11/17] Revert part of 9b818c6dc00143ff18775a4015a3f43b5196fa31
+ (support for old Java on macOS)
+
+---
+ src/scripts/javareconf.in | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/src/scripts/javareconf.in b/src/scripts/javareconf.in
+index 5dbe3a3e9a..ca72145269 100644
+--- a/src/scripts/javareconf.in
++++ b/src/scripts/javareconf.in
+@@ -199,6 +199,23 @@ custom_JAVA_CPPFLAGS="${JAVA_CPPFLAGS}"
+ custom_JAVA_LD_LIBRARY_PATH="${JAVA_LD_LIBRARY_PATH}"
+ 
+ 
++# sys-dependent tweaks to JNI flags
++hostos=`uname 2>/dev/null`
++if test "${hostos}" = "Darwin"; then
++     ## This changed for Java 9.
++     ## pref=`echo "${JAVA_HOME}" | grep "/Home$"`
++     pref=`echo "${JAVA_HOME}" | grep "^/System/Library"`
++     if test "${pref}" = "${JAVA_HOME}"; then
++       echo "System Java on macOS"
++       JAVA_CPPFLAGS="-I/System/Library/Frameworks/JavaVM.framework/Headers"
++       JAVA_LIBS="-framework JavaVM"
++       JAVA_LD_LIBRARY_PATH=
++       has_libjvm=unknown
++    else
++       echo "Non-system Java on macOS"
++    fi
++fi
++
+ # sys-dependent tweaks to JNI flags -- Darwin ones removed for R 3.5
+ 
+ ## we now look for a path to put in R_LD_LIBRARY_PATH which will
+-- 
+2.18.0
+

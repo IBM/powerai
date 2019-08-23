@@ -1,0 +1,2 @@
+export JDK_HOME=/usr/lib/jvm/java
+export JAVA_HOME=${JDK_HOME}/jre

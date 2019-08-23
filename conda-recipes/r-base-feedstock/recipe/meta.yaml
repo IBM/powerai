@@ -1,0 +1,183 @@
+{% set native = 'm2w64-' if win else '' %}
+{% set posix= 'm2-' if win else '' %}
+{% set version= '3.4.3' %}
+
+package:
+  name: r-base
+  version: {{ version }}
+
+source:
+  url: https://cran.r-project.org/src/base/R-3/R-{{ version }}.tar.gz
+  sha256: 7a3cb831de5b4151e1f890113ed207527b7d4b16df9ec6b35e0964170007f426
+  patches:
+    - 0001-Darwin-Remove-unicode-elipsis-character-from-grDevic.patch
+    - 0002-Fix-trio-config.h-include-depth-issue.patch
+    - 0003-Win32-Do-not-link-static-libgcc.patch
+    - 0004-Win32-Extend-sqrt-NA_real_-hack-to-all-GCC-versions.patch
+    - 0005-Win32-Prevent-conversion-of-R_ARCH-to-abs-Windows-pa.patch
+    - 0006-Darwin-Avoid-setting-DYLD_FALLBACK_LIBRARY_PATH.patch
+    - 0007-Use-AC_SEARCH_LIBS-to-search-for-ncursesw-then-ncurs.patch
+    - 0008-Linux-Do-not-modify-LD_LIBRARY_PATH.patch
+    - 0009-macOS-include-cairo.h-not-cairo-xlib.h.patch
+    - 0010-javareconf-Do-not-fail-on-compile-fail.patch
+    - 0011-javareconf-macOS-Continue-to-allow-system-Java-lt-9-.patch
+    - 0012-Allow-rpath-in-tcltk-dylib-LC_LOAD_DYLIB.patch
+
+build:
+  merge_build_host: True  # [win]
+  number: 5
+  rpaths:
+    - lib/R/lib/
+    - lib/
+  no_link:
+    # These files are modified by R CMD javareconf and can
+    # point to different Java implementations in each env.
+    - lib/R/etc/Makeconf
+    - lib/R/etc/ldpaths
+    - lib/R/etc/javaconf
+    - lib/R/etc/x64/Makeconf
+    - lib/R/etc/x64/ldpaths
+    - lib/R/etc/x64/javaconf
+  detect_binary_files_with_prefix: true
+  # The current openblas-devel run exports
+  # are overly restrictive IMHO, should be
+  # open-ended, but actually because we
+  # need to copy the shared library into this
+  # package and change its SONAME to libRblas.so
+  # we do not want a run dependency on openblas
+  # at all (otherwise Matrix.so ends up with a
+  # DT_NEEDED of libopenblas.so and cannot be used
+  # against any old libRblas.so)
+  ignore_run_exports:
+    - libopenblas
+    - ncurses
+    - blas
+    - libstdcxx-ng
+
+requirements:
+  build:
+    - {{ compiler('c') }}                # [not win]
+    - {{ compiler('cxx') }}              # [not win]
+    - {{ compiler('fortran') }}          # [not win]
+    - make                               # [not win]
+    - {{native}}toolchain                # [win]
+    - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
+    - {{ cdt('libxrender') }}            # [linux]
+    - {{ cdt('libxext') }}               # [linux]
+    - {{ cdt('libuuid') }}               # [linux]
+    #- {{ cdt('libsm-devel') }}           # [linux]
+    - xorg-libsm                        # [linux]
+    #- {{ cdt('libice-devel') }}          # [linux]
+    - xorg-libice                        # [linux]
+    - {{ cdt('libx11-devel') }}          # [linux]
+    #- {{ cdt('libxt') }}                 # [linux]
+    #- {{ cdt('libxt-devel') }}           # [linux]
+    - xorg-libxt                         # [linux]
+    - {{ cdt('libxcb') }}                # [linux]
+    - {{ cdt('libxau') }}                # [linux]
+    - {{ cdt('java-1.7.0-openjdk') }}    # [linux]
+    - {{posix}}pkg-config
+    - llvm-openmp >=4.0.1                # [osx]
+    - posix                              # [win]
+    - m2-texinfo-tex                     # [win]
+    - m2-texinfo                         # [win]
+    - m2-curl                            # [win]
+    - m2-p7zip                           # [win]
+    - texlive-core                       # [unix]
+    - {{posix}}autoconf
+    - {{posix}}automake-wrapper          # [win]
+    - {{posix}}automake                  # [not win]
+  host:
+    # This is a hack, strong run_exports should cause this to be added
+    - llvm-openmp >=4.0.1                # [osx]
+    - libgfortran                        # [osx]
+    - readline 7.*                       # [not win]
+    - ncurses                            # [not win]
+    - libcurl                            # [not win]
+    - xz                                 # [not win]
+    - libpng                             # [not win]
+    - {{native}}bzip2 1.0.*
+    - {{native}}cairo                    # [not win]
+    - {{native}}libjpeg-turbo            # [win]
+    - {{native}}jpeg                     # [not win]
+    - {{native}}libiconv                 # [not linux]
+    - {{native}}gmp                      # [win]
+    - {{native}}glib                     # [linux]
+    - {{native}}fftw                     # [win]
+    - {{native}}xz                       # [win]
+    - {{native}}mpfr                     # [win]
+    - {{native}}libsndfile               # [win]
+    - {{native}}bwidget
+    - {{native}}tktable
+    - {{native}}libpng                   # [win]
+    - {{native}}pango 1.40.*             # [not win]
+    - {{native}}icu
+    - {{native}}pcre
+    - {{native}}tk                       # [win]
+    - {{native}}tk 8.6.*                 # [not win]
+    - {{native}}zlib 1.2.8               # [win]
+    - {{native}}zlib                     # [not win]
+    - {{native}}libtiff >=4.0.3,<4.0.8   # [win]
+    - {{native}}libtiff                  # [not win]
+    - {{native}}libxml2 2.9.*            # [win]
+    - {{native}}openblas-devel >=0.2.20  # [linux]
+    - {{native}}openblas                 # [win]
+
+  run:
+    - _r-mutex 1.* anacondar_1
+    - {{ compiler('c') }}                # [not win]
+    - {{ compiler('cxx') }}              # [not win]
+    - {{ compiler('fortran') }}          # [not win]
+    - llvm-openmp >=4.0.1                # [osx]
+    - readline 7.*                       # [not win]
+    - {{native}}gcc-libs                 # [win]
+    - libcurl                            # [not win]
+    - curl                               # [not win]
+    - {{native}}bzip2 1.0.*              # [win]
+    - {{native}}libjpeg-turbo            # [win]
+    - {{native}}libiconv                 # [win]
+    - {{native}}gmp                      # [win]
+    - {{native}}fftw                     # [win]
+    - {{native}}xz                       # [win]
+    - {{native}}mpfr                     # [win]
+    - {{native}}libsndfile               # [win]
+    - {{native}}bwidget
+    - {{native}}tktable
+    - {{native}}libpng                   # [win]
+    - {{native}}pango 1.*                # [not win]
+    - {{native}}pcre
+    - {{native}}tk                       # [win]
+    - {{native}}tk 8.6.*                 # [not win]
+    - {{native}}zlib 1.2.8               # [win]
+    - {{native}}libtiff >=4.0.3,<4.0.8   # [win]
+    - {{native}}openblas                 # [win]
+
+test:
+  commands:
+    - R -h
+    - R --version
+    - $R -e "library('tcltk')"           # [not win]
+    - "\"%R%\" -e \"library('tcltk')\""  # [win]
+    - Rscript --version
+    - Rscript -e  'cat("ok\\n")'
+    - open  # [win]
+    # There doesn't seem to be a way to test this one
+    # - RSetReg  # [win]
+    - Rfe --help  # [win]
+    - Rterm --help  # [win]
+    - Rterm --version  # [win]
+
+about:
+  home: http://www.r-project.org/
+  license: GPL-3.0
+  license_family: GPL
+  license_file: COPYING
+  summary: 'R is a free software environment for statistical computing and graphics.'
+
+extra:
+  recipe-maintainers:
+    - bgruening
+    - johanneskoester
+    - mingwandroid
+    - ocefpaf
+    - sodre
