@@ -9,4 +9,4 @@ channel_targets:
 docker_image:
 - condaforge/linux-anvil-ppc64le
 fortran_compiler:
-- gfortan
+- gfortran
