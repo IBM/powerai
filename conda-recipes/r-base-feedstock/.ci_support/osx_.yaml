@@ -1,0 +1,79 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '10.9'
+c_compiler:
+- toolchain_c
+cairo:
+- '1.14'
+curl:
+- '7.59'
+fortran_compiler:
+- toolchain_fort
+gsl:
+- '2.2'
+icu:
+- '58'
+jpeg:
+- '9'
+krb5:
+- '1.14'
+libpng:
+- 1.6.34
+libssh2:
+- '1.8'
+libtiff:
+- 4.0.9
+libxml2:
+- '2.9'
+macos_machine:
+- x86_64-apple-darwin13.4.0
+macos_min_version:
+- '10.9'
+ncurses:
+- '6.1'
+openssl:
+- 1.0.2
+pango:
+- '1.40'
+pin_run_as_build:
+  cairo:
+    max_pin: x.x
+  curl:
+    max_pin: x
+  gsl:
+    max_pin: x.x
+  icu:
+    max_pin: x
+  jpeg:
+    max_pin: x
+  krb5:
+    max_pin: x.x
+  libpng:
+    max_pin: x.x
+  libssh2:
+    max_pin: x.x
+  libtiff:
+    max_pin: x
+  libxml2:
+    max_pin: x.x
+  ncurses:
+    max_pin: x.x
+  openssl:
+    max_pin: x.x.x
+  pango:
+    max_pin: x.x
+  readline:
+    max_pin: x
+  tk:
+    max_pin: x.x
+  xz:
+    max_pin: x.x
+  zlib:
+    max_pin: x.x
+readline:
+- '7.0'
+tk:
+- '8.6'
+xz:
+- '5.2'
+zlib:
+- '1.2'
