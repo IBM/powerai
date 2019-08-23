@@ -27,7 +27,7 @@ jobs:
   include:
 
     # tktable recipe
-    - stage: tktable
+    - stage: texlive-core
       language: generic
 
       os: linux-ppc64le
@@ -35,5 +35,5 @@ jobs:
       env: CONFIG=linux_ UPLOAD_PACKAGES=True
 
       script:
-          -  cd conda-recipes/tktable-feedstock
+          -  cd conda-recipes/texlive-core-feedstock
           -  ./ci_support/run_docker_build.sh
