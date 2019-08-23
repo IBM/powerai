@@ -1,0 +1,33 @@
+package:
+  name: libice-devel-cos7-ppc64le
+  version: 1.0.9
+
+source:
+  - url: http://mirror.centos.org/altarch/7.6.1810/os/ppc64le/Packages/libICE-devel-1.0.9-9.el7.ppc64le.rpm
+    sha256: 6e623317f8ca06df5724db8d1cc7f18a95f695cdd9a5d12e4861e002e8411ee6
+    folder: binary
+
+build:
+  number: 0
+  noarch: generic
+  missing_dso_whitelist:
+    - '*'
+
+requirements:
+  build:
+    - libice-cos7-ppc64le ==1.0.9
+  run:
+    - libice-cos7-ppc64le ==1.0.9
+
+test:
+  commands:
+    - test -d "${PREFIX}/ppc64le-conda_cos7-linux-gnu/sysroot"
+  requires:
+    - zlib
+
+about:
+  home:
+  license: LGPLv2/GPLv2
+  license_family: GPL2
+  summary:
+  description: |
