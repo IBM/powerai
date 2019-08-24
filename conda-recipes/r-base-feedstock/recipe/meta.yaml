@@ -121,7 +121,7 @@ requirements:
     - {{native}}openblas                 # [win]
 
   run:
-    - _r-mutex 1.* anacondar_1
+    #- _r-mutex 1.* anacondar_1
     - {{ compiler('c') }}                # [not win]
     - {{ compiler('cxx') }}              # [not win]
     - {{ compiler('fortran') }}          # [not win]
