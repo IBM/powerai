@@ -107,7 +107,7 @@ requirements:
     - {{native}}bwidget
     - {{native}}tktable
     - {{native}}libpng                   # [win]
-    - {{native}}pango 1.40.*             # [not win]
+    - {{native}}pango 1.42.*             # [not win]
     - {{native}}icu
     - {{native}}pcre
     - {{native}}tk                       # [win]
