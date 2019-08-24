@@ -26,8 +26,8 @@ env:
 jobs:
   include:
 
-    # libxt-devel recipe
-    - stage: libxt-devel
+    # texlive-core recipe
+    - stage: texlive-core
       language: generic
 
       os: linux-ppc64le
@@ -35,5 +35,5 @@ jobs:
       env: CONFIG=linux_ppc64le_ UPLOAD_PACKAGES=True
 
       script:
-          -  cd conda-recipes/libxt-devel-cos7-ppc64le-feedstock
+          -  cd conda-recipes/texlive-core-feedstock
           -  ./ci_support/run_docker_build.sh
