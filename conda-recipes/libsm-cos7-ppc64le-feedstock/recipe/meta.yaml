@@ -3,25 +3,23 @@ package:
   version: 1.2.2
 
 source:
-  - url: http://mirror.centos.org/altarch/7.6.1810/os/ppc64le/Packages/libSM-1.2.2-2.el7.ppc64le.rpm
+  - folder: binary
     sha256: 055ac077f6605a51578a525898f0a284a9a23b02667d0bf5ef5f99ac842c2ea0
-    folder: binary
+    url: http://mirror.centos.org/altarch/7/os/ppc64le/Packages/libSM-1.2.2-2.el7.ppc64le.rpm
+  - folder: source
+    url: http://vault.centos.org/7.6.1810/os/Source/SPackages/libSM-1.2.2-2.el7.src.rpm
 
 build:
   number: 0
   noarch: generic
   missing_dso_whitelist:
     - '*'
-
-test:
-  commands:
-    - test -d "${PREFIX}/ppc64le-conda_cos7-linux-gnu/sysroot"
-  requires:
-    - zlib
-
 about:
-  home:
-  license: LGPLv2/GPLv2
-  license_family: GPL2
-  summary:
-  description: |
+  description: 'The X.Org X11 SM (Session Management) runtime library.'
+  home: http://www.x.org
+  license: MIT
+  license_family: MIT
+  summary: (CDT) X.Org X11 SM runtime library
+extra:
+  copy_test_source_files: true
+  final: true
