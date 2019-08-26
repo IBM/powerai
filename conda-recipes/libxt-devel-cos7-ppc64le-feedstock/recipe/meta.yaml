@@ -5,7 +5,7 @@ package:
 source:
   - folder: binary
     sha256: 823b99d22ff9ce483f8f2ea9a4f8435547b52e06037b85aaf1a0e2902fde9a87
-    url: http://mirror.centos.org/altarch/7.6.1810/os/ppc64le/Packages/libXt-devel-1.1.5-3.el7.ppc64le.rpm
+    url: http://mirror.centos.org/altarch/7/os/ppc64le/Packages/libXt-devel-1.1.5-3.el7.ppc64le.rpm
   - folder: source
     url: http://vault.centos.org/7.6.1810/os/Source/SPackages/libXt-1.1.5-3.el7.src.rpm
     sha256: 2ed20bbe0683467fa8f66bc028a282c93569525d95ff38295b9d22af560b102a
