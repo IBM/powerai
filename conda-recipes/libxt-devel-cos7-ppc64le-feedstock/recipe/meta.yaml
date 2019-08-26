@@ -13,6 +13,8 @@ source:
 build:
   number: 0
   noarch: generic
+  missing_dso_whitelist:
+    - '*'
 requirements:
   build:
     - libxt-cos7-ppc64le ==1.1.5
