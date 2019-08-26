@@ -67,6 +67,7 @@ requirements:
     - {{ cdt('libuuid') }}               # [linux]
     - {{ cdt('libsm-devel') }}           # [linux]
     - {{ cdt('libice-devel') }}          # [linux]
+    - {{ cdt('libx11-devel') }}          # [linux]
     - {{ cdt('libxt') }}                 # [linux]
     - {{ cdt('libxt-devel') }}           # [linux]
     - {{ cdt('libxcb') }}                # [linux]
