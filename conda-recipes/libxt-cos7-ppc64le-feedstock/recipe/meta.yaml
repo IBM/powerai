@@ -24,4 +24,4 @@ about:
   summary: (CDT) X.org X11 libXt runtime library
 extra:
   copy_test_source_files: true
-  final:true
+  final: true
