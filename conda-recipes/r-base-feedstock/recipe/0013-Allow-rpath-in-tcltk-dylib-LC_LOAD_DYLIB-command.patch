@@ -1,0 +1,25 @@
+From 69eda19e57f193d457885b193a3d6bdfe9d05479 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Sun, 29 Apr 2018 19:30:59 +0100
+Subject: [PATCH 13/17] Allow @rpath in tcltk dylib LC_LOAD_DYLIB command
+
+---
+ src/library/tcltk/R/unix/zzz.R | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/library/tcltk/R/unix/zzz.R b/src/library/tcltk/R/unix/zzz.R
+index e33405f0e8..8c8bdc5a27 100644
+--- a/src/library/tcltk/R/unix/zzz.R
++++ b/src/library/tcltk/R/unix/zzz.R
+@@ -49,7 +49,7 @@
+             if(length(ind)) {
+                 this <- sub(" .*", "", sub("^\t", "", out[ind]))
+                 ##  message("tcltk DLL is linked to ", shQuote(this))
+-                if(!file.exists(this))
++                if(!file.exists(this) && !grepl("@rpath",this))
+                     stop("Tcl/Tk libraries are missing: install the Tcl/Tk component from the R installer",
+                          domain = NA)
+             }
+-- 
+2.18.0
+

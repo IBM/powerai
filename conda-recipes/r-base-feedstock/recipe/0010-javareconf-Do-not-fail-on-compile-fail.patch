@@ -1,0 +1,37 @@
+From 2da3db3d202cb7383f4c0c369bab4784ba27cc0d Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Tue, 2 Jan 2018 15:53:45 +0000
+Subject: [PATCH 10/10] javareconf: Do not fail on compile fail
+
+---
+ src/scripts/javareconf.in | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/src/scripts/javareconf.in b/src/scripts/javareconf.in
+index cd379725f0..42879a5589 100644
+--- a/src/scripts/javareconf.in
++++ b/src/scripts/javareconf.in
+@@ -356,10 +356,16 @@ ${R_HOME}/bin/R CMD SHLIB conftest.c
+ ac_status=$?
+ 
+ if test $ac_status != 0; then
+-  echo "Unable to compile a JNI program"
+-  JAVA_LD_LIBRARY_PATH=
+-  JAVA_LIBS=
+-  JAVA_CPPFLAGS=
++  echo "Unable to compile a JNI program, ignoring this though as you may not want to compile anything here"
++  echo ".. this is an Anaconda Distribution and conda-forge customization whereby env activation causes us"
++  echo ".. to call R CMD javareconf in order to dynamically detect a JDK that may be in that env. The fact"
++  echo ".. that we prohibit setting LD_LIBRARY_PATH is also somewhat responsible for us needing to do this"
++  echo ".. because \${R_HOME}/etc/ldpaths is the normal way that R dynamically finds shared libraries. This"
++  echo ".. is what would, in upstream R, set LD_LIBRARY_PATH. AD cannot set this as it causes all sorts of"
++  echo ".. issues with DT_RUNPATH / DT_RPATH on various distributions."
++  # JAVA_LD_LIBRARY_PATH=
++  # JAVA_LIBS=
++  # JAVA_CPPFLAGS=
+ fi
+ 
+ rm -f conftest.c conftest.o conftest.so Makevars
+-- 
+2.14.3 (Apple Git-98)
+

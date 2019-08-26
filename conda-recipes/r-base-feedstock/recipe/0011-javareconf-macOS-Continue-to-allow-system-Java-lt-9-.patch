@@ -1,0 +1,42 @@
+From d07087d0f661aaae4e9c1930ad3561bd3275a5d4 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Sun, 7 Jan 2018 11:35:05 +0000
+Subject: [PATCH 11/11] javareconf (macOS): Continue to allow system Java lt 9
+ to be detected as such
+
+Java 9 is for macOS 10.10 and above, we still support 10.9
+
+Without this change:
+JAVA_HOME        : /Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
+Java library path: /Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries
+JNI cpp flags    :
+JNI linker flags : -L/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries -ljvm
+
+With this change:
+JAVA_HOME        : /Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
+Java library path:
+JNI cpp flags    : -I/System/Library/Frameworks/JavaVM.framework/Headers
+JNI linker flags : -framework JavaVM
+
+The problems without this change are that libjvm.so on Apple's Java 1.6.0 JDK (2015 and 2017)
+is 32-bit only and jni.h does not get found without JNI cpp flags being set.
+---
+ src/scripts/javareconf.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/scripts/javareconf.in b/src/scripts/javareconf.in
+index 42879a5589..420fe126f6 100644
+--- a/src/scripts/javareconf.in
++++ b/src/scripts/javareconf.in
+@@ -199,7 +199,7 @@ hostos=`uname 2>/dev/null`
+ if test "${hostos}" = "Darwin"; then
+      ## This changed for Java 9.
+      ## pref=`echo "${JAVA_HOME}" | grep "/Home$"`
+-     pref=`echo "${JAVA_HOME}" | grep "^/System/Library"`
++     pref=`echo "${JAVA_HOME}" | grep "^/System/Library\|/Home$"`
+      if test "${pref}" = "${JAVA_HOME}"; then 
+        echo "System Java on macOS"
+        JAVA_CPPFLAGS="-I/System/Library/Frameworks/JavaVM.framework/Headers"
+-- 
+2.14.3 (Apple Git-98)
+
