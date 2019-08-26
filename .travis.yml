@@ -26,8 +26,8 @@ env:
 jobs:
   include:
 
-    # libice recipe
-    - stage: libice
+    # libice-devel recipe
+    - stage: libice-devel
       language: generic
 
       os: linux-ppc64le
@@ -35,5 +35,5 @@ jobs:
       env: CONFIG=linux_ppc64le_ UPLOAD_PACKAGES=True
 
       script:
-          -  cd conda-recipes/libice-cos7-ppc64le-feedstock
+          -  cd conda-recipes/libice-devel-cos7-ppc64le-feedstock
           -  ./ci_support/run_docker_build.sh
