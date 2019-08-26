@@ -3,32 +3,27 @@ package:
   version: 1.1.5
 
 source:
-  - url: http://mirror.centos.org/altarch/7.6.1810/os/ppc64le/Packages/libXt-devel-1.1.5-3.el7.ppc64le.rpm
+  - folder: binary
     sha256: 823b99d22ff9ce483f8f2ea9a4f8435547b52e06037b85aaf1a0e2902fde9a87
-    folder: binary
+    url: http://mirror.centos.org/altarch/7.6.1810/os/ppc64le/Packages/libXt-devel-1.1.5-3.el7.ppc64le.rpm
+  - folder: source
+    url: http://vault.centos.org/7.6.1810/os/Source/SPackages/libXt-1.1.5-3.el7.src.rpm
+    sha256: 2ed20bbe0683467fa8f66bc028a282c93569525d95ff38295b9d22af560b102a
 
 build:
   number: 0
   noarch: generic
-  missing_dso_whitelist:
-    - '*'
-
 requirements:
-  build:
-    - libxt-cos7-ppc64le ==1.1.5
   run:
     - libxt-cos7-ppc64le ==1.1.5
 
-test:
-  commands:
-    - test -d "${PREFIX}/ppc64le-conda_cos7-linux-gnu/sysroot"
-  requires:
-    - zlib
-
 about:
-  home:
-  license: LGPLv2/GPLv2
-  license_family: GPL2
-  summary:
-  description: |
+  description: 'X.Org X11 libXt development package'
+  home: http://www.x.org
+  license: MIT
+  license_family: MIT
+  summary: (CDT) X.org X11 libXt development package
+extra:
+  copy_test_source_files: true
+  final: true
 
