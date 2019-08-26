@@ -60,6 +60,7 @@ requirements:
     - {{ compiler('cxx') }}              # [not win]
     - {{ compiler('fortran') }}          # [not win]
     - make                               # [not win]
+    - patchelf ==0.9
     - {{native}}toolchain                # [win]
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
     - {{ cdt('libxrender') }}            # [linux]

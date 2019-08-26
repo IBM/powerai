@@ -28,6 +28,9 @@ conda-build:
 
 CONDARC
 
+# install the need yum pre-reqs
+sudo yum -y install $(recipe/yum_requirements.txt)
+
 conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
 
 # set up the condarc
@@ -35,6 +38,9 @@ setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
 # make the build number clobber
 make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
+
+# patchelf from conda-forge (0.10) causes errors. Use 0.9 from defaults
+conda install patchelf=0.9
 
 conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
     --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"

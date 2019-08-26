@@ -36,5 +36,4 @@ jobs:
 
       script:
           -  cd conda-recipes/r-base-feedstock
-          -  sudo yum -y install $(recipe/yum_requirements.txt)
           -  ./ci_support/run_docker_build.sh
