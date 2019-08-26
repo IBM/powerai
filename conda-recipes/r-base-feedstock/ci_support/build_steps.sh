@@ -29,7 +29,7 @@ conda-build:
 CONDARC
 
 # install the need yum pre-reqs
-sudo yum -y install $(recipe/yum_requirements.txt)
+sudo yum -y install $(cat /home/conda/feedstock_root/recipe/yum_requirements.txt)
 
 conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
 
