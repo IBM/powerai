@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#Save parameters
+PKG_VERSION=$1
+
+echo "Test Case: openjdk-${PKG_VERSION}"
+
+# Make sure libjawt.so exists
+LIBJAWT=$(find ${PREFIX} -type f -name "libjawt.so")
+if [[ -z "${LIBJAWT}" ]]; then
+    echo "ERROR: Could not find libjawt.so"
+    exit 1
+fi
+
+# Make sure libawt_xawt.so exists
+XAWT=$(find ${PREFIX} -type f -name "libawt_xawt.so")
+if [[ -z "${XAWT}" ]]; then
+    echo "ERROR: Could not find libawt_xawt.so"
+    exit 1
+fi
+
