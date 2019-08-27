@@ -22,7 +22,7 @@ requirements:
     - {{ compiler('cxx') }}
     - patch  # [unix]
   host:
-    - java-openjdk-ppc64le >=1.8.0 # [ppc64le]
+    - java-1.8.0-openjdk-headless-ppcl64le # [ppc64le]
     - openjdk >=8,<11              # [x86_64]
     - unzip                        # [linux]
     - zip                          # [linux]
