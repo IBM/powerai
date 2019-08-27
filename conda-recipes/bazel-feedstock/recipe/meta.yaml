@@ -1,8 +1,8 @@
 {% set sha256sum = "c0e94f8f818759f3f67af798c38683520c540f469cb41aea8f5e5a0e43f11600" %}
-
+{% set version = "0.26.1" %}
 package:
   name: bazel
-  version: 0.26.1
+  version: {{ version }}
 
 source:
   url: https://github.com/bazelbuild/bazel/releases/download/{{ version }}/bazel-{{ version }}-dist.zip
@@ -22,7 +22,7 @@ requirements:
     - {{ compiler('cxx') }}
     - patch  # [unix]
   host:
-    - java-openjdk-ppc64le ==1.8.0 # [ppc64le]
+    - java-openjdk-ppc64le >=1.8.0 # [ppc64le]
     - openjdk >=8,<11              # [x86_64]
     - unzip                        # [linux]
     - zip                          # [linux]
