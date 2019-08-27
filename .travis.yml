@@ -26,8 +26,8 @@ env:
 jobs:
   include:
 
-    # r-base recipe
-    - stage: r-base
+    # bazel recipe
+    - stage: bazel
       language: generic
 
       os: linux-ppc64le
@@ -35,5 +35,5 @@ jobs:
       env: CONFIG=linux_ppc64le_ UPLOAD_PACKAGES=True
 
       script:
-          -  cd conda-recipes/r-base-feedstock
+          -  cd conda-recipes/bazel-feedstock
           -  ./ci_support/run_docker_build.sh
