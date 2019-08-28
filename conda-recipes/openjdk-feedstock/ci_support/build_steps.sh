@@ -21,10 +21,6 @@ export RECIPE_ROOT=/home/conda/recipe_root
 export CI_SUPPORT=/home/conda/feedstock_root/.ci_support
 export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
 
-# This is needed as latest conda-build 3.18 has an issue
-# wherein it tries to use lief along with patchelf for rpaths additions
-conda install -y conda-build=3.16
-
 cat >~/.condarc <<CONDARC
 
 conda-build:
@@ -35,7 +31,9 @@ CONDARC
 conda config --prepend channels https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/
 export IBM_POWERAI_LICENSE_ACCEPT=yes
 
-conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
+# This is needed as latest conda-build 3.18 has an issue
+# wherein it tries to use lief along with patchelf for rpaths additions
+conda install --yes --quiet conda-forge-ci-setup=2 conda-build=3.16 -c conda-forge
 
 # set up the condarc
 setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
