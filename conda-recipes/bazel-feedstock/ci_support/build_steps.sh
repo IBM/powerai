@@ -21,6 +21,10 @@ export RECIPE_ROOT=/home/conda/recipe_root
 export CI_SUPPORT=/home/conda/feedstock_root/.ci_support
 export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
 
+# Bazel needs jdk 1.8 whose conda package isn't available for CentOS
+yum -y update
+yum install -y java-1.8.0-openjdk
+
 cat >~/.condarc <<CONDARC
 
 conda-build:
