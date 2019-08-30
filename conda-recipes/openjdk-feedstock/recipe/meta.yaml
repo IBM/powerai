@@ -1,0 +1,35 @@
+{% set java_version = "1.8.0_202"%}
+{% set jdk_version = "8" %}
+{% set sha256sum = "485533573e0a6aa4188a9adb336d24e795f9de8c59499d5b88a651b263fa1c34" %}
+{% set build_number = "202-b08" %}
+
+package:
+    name: java-openjdk-ppc64le
+    version: {{ java_version }}
+
+source:
+  - url: https://github.com/AdoptOpenJDK/openjdk{{ jdk_version }}-binaries/releases/download/jdk{{ jdk_version }}u{{ build_number }}/OpenJDK{{ jdk_version }}U-jdk_ppc64le_linux_hotspot_{{ jdk_version }}u{{ build_number.replace('-','') }}.tar.gz
+    sha256: {{ sha256sum }}
+
+build:
+  number: 0
+  missing_dso_whitelist:
+  - '*'
+
+test:
+    files:
+     - existence_test
+    commands:
+     - java -version
+     - bash existence_test {{ java_version }}
+
+outputs:
+  - name: java-openjdk-ppc64le
+
+    about:
+      home: http://openjdk.java.net/
+      license: ASL 1.1 and ASL 2.0 and GPL+ and GPLv2 and GPLv2 with exceptions and LGPL+ and LGPLv2 and MPLv1.0 and MPLv1.1 and Public Domain and W3C
+      license_family: GPL2
+      summary: "(CDT) OpenJDK Runtime Environment"
+      description: |
+        The OpenJDK runtime environment.
