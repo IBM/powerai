@@ -35,6 +35,9 @@ export IBM_POWERAI_LICENSE_ACCEPT=yes
 # wherein it tries to use lief along with patchelf for rpaths additions
 conda install --yes --quiet conda-forge-ci-setup=2 conda-build=3.16 -c conda-forge
 
+# patchelf from conda-forge (0.10) causes errors. Use 0.9 from defaults
+conda install -y patchelf=0.9
+
 # set up the condarc
 setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
