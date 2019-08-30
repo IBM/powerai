@@ -32,7 +32,7 @@ jobs:
 
       os: linux-ppc64le
 
-      env: CONFIG=linux_ppc64le_ UPLOAD_PACKAGES=True
+      env: CONFIG=linux_ppc64le UPLOAD_PACKAGES=True
 
       script:
           -  cd conda-recipes/bazel-feedstock
