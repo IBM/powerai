@@ -14,11 +14,16 @@ build:
   number: 0 
 
 requirements:
+  host:
+    - python
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
   build:
     - cmake >=3.1
     - make
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
+    - setuptools
+    - tensorflow
+
   run:
    # conda build requirements
     - python

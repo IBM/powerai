@@ -19,12 +19,11 @@ set -ex
 
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=${CONDA_INSTALL_DIR} .. -DSPM_BUILD_TEST=ON -DSPM_ENABLE_TENSORFLOW_SHARED=ON
+cmake -DCMAKE_INSTALL_PREFIX=${BUILD_PREFIX} .. -DSPM_BUILD_TEST=ON -DSPM_ENABLE_TENSORFLOW_SHARED=ON
 make -j $(nproc)
-export PKG_CONFIG_PATH=${CONDA_INSTALL_DIR}/lib/pkgconfig:${PKG_CONFIG_PATH}
-export LD_LIBRARY_PATH=${CONDA_INSTALL_DIR}/lib:${LD_LIBRARY_PATH}
+export PKG_CONFIG_PATH=${BUILD_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}
+export LD_LIBRARY_PATH=${BUILD_PREFIX}/lib:${LD_LIBRARY_PATH}
 make install
-ldconfig -v
 
 cd ../python
 python setup.py install
