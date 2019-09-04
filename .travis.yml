@@ -26,8 +26,8 @@ env:
 jobs:
   include:
 
-    # openjdk recipe
-    - stage: openjdk
+    # zip recipe
+    - stage: zip
       language: generic
 
       os: linux-ppc64le
@@ -35,5 +35,5 @@ jobs:
       env: CONFIG=linux_ppc64le UPLOAD_PACKAGES=True
 
       script:
-          -  cd conda-recipes/openjdk-feedstock
+          -  cd conda-recipes/zip-feedstock
           -  ./ci_support/run_docker_build.sh
