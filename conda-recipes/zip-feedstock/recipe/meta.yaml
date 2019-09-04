@@ -14,12 +14,13 @@ source:
 build:
   number: 0
   skip: True  # [win]
-  script: make -f unix/Makefile generic && mv zip $PREFIX/bin
+  script: make -f unix/Makefile generic && mkdir -p $PREFIX/bin && mv zip $PREFIX/bin/
 
 requirements:
   build:
     - {{ compiler('c') }}
     - make
+    - patch
 
 test:
   commands:
