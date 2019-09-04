@@ -28,6 +28,7 @@ jobs:
 
     # bazel recipe
     - stage: bazel
+
       language: generic
 
       os: linux-ppc64le
