@@ -3,7 +3,7 @@ c_compiler:
 c_compiler_version:
 - '8'
 channel_sources:
-- defaults powerai
+- defaults,powerai
 channel_targets:
 - powerai main
 docker_image:
