@@ -26,8 +26,8 @@ env:
 jobs:
   include:
 
-    # zip recipe
-    - stage: zip
+    # bazel recipe
+    - stage: bazel
       language: generic
 
       os: linux-ppc64le
@@ -35,5 +35,5 @@ jobs:
       env: CONFIG=linux_ppc64le UPLOAD_PACKAGES=True
 
       script:
-          -  cd conda-recipes/zip-feedstock
+          -  cd conda-recipes/bazel-feedstock
           -  ./ci_support/run_docker_build.sh
