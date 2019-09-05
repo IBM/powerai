@@ -22,13 +22,3 @@ bash compile.sh
 mkdir -p $PREFIX/bin
 mv output/bazel $PREFIX/bin
 
-# Run test here, because we lose $RECIPE_DIR in the test portion
-cp -r ${RECIPE_DIR}/tutorial .
-cd tutorial
-bazel build "${BAZEL_BUILD_OPTS[@]}" //main:hello-world
-bazel info | grep "java-home.*_embedded_binaries"
-
-if [[ ${HOST} =~ .*linux.* ]]; then
-    # libstdc++ should not be included in this listing as it is statically linked
-    readelf -d $PREFIX/bin/bazel
-fi
