@@ -15,7 +15,7 @@ build:
 
 requirements:
   host:
-    - python
+    - {{ PYTHON }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   build:
@@ -26,7 +26,7 @@ requirements:
 
   run:
    # conda build requirements
-    - python
+    - {{ PYTHON }}
     
 about:
   home: https://github.com/google/sentencepiece
