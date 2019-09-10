@@ -41,7 +41,6 @@ matrix:
       os: linux-64
       language: generic
 
-
 script:
-  -  cd conda-recipes/spacy-feedstock
+  -  cd conda-recipes/fastBPE-feedstock
   -  ./ci_support/run_docker_build.sh
