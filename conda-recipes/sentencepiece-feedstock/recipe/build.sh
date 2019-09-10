@@ -24,7 +24,7 @@ make -j $(nproc)
 export PKG_CONFIG_PATH=${BUILD_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}
 export LD_LIBRARY_PATH=${BUILD_PREFIX}/lib:${LD_LIBRARY_PATH}
 make install
-/usr/bin/sudo -n ldconfig -v
+/usr/bin/sudo -i ldconfig -v
 cd ../python
 python setup.py install
 cd ../tensorflow
