@@ -1,4 +1,4 @@
-{% set version = "v0.1.83" %}
+{% set version = "0.1.83" %}
 {% set name = "sentencepiece" %}
 
 # This is the recipe for tensorflow-datasets
