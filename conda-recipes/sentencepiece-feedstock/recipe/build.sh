@@ -19,11 +19,14 @@ set -ex
 
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=${BUILD_PREFIX} .. -DSPM_BUILD_TEST=ON -DSPM_ENABLE_TENSORFLOW_SHARED=ON
+cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} .. -DSPM_BUILD_TEST=ON -DSPM_ENABLE_TENSORFLOW_SHARED=ON
 make -j $(nproc)
-export PKG_CONFIG_PATH=${BUILD_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}
-export LD_LIBRARY_PATH=${BUILD_PREFIX}/lib:${LD_LIBRARY_PATH}
-patchelf --set-rpath $LD_LIBRARY_PATH _sentencepiece.cpython-${CONDA_PY}m-powerpc64le-linux-gnu.so
+export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}
+export LD_LIBRARY_PATH=${PREFIX}/lib:${LD_LIBRARY_PATH}
+SYS_PYTHON_MAJOR=$(python -c "import sys;print(sys.version_info.major)")
+SYS_PYTHON_MINOR=$(python -c "import sys;print(sys.version_info.minor)")
+
+patchelf --set-rpath $LD_LIBRARY_PATH $PREFIX/lib/python${SYS_PYTHON_MAJOR}.${SYS_PYTHON_MINOR}/_sentencepiece.cpython-${CONDA_PY}m-powerpc64le-linux-gnu.so
 make install
 cd ../python
 python setup.py install
