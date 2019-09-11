@@ -30,7 +30,7 @@ python setup.py install
 
 SYS_PYTHON_MAJOR=$(python -c "import sys;print(sys.version_info.major)")
 SYS_PYTHON_MINOR=$(python -c "import sys;print(sys.version_info.minor)")
-patchelf --set-rpath $LD_LIBRARY_PATH $PREFIX/lib/python${SYS_PYTHON_MAJOR}.${SYS_PYTHON_MINOR}/site-packages/_sentencepiece.cpython-${CONDA_PY}m-powerpc64le-linux-gnu.so
+patchelf --set-rpath $LD_LIBRARY_PATH $PREFIX/lib/python${SYS_PYTHON_MAJOR}.${SYS_PYTHON_MINOR}/site-packages/sentencepiece-$PKG_VERSION-py${SYS_PYTHON_MAJOR}.${SYS_PYTHON_MINOR}-linux-ppc64le.egg/_sentencepiece.cpython-${CONDA_PY}m-powerpc64le-linux-gnu.so
 
 cd ../tensorflow
 python setup.py install
