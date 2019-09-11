@@ -23,12 +23,14 @@ cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} .. -DSPM_BUILD_TEST=ON -DSPM_ENABLE_TENSO
 make -j $(nproc)
 export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}
 export LD_LIBRARY_PATH=${PREFIX}/lib:${LD_LIBRARY_PATH}
-SYS_PYTHON_MAJOR=$(python -c "import sys;print(sys.version_info.major)")
-SYS_PYTHON_MINOR=$(python -c "import sys;print(sys.version_info.minor)")
-
-patchelf --set-rpath $LD_LIBRARY_PATH $PREFIX/lib/python${SYS_PYTHON_MAJOR}.${SYS_PYTHON_MINOR}/_sentencepiece.cpython-${CONDA_PY}m-powerpc64le-linux-gnu.so
 make install
 cd ../python
+
 python setup.py install
+
+SYS_PYTHON_MAJOR=$(python -c "import sys;print(sys.version_info.major)")
+SYS_PYTHON_MINOR=$(python -c "import sys;print(sys.version_info.minor)")
+patchelf --set-rpath $LD_LIBRARY_PATH $PREFIX/lib/python${SYS_PYTHON_MAJOR}.${SYS_PYTHON_MINOR}/site-packages/_sentencepiece.cpython-${CONDA_PY}m-powerpc64le-linux-gnu.so
+
 cd ../tensorflow
 python setup.py install
