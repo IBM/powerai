@@ -23,6 +23,7 @@ cmake -DCMAKE_INSTALL_PREFIX=${BUILD_PREFIX} .. -DSPM_BUILD_TEST=ON -DSPM_ENABLE
 make -j $(nproc)
 export PKG_CONFIG_PATH=${BUILD_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}
 export LD_LIBRARY_PATH=${BUILD_PREFIX}/lib:${LD_LIBRARY_PATH}
+patchelf --set-rpath $LD_LIBRARY_PATH _sentencepiece.cpython-${CONDA_PY}m-powerpc64le-linux-gnu.so
 make install
 cd ../python
 python setup.py install
