@@ -1,0 +1,43 @@
+{% set version = "0.1.83" %}
+{% set name = "sentencepiece" %}
+
+# This is the recipe for tensorflow-datasets
+package:
+   name: {{ name }}
+   version: {{ version }}
+
+source:
+  git_url: https://github.com/google/sentencepiece
+  git_rev: v0.1.83 
+
+build:
+  number: 0 
+
+requirements:
+  build:
+    - cmake >=3.1
+    - make
+  host:
+    - python
+    - setuptools
+    - tensorflow
+  run:
+    - python
+    - tensorflow
+
+test:
+  imports:
+    - sentencepiece
+ 
+about:
+  home: https://github.com/google/sentencepiece
+  license: Apache License 2.0
+  summary: "An unsupervised text tokenizer and detokenizer mainly for Neural Network-based text generation systems."
+  description: |
+      SentencePiece is an unsupervised text tokenizer and detokenizer mainly for Neural Network-based text generation 
+      systems where the vocabulary size is predetermined prior to the neural model training. SentencePiece implements 
+      subword units (e.g., byte-pair-encoding (BPE) [Sennrich et al.]) and unigram language model [Kudo.]) with the 
+      extension of direct training from raw sentences. SentencePiece allows us to make a purely end-to-end system that
+      does not depend on language-specific pre/postprocessing.
+  dev_url: https://github.com/google/sentencepiece
+  doc_url: https://github.com/google/sentencepiece

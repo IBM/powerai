@@ -26,8 +26,8 @@ env:
 jobs:
   include:
 
-    # bazel recipe
-    - stage: bazel
+    # sentencepiece recipe
+    - stage: sentencepiece
       language: generic
 
       os: linux-ppc64le
@@ -35,5 +35,5 @@ jobs:
       env: CONFIG=linux_ppc64le UPLOAD_PACKAGES=True
 
       script:
-          -  cd conda-recipes/bazel-feedstock
+          -  cd conda-recipes/sentencepiece-feedstock
           -  ./ci_support/run_docker_build.sh
