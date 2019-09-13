@@ -42,6 +42,6 @@ matrix:
       language: generic
 
 
-      script:
-          -  cd conda-recipes/spacy-feedstock
-          -  ./ci_support/run_docker_build.sh
+script:
+  -  cd conda-recipes/spacy-feedstock
+  -  ./ci_support/run_docker_build.sh
