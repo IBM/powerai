@@ -14,11 +14,10 @@ build:
     script: 
       # xref: https://github.com/explosion/spaCy/issues/1592#issuecomment-360889011
       - mv $SRC_DIR/include/numpy $SRC_DIR/include/numpy.bak                                             # [ppc64le]
-      - ln -s $PREFIX/lib/python${PY_VER}/site-packages/numpy/core/include/numpy $SRC_DIR/include/numpy  # [ppc64le]
+      - ln -s $SP_DIR/numpy/core/include/numpy $SRC_DIR/include/numpy  # [ppc64le]
       - rm spacy/tests/regression/test_issue957.py       # [not win]
       - rm spacy/tests/regression/test_issue2626.py      # [not win]
-      - {{PYTHON}} $SRC_DIR/setup.py install --single-version-externally-managed --record=record.txt
-      #- {{PYTHON}} -m pip install . --no-deps --ignore-installed --no-cache-dir -vvv
+      - python setup.py install --single-version-externally-managed --record=record.txt
 
 requirements:
     build:
