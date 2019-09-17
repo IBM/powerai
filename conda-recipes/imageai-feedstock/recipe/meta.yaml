@@ -1,0 +1,64 @@
+{% set name = "imageai" %}
+{% set version = "2.1.5" %}
+{% set sha256 = "348f5f6c3edd4fd47c9cd65aed03ac1b31136d375aa63871a57d3e444c85655c" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  fn: {{ name }}-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: {{ sha256 }}
+  #git_url: https://github.com/OlafenwaMoses/ImageAI.git
+  #git_rev: master
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record record.txt
+  noarch: python
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - tensorflow
+    - opencv-python
+    - keras
+    - python
+    - pillow
+    - matplotlib
+    - scipy
+    - numpy
+    - h5py
+    - cycler>=0.10
+    - kiwisolver>=1.0.1
+    - pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.1
+    - python-dateutil>=2.1 
+    - six
+    - setuptools
+
+test:
+  imports:
+    - imageai
+
+about:
+  home: https://github.com/OlafenwaMoses/ImageAI
+  license: MIT
+  license_family: MIT
+  license_file: 'LICENSE'
+  summary: 'A python library built to build applications and systems with self-contained Computer Vision capabilities'
+  description: |
+      ImageAI is an easy to use Computer Vision Python library that empowers developers to easily integrate
+      state-of-the-art Artificial Intelligence features into their new and existing applications and systems.
+      It implements several relevant algorithms such as DenseNet for classification. It is based on TensorFlow.
+      It also implements object detection models.
+  doc_url: https://github.com/OlafenwaMoses/ImageAI
+  dev_url: https://github.com/OlafenwaMoses/ImageAI
+
+extra:
+  maintainers:
+   - Moses Olafenwa
+   - John Olafenwa
