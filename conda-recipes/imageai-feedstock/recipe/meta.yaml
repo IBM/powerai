@@ -1,6 +1,6 @@
 {% set name = "imageai" %}
 {% set version = "2.1.5" %}
-{% set sha256 = "348f5f6c3edd4fd47c9cd65aed03ac1b31136d375aa63871a57d3e444c85655c" %}
+{% set sha256 = "210f2e6af801e41085becb5ca19f710f0699fc9818018571a72f407b2a97ec31" %}
 
 package:
   name: {{ name|lower }}
