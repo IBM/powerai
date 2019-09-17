@@ -48,7 +48,7 @@ about:
   home: https://github.com/OlafenwaMoses/ImageAI
   license: MIT
   license_family: MIT
-  license_file: 'LICENSE'
+  license_file: LICENSE
   summary: 'A python library built to build applications and systems with self-contained Computer Vision capabilities'
   description: |
       ImageAI is an easy to use Computer Vision Python library that empowers developers to easily integrate
