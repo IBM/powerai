@@ -1,0 +1,69 @@
+{% set name = "spacy" %}
+{% set version = "2.0.18" %}
+{% set sha256sum = "123f3b70afa16516ffe458cd8718793e4aab8ab10085a9d0dc121076746dcb57" %}
+
+package:
+    name: {{ name }}
+    version: {{ version }}
+source:
+    fn: {{ name }}-{{ version }}.tar.gz
+    sha256: {{ sha256sum }}
+    url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+build:
+    number: '0'
+    script: 
+      # xref: https://github.com/explosion/spaCy/issues/1592#issuecomment-360889011
+      - mv $SRC_DIR/include/numpy $SRC_DIR/include/numpy.bak                                             # [ppc64le]
+      - ln -s $SP_DIR/numpy/core/include/numpy $SRC_DIR/include/numpy  # [ppc64le]
+      - rm spacy/tests/regression/test_issue957.py       # [not win]
+      - rm spacy/tests/regression/test_issue2626.py      # [not win]
+      - python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+    build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+    host:
+        - python
+        - setuptools
+        - numpy
+        # setup.py constrains wheel via setup_requires
+        - wheel >=0.32.0,<0.33.0
+    run:
+        - cymem >=2.0.0,<2.1.0
+        - dill >=0.2,<0.3
+        - msgpack-python >=0.5.0
+        - murmurhash >=0.28,<1.1.0
+        - plac >=0.9.6,<1.0.0
+        - preshed >=2.0.1,<2.1.0
+        - regex >=2018.01.10
+        - requests >=2.13.0,<3.0.0
+        - thinc >=6.12.0,<6.13.0
+        - ujson >=1.35
+test:
+    imports:
+        - spacy
+    requires:
+        - mock
+        - pytest <4
+about:
+    description: 'spaCy is a library for advanced natural language processing in Python
+        and
+
+        Cython.
+
+        '
+    dev_url: https://github.com/explosion/spaCy
+    doc_url: https://spacy.io
+    home: https://spacy.io/
+    license: MIT
+    license_file: LICENSE
+    summary: Industrial-strength Natural Language Processing
+extra:
+    copy_test_source_files: true
+    final: true
+    recipe-maintainers:
+        - danielfrg
+        - honnibal
+        - ines
+        - rmax
