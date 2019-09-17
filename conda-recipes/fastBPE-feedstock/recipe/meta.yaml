@@ -1,0 +1,35 @@
+{% set version="0.1.0" %}
+
+package:
+  name: fastbpe
+  version: {{ version }}
+
+source:
+  git_url: https://github.com/glample/fastBPE
+  git_rev: 1fd33189c126dae356b9e187d93d93302fa45cef
+
+build:
+  number: 0
+  skip: True  # [win]
+  script: python setup.py install
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+
+  host:
+    - python
+    - cython
+
+  run:
+    - python
+
+test:
+  imports:
+    - fastBPE
+ 
+about:
+  home: http://www.info-zip.org/
+  license: MSD License
+  license_file: LICENSE
+  summary: Fast BPE
