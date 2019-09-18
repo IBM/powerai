@@ -1,0 +1,77 @@
+{% set version = '0.20-38' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-lattice
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/lattice_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/lattice/lattice_{{ version }}.tar.gz
+  sha256: fdeb5e3e50dbbd9d3c5e2fa3eef865132b3eef30fbe53a10c24c7b7dfe5c0a2d
+
+build:
+  merge_build_host: True  # [win]
+  number: 1002
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}              # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+
+test:
+  commands:
+    - $R -e "library('lattice')"           # [not win]
+    - "\"%R%\" -e \"library('lattice')\""  # [win]
+
+about:
+  home: http://lattice.r-forge.r-project.org/
+  license: GPL (>= 2)
+  summary: A powerful and elegant high-level data visualization system inspired by Trellis graphics,
+    with an emphasis on multivariate data. Lattice is sufficient for typical graphics
+    needs, and is also flexible enough to handle most nonstandard requirements. See
+    ?Lattice for an introduction.
+  license_family: GPL3
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-2'
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+    - ocefpaf
+
+# Package: lattice
+# Version: 0.20-38
+# Date: 2018-11-01
+# Priority: recommended
+# Title: Trellis Graphics for R
+# Author: Deepayan Sarkar <deepayan.sarkar@r-project.org>
+# Maintainer: Deepayan Sarkar <deepayan.sarkar@r-project.org>
+# Description: A powerful and elegant high-level data visualization system inspired by Trellis graphics, with an emphasis on multivariate data. Lattice is sufficient for typical graphics needs, and is also flexible enough to handle most nonstandard requirements. See ?Lattice for an introduction.
+# Depends: R (>= 3.0.0)
+# Suggests: KernSmooth, MASS, latticeExtra
+# Imports: grid, grDevices, graphics, stats, utils
+# Enhances: chron
+# LazyLoad: yes
+# LazyData: yes
+# License: GPL (>= 2)
+# URL: http://lattice.r-forge.r-project.org/
+# BugReports: https://github.com/deepayan/lattice/issues
+# NeedsCompilation: yes
+# Packaged: 2018-11-04 11:39:05 UTC; deepayan
+# Repository: CRAN
+# Date/Publication: 2018-11-04 12:50:03 UTC

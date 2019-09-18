@@ -1,12 +1,97 @@
+bzip2:
+- '1'
 c_compiler:
 - gcc
 c_compiler_version:
 - '8'
+cairo:
+- '1.16'
 channel_sources:
-- defaults,powerai
+- conda-forge,defaults
 channel_targets:
 - powerai main
+cxx_compiler:
+- gxx
+cxx_compiler_version:
+- '8'
 docker_image:
 - condaforge/linux-anvil-ppc64le
 fortran_compiler:
 - gfortran
+fortran_compiler_version:
+- '8'
+freetype:
+- 2.9.1
+glib:
+- '2.58'
+gsl:
+- '2.5'
+icu:
+- '64.2'
+jpeg:
+- '9'
+krb5:
+- '1.16'
+libblas:
+- 3.8 *netlib
+libcurl:
+- '7.64'
+liblapack:
+- 3.8.0 *netlib
+libpng:
+- '1.6'
+libssh2:
+- '1.8'
+libtiff:
+- 4.0.10
+libuuid:
+- 2.32.1
+libxml2:
+- '2.9'
+ncurses:
+- '6.1'
+pango:
+- '1.42'
+pin_run_as_build:
+  bzip2:
+    max_pin: x
+  cairo:
+    max_pin: x.x
+  freetype:
+    max_pin: x
+  icu:
+    max_pin: x
+  jpeg:
+    max_pin: x
+  krb5:
+    max_pin: x.x
+  libcurl:
+    max_pin: x
+  libpng:
+    max_pin: x.x
+  libssh2:
+    max_pin: x.x
+  libtiff:
+    max_pin: x
+  libuuid:
+    max_pin: x
+  libxml2:
+    max_pin: x.x
+  ncurses:
+    max_pin: x.x
+  pango:
+    max_pin: x.x
+  readline:
+    max_pin: x
+  xz:
+    max_pin: x.x
+  zlib:
+    max_pin: x.x
+readline:
+- '8.0'
+target_platform:
+- linux-ppc64le
+xz:
+- '5.2'
+zlib:
+- '1.2'
