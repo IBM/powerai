@@ -1,0 +1,64 @@
+{% set version = '0.9-27' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-kernlab
+  version: {{ version|replace("-", "_") }}
+
+source:
+  fn: kernlab_{{ version }}.tar.gz
+  url:
+    - {{ cran_mirror }}/src/contrib/kernlab_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/kernlab/kernlab_{{ version }}.tar.gz
+  sha256: f6add50ed4097f04d09411491625f8d46eafc4f003b1c1cff78a6fff8cc31dd4
+
+build:
+  merge_build_host: True  # [win]
+  number: 1001
+  skip: true  # [win32]
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}        # [not win]
+    - {{ compiler('cxx') }}      # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{ compiler('m2w64_cxx') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+
+test:
+  commands:
+    - $R -e "library('kernlab')"           # [not win]
+    - "\"%R%\" -e \"library('kernlab')\""  # [win]
+
+about:
+  home: https://CRAN.R-project.org/package=kernlab
+  license: GPL-2
+  summary: Kernel-based machine learning methods for classification, regression, clustering,
+    novelty detection, quantile regression and dimensionality reduction.  Among other
+    methods 'kernlab' includes Support Vector Machines, Spectral Clustering, Kernel
+    PCA, Gaussian Processes and a QP solver.
+  license_family: GPL2
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-2'
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+    - johanneskoester
+    - bgruening
+    - daler
+    - jdblischak
+    - cbrueffer
+    - dbast
