@@ -1,0 +1,73 @@
+{% set version = '1.1-5' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-synth
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/Synth_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/Synth/Synth_{{ version }}.tar.gz
+  sha256: f382fc4de85396d329f2ad0efc9c6633a93736878e802dd194539b6f4382dbb1
+
+build:
+  merge_build_host: True  # [win]
+  number: 0
+  noarch: generic
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+    - r-kernlab
+    - r-optimx
+  run:
+    - r-base
+    - r-kernlab
+    - r-optimx
+
+test:
+  commands:
+    - $R -e "library('Synth')"           # [not win]
+    - "\"%R%\" -e \"library('Synth')\""  # [win]
+
+about:
+  home: http://www.stanford.edu/~jhain
+  license: GPL (>= 2)
+  summary: Implements the synthetic control group method for comparative case studies as described
+    in Abadie and Gardeazabal (2003) and Abadie, Diamond, and Hainmueller (2010, 2011,
+    2014). The synthetic control method allows for effect estimation in settings where
+    a single unit (a state, country, firm, etc.) is exposed to an event or intervention.
+    It provides a data-driven procedure to construct synthetic control units based on
+    a weighted combination of comparison units that approximates the characteristics
+    of the unit that is exposed to the intervention. A combination of comparison units
+    often provides a better comparison for the unit exposed to the intervention than
+    any comparison unit alone.
+  license_family: GPL3
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-2'
+
+extra:
+  recipe-maintainers:
+    - jayfurmanek
+
+# Package: Synth
+# Version: 1.1-5
+# Date: 2014-01-26
+# Title: Synthetic Control Group Method for Comparative Case Studies
+# Author: Jens Hainmueller <jhain@stanford.edu> and Alexis Diamond <adiamond@fas.harvard.edu>
+# Maintainer: Jens Hainmueller <jhain@stanford.edu>
+# Description: Implements the synthetic control group method for comparative case studies as described in Abadie and Gardeazabal (2003) and Abadie, Diamond, and Hainmueller (2010, 2011, 2014). The synthetic control method allows for effect estimation in settings where a single unit (a state, country, firm, etc.) is exposed to an event or intervention. It provides a data-driven procedure to construct synthetic control units based on a weighted combination of comparison units that approximates the characteristics of the unit that is exposed to the intervention. A combination of comparison units often provides a better comparison for the unit exposed to the intervention than any comparison unit alone.
+# Imports: kernlab, optimx
+# Suggests: rgenoud, LowRankQP
+# License: GPL (>= 2)
+# URL: http://www.stanford.edu/~jhain
+# Packaged: 2014-01-26 23:13:46 UTC; jhainmueller
+# NeedsCompilation: no
+# Repository: CRAN
+# Date/Publication: 2014-01-27 00:37:42
