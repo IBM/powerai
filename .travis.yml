@@ -30,5 +30,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/r-kernlab-feedstock
+  -  cd conda-recipes/r-synth-feedstock
   -  ./ci_support/run_docker_build.sh
