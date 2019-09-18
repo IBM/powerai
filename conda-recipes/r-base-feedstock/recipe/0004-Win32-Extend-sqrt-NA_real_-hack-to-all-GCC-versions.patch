@@ -1,7 +1,7 @@
-From b53e2b282fad576edaa1b8496918f826c8494cb8 Mon Sep 17 00:00:00 2001
+From 2b7c8fcc39b7ad5baa91c6578b51ad4cd74f81f7 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 2 Jan 2018 15:42:00 +0000
-Subject: [PATCH 04/10] Win32: Extend sqrt NA_real_ hack to all GCC versions
+Subject: [PATCH 04/18] Win32: Extend sqrt NA_real_ hack to all GCC versions
 
 Also fix for GCC 5.3 ISNAN(int) emitting UD2 insn
 ---
@@ -9,10 +9,10 @@ Also fix for GCC 5.3 ISNAN(int) emitting UD2 insn
  1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/src/main/eval.c b/src/main/eval.c
-index e46985a1cf..3cb11423fb 100644
+index aad2cd62bb..e466a3fac9 100644
 --- a/src/main/eval.c
 +++ b/src/main/eval.c
-@@ -4198,9 +4198,8 @@ static SEXP cmp_arith2(SEXP call, int opval, SEXP opsym, SEXP x, SEXP y,
+@@ -4364,9 +4364,8 @@ static SEXP cmp_arith2(SEXP call, int opval, SEXP opsym, SEXP x, SEXP y,
     called with NA_real_. Not sure this is a bug in the Windows
     toolchain or in our expectations, but these defines attempt to work
     around this. */
@@ -25,5 +25,5 @@ index e46985a1cf..3cb11423fb 100644
  # define R_sqrt sqrt
  #endif
 -- 
-2.14.3 (Apple Git-98)
+2.20.1
 

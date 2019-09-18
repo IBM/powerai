@@ -1,17 +1,17 @@
-From 5e86c29c928d64db9fce11c774fe93e79dade323 Mon Sep 17 00:00:00 2001
+From a326449545776287a5db2dcf9a8bd3bea2b393ba Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 2 Jan 2018 15:45:22 +0000
-Subject: [PATCH 05/10] Win32: Prevent conversion of R_ARCH to abs Windows path
+Subject: [PATCH 05/18] Win32: Prevent conversion of R_ARCH to abs Windows path
 
 ---
  src/main/main.c | 28 ++++++++++++++++++++++++++++
  1 file changed, 28 insertions(+)
 
 diff --git a/src/main/main.c b/src/main/main.c
-index 69f727fd4e..00610dbbad 100644
+index 4a198f158f..bd55154fad 100644
 --- a/src/main/main.c
 +++ b/src/main/main.c
-@@ -770,6 +770,34 @@ void setup_Rmainloop(void)
+@@ -800,6 +800,34 @@ void setup_Rmainloop(void)
  	} else setlocale(LC_MONETARY, Rlocale);
  	/* Windows does not have LC_MESSAGES */
  
@@ -47,5 +47,5 @@ index 69f727fd4e..00610dbbad 100644
  	char Rarch[30];
  	strcpy(Rarch, "R_ARCH=/");
 -- 
-2.14.3 (Apple Git-98)
+2.20.1
 

@@ -3,17 +3,37 @@
 aclocal -I m4
 autoconf
 
+# Delete ICU headers from BUILD_PREFIX
+rm -rf $BUILD_PREFIX/include/unicode
+
 # Filter out -std=.* from CXXFLAGS as it disrupts checks for C++ language levels.
 re='(.*[[:space:]])\-std\=[^[:space:]]*(.*)'
 if [[ "${CXXFLAGS}" =~ $re ]]; then
   export CXXFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
 fi
 
-# Without this, dependency scanning fails.
-export CPPFLAGS="${CPPFLAGS} -I$PREFIX/include"
-if [[ $target_platform =~ linux.* ]]; then
-  export LDFLAGS="${LDFLAGS} -Wl,-rpath-link,$PREFIX/lib"
+re2='(.*[[:space:]])\-I.*[^[:space:]]*(.*)'
+if [[ "${CPPFLAGS}" =~ $re2 ]]; then
+  export CPPFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
 fi
+# if [[ "${CFLAGS}" =~ $re2 ]]; then
+#   export CFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
+# fi
+re3='(.*[[:space:]])\-L.*[^[:space:]]*(.*)'
+if [[ "${CPPFLAGS}" =~ $re3 ]]; then
+  export CPPFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
+fi
+# if [[ "${CFLAGS}" =~ $re3 ]]; then
+#   export CFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
+# fi
+# if [[ "${LDFLAGS}" =~ $re3 ]]; then
+#   export LDFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
+# fi
+
+# Without this, dependency scanning fails (but with it CDT libuuid / Xt fails to link
+# which we hack around with config.site)
+export CPPFLAGS="${CPPFLAGS} -I$PREFIX/include"
+
 export TCL_CONFIG=${PREFIX}/lib/tclConfig.sh
 export TK_CONFIG=${PREFIX}/lib/tkConfig.sh
 export TCL_LIBRARY=${PREFIX}/lib/tcl8.6
@@ -28,6 +48,8 @@ export TK_LIBRARY=${PREFIX}/lib/tk8.6
 [[ -n ${LD} ]] && export LD=$(basename ${LD})
 [[ -n ${RANLIB} ]] && export RANLIB=$(basename ${RANLIB})
 [[ -n ${STRIP} ]] && export STRIP=$(basename ${STRIP})
+export OBJC=${CC}
+INSTALL_NAME_TOOL=${INSTALL_NAME_TOOL:-install_name_tool}
 
 Linux() {
     # If lib/R/etc/javaconf ends up with anything other than ~autodetect~
@@ -36,15 +58,32 @@ Linux() {
     # and activate scripts now call 'R CMD javareconf'.
     unset JAVA_HOME
 
+    export CPPFLAGS="${CPPFLAGS} -Wl,-rpath-link,${PREFIX}/lib"
+    export LDFLAGS="${LDFLAGS} -Wl,-rpath-link,${PREFIX}/lib"
+
+    mkdir -p ${PREFIX}/lib
+    # Tricky libuuid resolution issues against CentOS6's libSM. I may need to add some symbols to our libuuid library.
+    # Works for configure:
+    # . /opt/conda/bin/activate /home/rdonnelly/r-base-bld/_build_env
+    # x86_64-conda_cos6-linux-gnu-cc -o conftest -L/home/rdonnelly/r-base-bld/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64 conftest.c -lXt -lX11 -lrt -ldl -lm -luuid -L$PREFIX/lib -licuuc -licui18n
+    # if [[ ${ARCH} == 32 ]]; then
+    #   export CPPFLAGS="-L${BUILD_PREFIX}/${HOST}/sysroot/usr/lib ${CPPFLAGS}"
+    #   export CFLAGS="-I${BUILD_PREFIX}/${HOST}/sysroot/usr/lib ${CFLAGS}"
+    #   export CXXFLAGS="-I${BUILD_PREFIX}/${HOST}/sysroot/usr/lib ${CXXFLAGS}"
+    # else
+    #   export CPPFLAGS="-L${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 ${CPPFLAGS}"
+    #   export CFLAGS="-I${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 ${CFLAGS}"
+    #   export CXXFLAGS="-I${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 ${CXXFLAGS}"
+    # fi
     echo "ac_cv_lib_Xt_XtToolkitInitialize=yes" > config.site
     export CONFIG_SITE=${PWD}/config.site
-    mkdir -p ${PREFIX}/lib
     ./configure --prefix=${PREFIX}               \
                 --host=${HOST}                   \
                 --build=${BUILD}                 \
                 --enable-shared                  \
                 --enable-R-shlib                 \
-                --enable-BLAS-shlib              \
+                --with-blas=-lblas               \
+                --with-lapack=-llapack           \
                 --disable-prebuilt-html          \
                 --enable-memory-profiling        \
                 --with-tk-config=${TK_CONFIG}    \
@@ -71,30 +110,16 @@ Linux() {
     # Prevent C and C++ extensions from linking to libgfortran.
     sed -i -r 's|(^LDFLAGS = .*)-lgfortran|\1|g' ${PREFIX}/lib/R/etc/Makeconf
 
-    # Backup the old libR{blas,lapack}.so files and replace them with OpenBLAS
-    pushd ${PREFIX}/lib/R/lib
-      mv libRblas.so libRblas.so.reference
-      mv libRlapack.so libRlapack.so.reference
-      cp ../../libblas.so libRblas.so
-      cp ../../liblapack.so libRlapack.so
-      # .. and modify the SONAME.
-      patchelf --set-soname libRblas.so libRblas.so
-      patchelf --set-soname libRlapack.so libRlapack.so
+    pushd ${PREFIX}/lib/R/etc
+      # See: https://github.com/conda/conda/issues/6701
+      chmod g+w Makeconf ldpaths
     popd
 
-    # # Backup the old libR{blas,lapack}.so files and make them symlinks to OpenBLAS
-    # pushd ${PREFIX}/lib/R/lib
-    #   mv libRblas.so libRblas.so.reference
-    #   mv libRlapack.so libRlapack.so.reference
-    #   ln -s ../../libblas.so libRblas.so
-    #   ln -s ../../liblapack.so libRlapack.so
-    # popd
-    # .. and make sure that the fact it is now a symlink to libblas.so in $PREFIX/lib
-    # does not trip up the linker when it tries to find DT_NEEDED for libgfortran.so.
-    # (r-rserve falls without this fix).
-    # pushd ${PREFIX}/lib/R/etc
-    #   sed -i -r "s|-lRblas|-Wl,-rpath-link,${PREFIX}/lib -lRblas|" Makeconf
-    # popd
+    # Remove hard coded paths to these commands in the build machine
+    sed -i.bak 's/PAGER=.*/PAGER=${PAGER-less}/g' ${PREFIX}/lib/R/etc/Renviron
+    sed -i.bak 's/TAR=.*/TAR=${TAR-tar}/g' ${PREFIX}/lib/R/etc/Renviron
+    sed -i.bak 's/R_GZIPCMD=.*/R_GZIPCMD=${R_GZIPCMD-gzip}/g' ${PREFIX}/lib/R/etc/Renviron
+    rm ${PREFIX}/lib/R/etc/Renviron.bak
 }
 
 # This was an attempt to see how far we could get with using Autotools as things
@@ -117,12 +142,13 @@ Mingw_w64_autotools() {
     ./configure --prefix=${PREFIX}              \
                 --enable-shared                 \
                 --enable-R-shlib                \
-                --enable-BLAS-shlib             \
                 --disable-prebuilt-html         \
                 --enable-memory-profiling       \
                 --with-tk-config=$TK_CONFIG     \
                 --with-tcl-config=$TCL_CONFIG   \
                 --with-x=no                     \
+                --with-blas=-lblas              \
+                --with-lapack=-llapack          \
                 --with-readline=no              \
                 --with-recommended-packages=no  \
                 LIBnn=lib
@@ -170,8 +196,8 @@ Mingw_w64_makefiles() {
     echo "BINPREF = "                                   >> "${SRC_DIR}/src/gnuwin32/MkRules.local"
     echo "BINPREF64 = "                                 >> "${SRC_DIR}/src/gnuwin32/MkRules.local"
     echo "USE_ATLAS = YES"                              >> "${SRC_DIR}/src/gnuwin32/MkRules.local"
-    echo "ATLAS_PATH = ${PREFIX}/Library/mingw-w64/lib" >> "${SRC_DIR}/src/gnuwin32/MkRules.local"
-    sed -i.bak 's|-lf77blas -latlas|-lopenblas|g' src/extra/blas/Makefile.win
+    echo "ATLAS_PATH = ${PREFIX}/Library/lib"           >> "${SRC_DIR}/src/gnuwin32/MkRules.local"
+    sed -i.bak 's|-lf77blas -latlas|-llapack -lblas|g' src/extra/blas/Makefile.win
     rm src/extra/blas/Makefile.win.bak
     echo "MULTI =   "                                   >> "${SRC_DIR}/src/gnuwin32/MkRules.local"
     echo "BUILD_HTML = YES"                             >> "${SRC_DIR}/src/gnuwin32/MkRules.local"
@@ -222,9 +248,9 @@ Mingw_w64_makefiles() {
         # The thing to is probably to make stub programs launching the right binaries in mingw-w64/bin
         # .. perhaps launcher.c can be generalized?
         mkdir -p "${SRC_DIR}/lib/R/Tcl"
-        CONDA_SUBDIR=$target_platform conda.bat install -c https://conda.anaconda.org/msys2 \
-                                                       --no-deps --yes --copy --prefix "${SRC_DIR}/lib/R/Tcl" \
-                                                       m2w64-{tcl,tk,bwidget,tktable}
+        CONDA_SUBDIR=$target_platform "${SYS_PYTHON}" -m conda install -c https://conda.anaconda.org/msys2 \
+                                                      --no-deps --yes --copy --prefix "${SRC_DIR}/lib/R/Tcl" \
+                                                      m2w64-{tcl,tk,bwidget,tktable}
         mv "${SRC_DIR}"/lib/R/Tcl/Library/mingw-w64/* "${SRC_DIR}"/lib/R/Tcl/ || exit 1
         rm -Rf "${SRC_DIR}"/lib/R/Tcl/{Library,conda-meta,.BUILDINFO,.MTREE,.PKGINFO}
         if [[ "${ARCH}" == "64" ]]; then
@@ -284,15 +310,20 @@ Mingw_w64_makefiles() {
     else
       mkdir miktex || true
       pushd miktex
-      MIKTEX_VER=2.9.6753
-
       # Fetch e.g.:
       # http://ctan.mines-albi.fr/systems/win32/miktex/tm/packages/url.tar.lzma
       # http://ctan.mines-albi.fr/systems/win32/miktex/tm/packages/mptopdf.tar.lzma
       # http://ctan.mines-albi.fr/systems/win32/miktex/tm/packages/inconsolata.tar.lzma
-        curl --insecure -C - -o ${DLCACHE}/miktex-portable-${MIKTEX_VER}.exe -SLO https://miktex.org/download/ctan/systems/win32/miktex/setup/windows-x86/miktex-portable-${MIKTEX_VER}.exe || true
-        echo "Extracting miktex-portable-${MIKTEX_VER}.exe, this will take some time ..."
-        7za x -y ${DLCACHE}/miktex-portable-${MIKTEX_VER}.exe > /dev/null || exit 1
+        # FIXME: Newer MiKTeX installer does not finish on AppVeyor and Azure, somehow.
+        #   MIKTEX_VER=2.9.7100
+        #   curl --insecure -C - -o ${DLCACHE}/basic-miktex-${MIKTEX_VER}.exe -SL https://miktex.org/download/ctan/systems/win32/miktex/setup/windows-x86/basic-miktex-${MIKTEX_VER}.exe || true
+        #   echo "Extracting basic-miktex-${MIKTEX_VER}.exe, this will take some time ..."
+        #   ${DLCACHE}/basic-miktex-${MIKTEX_VER}.exe --portable=${PWD} --unattended --no-registry || exit 1
+        # FIXME: Temporary workaround! Fix the above as soon as possible, please.
+        #        Downloading this archived version may not comply with the ToS of archive.org!
+        curl --insecure -C - -o ${DLCACHE}/miktex-portable-2.9.6942.exe -SL https://web.archive.org/web/20190325114245/https://mirrors.rit.edu/CTAN/systems/win32/miktex/setup/windows-x86/miktex-portable-2.9.6942.exe || true
+        echo "Extracting miktex-portable-2.9.6942.exe, this will take some time ..."
+        7za x -y ${DLCACHE}/miktex-portable-2.9.6942.exe > /dev/null || exit 1
         # We also need the url, incolsolata and mptopdf packages and
         # do not want a GUI to prompt us about installing these.
         # sed -i 's|AutoInstall=2|AutoInstall=1|g' miktex/config/miktex.ini
@@ -307,6 +338,9 @@ Mingw_w64_makefiles() {
     # R_ARCH looks like an absolute path (e.g. "/x64"), so MSYS2 will convert it.
     # We need to prevent that from happening.
     export MSYS2_ARG_CONV_EXCL="R_ARCH"
+    # Following dlls are not found in the current place. Copy them for now and remove later
+    cp ${PREFIX}/Library/bin/libblas.dll   ${PREFIX}/Library/mingw-w64/bin/libblas.dll
+    cp ${PREFIX}/Library/bin/liblapack.dll ${PREFIX}/Library/mingw-w64/bin/liblapack.dll
     cd "${SRC_DIR}/src/gnuwin32"
     if [[ "${_use_msys2_mingw_w64_tcltk}" == "yes" ]]; then
         # rinstaller and crandir would come after manuals (if it worked with MSYS2/mingw-w64-{tcl,tk}, in which case we'd just use make distribution anyway)
@@ -351,6 +385,10 @@ Mingw_w64_makefiles() {
         # For compilers it is not, since they're put in the build prefix.
         sed -i 's| = \$(BINPREF)| = |g' ${_makeconf}
     done
+    # Remove previously copied file
+    rm ${PREFIX}/Library/mingw-w64/bin/libblas.dll
+    rm ${PREFIX}/Library/mingw-w64/bin/liblapack.dll
+
     return 0
 }
 
@@ -362,13 +400,36 @@ Darwin() {
     # unknown timezone 'GMT'
     # https://stat.ethz.ch/pipermail/r-devel/2014-April/068745.html
 
+    # May want to strip these from Makeconf at the end.
+    CFLAGS="-isysroot ${CONDA_BUILD_SYSROOT} "${CFLAGS}
+    LDFLAGS="-Wl,-dead_strip_dylibs -isysroot ${CONDA_BUILD_SYSROOT} "${LDFLAGS}
+    CPPFLAGS="-isysroot ${CONDA_BUILD_SYSROOT} "${CPPFLAGS}
+
+    # Our libuuid causes problems:
+    # In file included from qdPDF.c:29:
+    # In file included from ./qdPDF.h:3:
+    # In file included from ../../../../include/R_ext/QuartzDevice.h:103:
+    # In file included from /opt/MacOSX10.9.sdk/System/Library/Frameworks/ApplicationServices.framework/Headers/ApplicationServices.h:23:
+    # In file included from /opt/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Headers/CoreServices.h:23:
+    # In file included from /opt/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Frameworks/AE.framework/Headers/AE.h:20:
+    # In file included from /opt/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Headers/CarbonCore.h:208:
+    # In file included from /opt/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Headers/HFSVolumes.h:25:
+    # .. apart from this issue there seems to be a segfault:
+    # https://rt.cpan.org/Public/Bug/Display.html?id=104394
+    # http://openradar.appspot.com/radar?id=6069753579831296
+    # .. anyway, uuid is part of libc on Darwin, so let's just try to use that.
+    rm -f "${PREFIX}"/include/uuid/uuid.h
+
     ./configure --prefix=${PREFIX}                  \
                 --host=${HOST}                      \
                 --build=${BUILD}                    \
-                --with-blas="-framework Accelerate" \
+                --with-sysroot=${CONDA_BUILD_SYSROOT}  \
+                --enable-shared                     \
+                --enable-R-shlib                    \
                 --with-tk-config=${TK_CONFIG}       \
                 --with-tcl-config=${TCL_CONFIG}     \
-                --with-lapack                       \
+                --with-blas=-lblas                  \
+                --with-lapack=-llapack              \
                 --enable-R-shlib                    \
                 --enable-memory-profiling           \
                 --without-x                         \
@@ -385,17 +446,27 @@ Darwin() {
     # echo "Running make check-all, this will take some time ..."
     # make check-all -j1 V=1 > $(uname)-make-check.log 2>&1
     make install
+
+    pushd ${PREFIX}/lib/R/etc
+      sed -i -r "s|-isysroot ${CONDA_BUILD_SYSROOT}||g" Makeconf
+      # See: https://github.com/conda/conda/issues/6701
+      chmod g+w Makeconf ldpaths
+    popd
 }
 
 if [[ $target_platform == osx-64 ]]; then
   Darwin
   mkdir -p ${PREFIX}/etc/conda/activate.d
   cp "${RECIPE_DIR}"/activate-${PKG_NAME}.sh ${PREFIX}/etc/conda/activate.d/activate-${PKG_NAME}.sh
-elif [[ $target_platform =~ linux.* ]]; then
+  mkdir -p ${PREFIX}/etc/conda/deactivate.d
+  cp "${RECIPE_DIR}"/deactivate-${PKG_NAME}.sh ${PREFIX}/etc/conda/deactivate.d/deactivate-${PKG_NAME}.sh
+elif [[ $target_platform =~ .*linux.* ]]; then
   Linux
   mkdir -p ${PREFIX}/etc/conda/activate.d
   cp "${RECIPE_DIR}"/activate-${PKG_NAME}.sh ${PREFIX}/etc/conda/activate.d/activate-${PKG_NAME}.sh
-elif [[ $target_platform =~ win.* ]]; then
+  mkdir -p ${PREFIX}/etc/conda/deactivate.d
+  cp "${RECIPE_DIR}"/deactivate-${PKG_NAME}.sh ${PREFIX}/etc/conda/deactivate.d/deactivate-${PKG_NAME}.sh
+elif [[ $(uname) =~ M.* ]]; then
   # Mingw_w64_autotools
   Mingw_w64_makefiles
 fi
