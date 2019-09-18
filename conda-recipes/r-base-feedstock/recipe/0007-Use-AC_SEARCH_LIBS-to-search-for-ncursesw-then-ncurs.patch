@@ -1,18 +1,18 @@
-From e46c0338067e76700a1191ae240fc84087a850c1 Mon Sep 17 00:00:00 2001
+From db6b99f1b2cfb235a121519a2419894c2538828c Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 21 Jun 2016 14:22:30 +0100
-Subject: [PATCH 07/10] Use AC_SEARCH_LIBS to search for ncursesw then ncurses
+Subject: [PATCH 07/18] Use AC_SEARCH_LIBS to search for ncursesw then ncurses
 
 ---
- configure    | 58 +++++++++++++++++++++++++++++++++++++---------------------
+ configure    | 58 +++++++++++++++++++++++++++++++++-------------------
  configure.ac |  2 +-
  2 files changed, 38 insertions(+), 22 deletions(-)
 
 diff --git a/configure b/configure
-index 120dc192de..2975be56ec 100755
+index e0a536c9be..a2149cae09 100755
 --- a/configure
 +++ b/configure
-@@ -22876,42 +22876,59 @@ fi
+@@ -22924,42 +22924,59 @@ fi
    if test "${use_readline}" = no; then
      ## only need ncurses if libreadline is not statically linked against it
      unset ac_cv_lib_readline_rl_callback_read_char
@@ -92,7 +92,7 @@ index 120dc192de..2975be56ec 100755
  
  else
    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -ltermcap" >&5
-@@ -46484,7 +46501,6 @@ fi
+@@ -44758,7 +44775,6 @@ fi
  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $MKDIR_P" >&5
  $as_echo "$MKDIR_P" >&6; }
  
@@ -101,10 +101,10 @@ index 120dc192de..2975be56ec 100755
  case $mkdir_p in
    [\\/$]* | ?:[\\/]*) ;;
 diff --git a/configure.ac b/configure.ac
-index 17a3c70da4..56da766d56 100644
+index 4c1cdbb745..6cfbcf5ee9 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -782,7 +782,7 @@ if test "${use_readline}" = yes; then
+@@ -772,7 +772,7 @@ if test "${use_readline}" = yes; then
    if test "${use_readline}" = no; then
      ## only need ncurses if libreadline is not statically linked against it
      unset ac_cv_lib_readline_rl_callback_read_char
@@ -114,5 +114,5 @@ index 17a3c70da4..56da766d56 100644
                                AC_CHECK_LIB(termlib, main)))
      AC_CHECK_LIB(readline, rl_callback_read_char)
 -- 
-2.14.3 (Apple Git-98)
+2.20.1
 

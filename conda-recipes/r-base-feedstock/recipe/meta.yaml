@@ -1,6 +1,6 @@
 {% set native = 'm2w64-' if win else '' %}
-{% set posix= 'm2-' if win else '' %}
-{% set version= '3.4.3' %}
+{% set posix = 'm2-' if win else '' %}
+{% set version = '3.6.1' %}
 
 package:
   name: r-base
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://cran.r-project.org/src/base/R-3/R-{{ version }}.tar.gz
-  sha256: 7a3cb831de5b4151e1f890113ed207527b7d4b16df9ec6b35e0964170007f426
+  sha256: 5baa9ebd3e71acecdcc3da31d9042fb174d55a42829f8315f2457080978b1389
   patches:
     - 0001-Darwin-Remove-unicode-elipsis-character-from-grDevic.patch
     - 0002-Fix-trio-config.h-include-depth-issue.patch
@@ -20,8 +20,13 @@ source:
     - 0008-Linux-Do-not-modify-LD_LIBRARY_PATH.patch
     - 0009-macOS-include-cairo.h-not-cairo-xlib.h.patch
     - 0010-javareconf-Do-not-fail-on-compile-fail.patch
-    - 0011-javareconf-macOS-Continue-to-allow-system-Java-lt-9-.patch
-    - 0012-Allow-rpath-in-tcltk-dylib-LC_LOAD_DYLIB.patch
+    - 0011-Revert-part-of-9b818c6dc00143ff18775a4015a3f43b5196f.patch
+    - 0012-javareconf-macOS-Continue-to-allow-system-Java-lt-9-.patch
+    - 0013-Allow-rpath-in-tcltk-dylib-LC_LOAD_DYLIB-command.patch
+    - 0014-Add-luuid-to-X_PRE_LIBS.patch
+    - 0015-link-Xt-to-uuid.patch
+    - 0017-Check-for-changes-then-forcibly-mv-in-javareconf.in.patch
+    - 0018-Use-LAPACK_LDFLAGS-in-Rlapack_la_LIBADD.patch
 
 build:
   merge_build_host: True  # [win]
@@ -39,33 +44,16 @@ build:
     - lib/R/etc/x64/ldpaths
     - lib/R/etc/x64/javaconf
   detect_binary_files_with_prefix: true
-  # The current openblas-devel run exports
-  # are overly restrictive IMHO, should be
-  # open-ended, but actually because we
-  # need to copy the shared library into this
-  # package and change its SONAME to libRblas.so
-  # we do not want a run dependency on openblas
-  # at all (otherwise Matrix.so ends up with a
-  # DT_NEEDED of libopenblas.so and cannot be used
-  # against any old libRblas.so)
-  ignore_run_exports:
-    - libopenblas
-    - ncurses
-    - blas
-    - libstdcxx-ng
 
 requirements:
   build:
     - {{ compiler('c') }}                # [not win]
     - {{ compiler('cxx') }}              # [not win]
     - {{ compiler('fortran') }}          # [not win]
-    - make                               # [not win]
-    - patchelf ==0.9
-    - {{native}}toolchain                # [win]
+    - m2w64-toolchain                    # [win]
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
     - {{ cdt('libxrender') }}            # [linux]
     - {{ cdt('libxext') }}               # [linux]
-    - {{ cdt('libuuid') }}               # [linux]
     - {{ cdt('libsm-devel') }}           # [linux]
     - {{ cdt('libice-devel') }}          # [linux]
     - {{ cdt('libx11-devel') }}          # [linux]
@@ -74,7 +62,6 @@ requirements:
     - {{ cdt('libxcb') }}                # [linux]
     - {{ cdt('libxau') }}                # [linux]
     - {{ cdt('java-1.7.0-openjdk') }}    # [linux]
-    - {{ cdt('java-1.7.0-openjdk-headless') }}    # [linux]
     - {{posix}}pkg-config
     - llvm-openmp >=4.0.1                # [osx]
     - posix                              # [win]
@@ -86,22 +73,27 @@ requirements:
     - {{posix}}autoconf
     - {{posix}}automake-wrapper          # [win]
     - {{posix}}automake                  # [not win]
+    - make                               # [not win]
   host:
+    - msys2-conda-epoch                  # [win]
     # This is a hack, strong run_exports should cause this to be added
     - llvm-openmp >=4.0.1                # [osx]
-    - libgfortran                        # [osx]
-    - readline 7.*                       # [not win]
+    - freetype                           # [not win]
+    - readline                           # [not win]
     - ncurses                            # [not win]
     - libcurl                            # [not win]
     - xz                                 # [not win]
     - libpng                             # [not win]
-    - {{native}}bzip2 1.0.*
-    - {{native}}cairo                    # [not win]
+    - bzip2                              # [not win]
+    - {{native}}bzip2                    # [win]
+    - cairo                              # [not win]
     - {{native}}libjpeg-turbo            # [win]
-    - {{native}}jpeg                     # [not win]
-    - {{native}}libiconv                 # [not linux]
+    - jpeg                               # [not win]
+    - libiconv                           # [osx]
+    - {{native}}libiconv                 # [win]
+    - libuuid                            # [linux]
     - {{native}}gmp                      # [win]
-    - {{native}}glib                     # [linux]
+    - glib                               # [linux]
     - {{native}}fftw                     # [win]
     - {{native}}xz                       # [win]
     - {{native}}mpfr                     # [win]
@@ -109,32 +101,41 @@ requirements:
     - {{native}}bwidget
     - {{native}}tktable
     - {{native}}libpng                   # [win]
-    - {{native}}pango 1.42.*             # [not win]
-    - {{native}}icu
+    - pango                              # [not win]
+    - {{native}}icu                      # [win]
+    - icu                                # [not win]
     - {{native}}pcre
+    - tk                                 # [not win]
     - {{native}}tk                       # [win]
-    - {{native}}tk 8.6.*                 # [not win]
-    - {{native}}zlib 1.2.8               # [win]
-    - {{native}}zlib                     # [not win]
-    - {{native}}libtiff >=4.0.3,<4.0.8   # [win]
-    - {{native}}libtiff                  # [not win]
-    - {{native}}libxml2 2.9.*            # [win]
-    - {{native}}openblas-devel >=0.2.20  # [linux]
-    - {{native}}openblas                 # [win]
+    - {{native}}zlib                     # [win]
+    - zlib                               # [not win]
+    - {{native}}gsl                      # [win]
+    - gsl                                # [not win]
+    - {{native}}libtiff                  # [win]
+    - libtiff                            # [not win]
+    - {{native}}libxml2                  # [win]
+    - libxml2                            # [not win]
+    - libssh2                            # [not win]
+    - krb5                               # [not win]
+    - libblas
+    - liblapack
+    - sed                                # [linux]
 
   run:
-    #- _r-mutex 1.* anacondar_1
-    - {{ compiler('c') }}                # [not win]
-    - {{ compiler('cxx') }}              # [not win]
-    - {{ compiler('fortran') }}          # [not win]
-    - llvm-openmp >=4.0.1                # [osx]
-    - readline 7.*                       # [not win]
+    - _r-mutex 1.* anacondar_1
+    - {{ pin_compatible("msys2-conda-epoch", exact=True) }}  # [win]
+    # Needed by R CMD javareconf
+    - make                               # [not win]
+    - {{ compiler('fortran') }}          # [not win and c_compiler!='toolchain_c']
+    - {{ compiler('cxx') }}              # [not win and c_compiler!='toolchain_c']
+    - {{ compiler('c') }}                # [not win and c_compiler!='toolchain_c']
+    - {{ pin_compatible('llvm-openmp', max_pin=None) }}      # [osx]
     - {{native}}gcc-libs                 # [win]
-    - libcurl                            # [not win]
     - curl                               # [not win]
-    - {{native}}bzip2 1.0.*              # [win]
+    - {{native}}bzip2                    # [win]
     - {{native}}libjpeg-turbo            # [win]
     - {{native}}libiconv                 # [win]
+    - libuuid                            # [linux]
     - {{native}}gmp                      # [win]
     - {{native}}fftw                     # [win]
     - {{native}}xz                       # [win]
@@ -143,28 +144,40 @@ requirements:
     - {{native}}bwidget
     - {{native}}tktable
     - {{native}}libpng                   # [win]
-    - {{native}}pango 1.*                # [not win]
-    - {{native}}pcre
+    - {{native}}pcre                     # [win]
     - {{native}}tk                       # [win]
-    - {{native}}tk 8.6.*                 # [not win]
-    - {{native}}zlib 1.2.8               # [win]
-    - {{native}}libtiff >=4.0.3,<4.0.8   # [win]
-    - {{native}}openblas                 # [win]
+    - {{native}}zlib                     # [win]
+    - {{native}}gsl                      # [win]
+    - {{native}}libtiff                  # [win]
+    - {{native}}libxml2                  # [win]
+    # Once run_exports are in place these will not be necessary:
+    - {{ pin_compatible('pango') }}      # [not win]
+    - {{ pin_compatible('bzip2') }}      # [not win]
+    - {{ pin_compatible('icu') }}        # [not win]
+    - sed                                # [linux]
+
 
 test:
   commands:
     - R -h
     - R --version
-    - $R -e "library('tcltk')"           # [not win]
-    - "\"%R%\" -e \"library('tcltk')\""  # [win]
+    - R -e "library('tcltk')"            # [linux]
+    - R -e \"library('tcltk')\""         # [win]
     - Rscript --version
     - Rscript -e  'cat("ok\\n")'
-    - open  # [win]
-    # There doesn't seem to be a way to test this one
-    # - RSetReg  # [win]
-    - Rfe --help  # [win]
-    - Rterm --help  # [win]
-    - Rterm --version  # [win]
+    # TODO does not work on windows, because winCairo.dll is missing
+    - Rscript test-svg.R                 # [not win]
+    - open                               # [win]
+     # There doesn't seem to be a way to test this one
+     # - RSetReg                         # [win]
+    - Rfe --help                         # [win]
+    - Rterm --help                       # [win]
+    - Rterm --version                    # [win]
+    # Prevent regression mentioned in https://github.com/conda-forge/r-base-feedstock/issues/50
+    - Rscript -e "stopifnot(capabilities('jpeg'), TRUE)"
+    - Rscript -e "stopifnot(capabilities('png'), TRUE)"
+  files:
+    - test-svg.R
 
 about:
   home: http://www.r-project.org/
@@ -177,6 +190,9 @@ extra:
   recipe-maintainers:
     - bgruening
     - johanneskoester
+    - isuruf
     - mingwandroid
     - ocefpaf
     - sodre
+    - jdblischak
+    - dpryan79

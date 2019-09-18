@@ -1,7 +1,7 @@
-From 163c19dffb5d98b5575b02c08a5e2e895f608403 Mon Sep 17 00:00:00 2001
+From 56503f8073452454d970f09c4bc49a3e89553128 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 2 Jan 2018 15:47:26 +0000
-Subject: [PATCH 06/10] Darwin: Avoid setting DYLD_FALLBACK_LIBRARY_PATH
+Subject: [PATCH 06/18] Darwin: Avoid setting DYLD_FALLBACK_LIBRARY_PATH
 
 Since it does nothing these days (you should use -Wl,-rpath,${PREFIX}/lib instead).
 ---
@@ -10,10 +10,10 @@ Since it does nothing these days (you should use -Wl,-rpath,${PREFIX}/lib instea
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/configure b/configure
-index caa8cc34b2..120dc192de 100755
+index fad6463cbc..e0a536c9be 100755
 --- a/configure
 +++ b/configure
-@@ -22504,7 +22504,7 @@ fi
+@@ -22569,7 +22569,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
  R_LD_LIBRARY_PATH_save=${R_LD_LIBRARY_PATH}
  R_LD_LIBRARY_PATH=
  case "${host_os}" in
@@ -23,10 +23,10 @@ index caa8cc34b2..120dc192de 100755
      ## that the linker can add library's path to the binary at link time.
      ## This allows the dyld to find libraries even without xx_LIBRARY_PATH.
 diff --git a/configure.ac b/configure.ac
-index f34744df32..17a3c70da4 100644
+index 2039a4894a..4c1cdbb745 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -691,7 +691,7 @@ AM_CONDITIONAL(CROSS_COMPILING, [test "${cross_compiling}" = yes])
+@@ -698,7 +698,7 @@ AC_SUBST(LIBTOOL_DEPS)
  R_LD_LIBRARY_PATH_save=${R_LD_LIBRARY_PATH}
  R_LD_LIBRARY_PATH=
  case "${host_os}" in
@@ -36,5 +36,5 @@ index f34744df32..17a3c70da4 100644
      ## that the linker can add library's path to the binary at link time.
      ## This allows the dyld to find libraries even without xx_LIBRARY_PATH.
 -- 
-2.14.3 (Apple Git-98)
+2.20.1
 
