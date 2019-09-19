@@ -1,0 +1,78 @@
+{% set version = '3.1-141' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-nlme
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/nlme_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/nlme/nlme_{{ version }}.tar.gz
+  sha256: 910046260a03d8f776ac7b0766b5adee91556829d0d8a70165b2c695ce038056
+
+build:
+  merge_build_host: True  # [win]
+  number: 1
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}              # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{ compiler('fortran') }}        # [not win]
+    - {{ compiler('m2w64_fortran') }}  # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+    - r-lattice
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+    - r-lattice
+
+test:
+  commands:
+    - $R -e "library('nlme')"           # [not win]
+    - "\"%R%\" -e \"library('nlme')\""  # [win]
+
+about:
+  home: https://svn.r-project.org/R-packages/trunk/nlme
+  license: GPL (>= 2)
+  summary: Fit and compare Gaussian linear and nonlinear mixed-effects models.
+  license_family: GPL3
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-3'
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+
+# Package: nlme
+# Version: 3.1-141
+# Date: 2019-08-01
+# Priority: recommended
+# Title: Linear and Nonlinear Mixed Effects Models
+# Authors@R: c(person("Jose", "Pinheiro", role = "aut", comment = "S version"), person("Douglas", "Bates", role = "aut", comment = "up to 2007"), person("Saikat", "DebRoy", role = "ctb", comment = "up to 2002"), person("Deepayan", "Sarkar", role = "ctb", comment = "up to 2005"), person("EISPACK authors", role = "ctb", comment = "src/rs.f"), person("Siem", "Heisterkamp", role = "ctb", comment = "Author fixed sigma"), person("Bert", "Van Willigen",role = "ctb", comment = "Programmer fixed sigma"), person("R-core", email = "R-core@R-project.org", role = c("aut", "cre")))
+# Description: Fit and compare Gaussian linear and nonlinear mixed-effects models.
+# Depends: R (>= 3.4.0)
+# Imports: graphics, stats, utils, lattice
+# Suggests: Hmisc, MASS
+# LazyData: yes
+# ByteCompile: yes
+# Encoding: UTF-8
+# License: GPL (>= 2) | file LICENCE
+# BugReports: https://bugs.r-project.org
+# URL: https://svn.r-project.org/R-packages/trunk/nlme
+# NeedsCompilation: yes
+# Packaged: 2019-08-01 03:39:13 UTC; hornik
+# Author: Jose Pinheiro [aut] (S version), Douglas Bates [aut] (up to 2007), Saikat DebRoy [ctb] (up to 2002), Deepayan Sarkar [ctb] (up to 2005), EISPACK authors [ctb] (src/rs.f), Siem Heisterkamp [ctb] (Author fixed sigma), Bert Van Willigen [ctb] (Programmer fixed sigma), R-core [aut, cre]
+# Maintainer: R-core <R-core@R-project.org>
+# Repository: CRAN
+# Date/Publication: 2019-08-01 06:04:26 UTC
