@@ -30,5 +30,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/r-reshape2-feedstock
+  -  cd conda-recipes/r-viridislite-feedstock
   -  ./ci_support/run_docker_build.sh
