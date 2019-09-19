@@ -29,5 +29,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/r-minqa-feedstock
+  -  cd conda-recipes/r-mitools-feedstock
   -  ./ci_support/run_docker_build.sh
