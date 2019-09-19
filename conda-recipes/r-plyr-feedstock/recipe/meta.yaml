@@ -1,0 +1,66 @@
+{% set version = '1.8.4' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-plyr
+  version: {{ version|replace("-", "_") }}
+
+source:
+  fn: plyr_{{ version }}.tar.gz
+  url:
+    - {{ cran_mirror }}/src/contrib/plyr_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/plyr/plyr_{{ version }}.tar.gz
+  sha256: 60b522d75961007658c9806f8394db27989f1154727cb0bb970062c96ec9eac5
+
+build:
+  merge_build_host: True  # [win]
+  number: 1003
+  skip: true  # [win32]
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}        # [not win]
+    - {{ compiler('cxx') }}      # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{ compiler('m2w64_cxx') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+    - r-rcpp >=0.11.0
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+    - r-rcpp >=0.11.0
+
+test:
+  commands:
+    - $R -e "library('plyr')"           # [not win]
+    - "\"%R%\" -e \"library('plyr')\""  # [win]
+
+about:
+  home: http://had.co.nz/plyr, https://github.com/hadley/plyr
+  license: MIT
+  summary: 'A set of tools that solves a common set of problems: you need to break a big problem
+    down into manageable pieces, operate on each piece and then put all the pieces back
+    together.  For example, you might want to fit a model to each spatial location or
+    time point in your study, summarise data by panels or collapse high-dimensional
+    arrays to simpler summary statistics. The development of ''plyr'' has been generously
+    supported by ''Becton Dickinson''.'
+  license_family: MIT
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+    - johanneskoester
+    - bgruening
+    - daler
+    - jdblischak
+    - cbrueffer
