@@ -1,0 +1,71 @@
+{% set version = '0.2.2' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-lazyeval
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/lazyeval_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/lazyeval/lazyeval_{{ version }}.tar.gz
+  sha256: d6904112a21056222cfcd5eb8175a78aa063afe648a562d9c42c6b960a8820d4
+
+build:
+  merge_build_host: True  # [win]
+  number: 1
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}        # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+
+test:
+  commands:
+    - $R -e "library('lazyeval')"           # [not win]
+    - "\"%R%\" -e \"library('lazyeval')\""  # [win]
+
+about:
+  home: https://CRAN.R-project.org/package=lazyeval
+  license: GPL-3
+  summary: An alternative approach to non-standard evaluation using formulas. Provides a full
+    implementation of LISP style 'quasiquotation', making it easier to generate code
+    with other code.
+  license_family: GPL3
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-3'
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+
+# Package: lazyeval
+# Version: 0.2.2
+# Title: Lazy (Non-Standard) Evaluation
+# Description: An alternative approach to non-standard evaluation using formulas. Provides a full implementation of LISP style 'quasiquotation', making it easier to generate code with other code.
+# Authors@R: c( person("Hadley", "Wickham", ,"hadley@rstudio.com", c("aut", "cre")), person("RStudio", role = "cph") )
+# License: GPL-3
+# LazyData: true
+# Depends: R (>= 3.1.0)
+# Suggests: knitr, rmarkdown (>= 0.2.65), testthat, covr
+# VignetteBuilder: knitr
+# RoxygenNote: 6.1.1
+# NeedsCompilation: yes
+# Packaged: 2019-03-15 14:18:01 UTC; lionel
+# Author: Hadley Wickham [aut, cre], RStudio [cph]
+# Maintainer: Hadley Wickham <hadley@rstudio.com>
+# Repository: CRAN
+# Date/Publication: 2019-03-15 17:50:07 UTC

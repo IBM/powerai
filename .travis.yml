@@ -25,10 +25,10 @@ env:
 matrix:
 #noarch build for imageai 
   include:
-    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+    - env: CONFIG=linux_r_base3.6target_platformlinux-ppc64le UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
       os: linux-ppc64le
       language: generic
 
 script:
-  -  cd conda-recipes/imageai-feedstock
+  -  cd conda-recipes/r-lazyeval-feedstock
   -  ./ci_support/run_docker_build.sh
