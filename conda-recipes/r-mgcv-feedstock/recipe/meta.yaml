@@ -1,0 +1,80 @@
+{% set version = '1.8-28' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-mgcv
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/mgcv_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/mgcv/mgcv_{{ version }}.tar.gz
+  sha256: b55ea8227cd5c263c266c3885fa3299aa6bd23b54186517f9299bf38a7bdd3ea
+
+build:
+  merge_build_host: True  # [win]
+  number: 1
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}        # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+    - llvm-openmp                # [osx]
+  host:
+    - r-base
+    - r-matrix
+    - r-nlme >=3.1_64
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+    - r-matrix
+    - r-nlme >=3.1_64
+    - llvm-openmp                # [osx]
+
+test:
+  commands:
+    - $R -e "library('mgcv')"           # [not win]
+    - "\"%R%\" -e \"library('mgcv')\""  # [win]
+
+about:
+  home: https://CRAN.R-project.org/package=mgcv
+  license: GPL (>= 2)
+  summary: 'Generalized additive (mixed) models, some of their extensions and  other generalized
+    ridge regression with multiple smoothing  parameter estimation by (Restricted) Marginal
+    Likelihood,  Generalized Cross Validation and similar, or using iterated  nested
+    Laplace approximation for fully Bayesian inference. See  Wood (2017) <doi:10.1201/9781315370279>
+    for an overview.  Includes a gam() function, a wide variety of smoothers, ''JAGS''  support
+    and distributions beyond the exponential family. '
+  license_family: GPL3
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-2'
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+
+# Package: mgcv
+# Version: 1.8-28
+# Author: Simon Wood <simon.wood@r-project.org>
+# Maintainer: Simon Wood <simon.wood@r-project.org>
+# Title: Mixed GAM Computation Vehicle with Automatic Smoothness Estimation
+# Description: Generalized additive (mixed) models, some of their extensions and  other generalized ridge regression with multiple smoothing  parameter estimation by (Restricted) Marginal Likelihood,  Generalized Cross Validation and similar, or using iterated  nested Laplace approximation for fully Bayesian inference. See  Wood (2017) <doi:10.1201/9781315370279> for an overview.  Includes a gam() function, a wide variety of smoothers, 'JAGS'  support and distributions beyond the exponential family.
+# Priority: recommended
+# Depends: R (>= 2.14.0), nlme (>= 3.1-64)
+# Imports: methods, stats, graphics, Matrix, splines, utils
+# Suggests: parallel, survival, MASS
+# LazyLoad: yes
+# ByteCompile: yes
+# License: GPL (>= 2)
+# NeedsCompilation: yes
+# Packaged: 2019-03-21 08:56:32 UTC; sw283
+# Repository: CRAN
+# Date/Publication: 2019-03-21 11:40:07 UTC
