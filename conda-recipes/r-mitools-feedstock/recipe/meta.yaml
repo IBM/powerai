@@ -1,0 +1,61 @@
+{% set version = '2.4' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-mitools
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/mitools_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/mitools/mitools_{{ version }}.tar.gz
+  sha256: f204f3774e29d79810f579f128de892539518f2cbe6ed237e08c8e7283155d30
+
+build:
+  merge_build_host: True  # [win]
+  number: 1
+  noarch: generic
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+    - r-dbi
+  run:
+    - r-base
+    - r-dbi
+
+test:
+  commands:
+    - $R -e "library('mitools')"           # [not win]
+    - "\"%R%\" -e \"library('mitools')\""  # [win]
+
+about:
+  home: https://CRAN.R-project.org/package=mitools
+  license: GPL-2
+  summary: Tools to perform analyses and combine results from multiple-imputation datasets.
+  license_family: GPL2
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-2'
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+
+# Package: mitools
+# Title: Tools for Multiple Imputation of Missing Data
+# Version: 2.4
+# Author: Thomas Lumley
+# Description: Tools to perform analyses and combine results from multiple-imputation datasets.
+# Maintainer: Thomas Lumley <t.lumley@auckland.ac.nz>
+# Suggests: RODBC, foreign
+# Imports: DBI, methods, stats
+# License: GPL-2
+# NeedsCompilation: no
+# Packaged: 2019-04-25 22:44:21 UTC; tlum005
+# Repository: CRAN
+# Date/Publication: 2019-04-26 05:00:03 UTC
