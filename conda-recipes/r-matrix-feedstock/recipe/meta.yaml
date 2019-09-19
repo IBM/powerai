@@ -1,0 +1,81 @@
+{% set version = '1.2-17' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-matrix
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/Matrix_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/Matrix/Matrix_{{ version }}.tar.gz
+  sha256: db43e6f0196fd5dfd05a7e88cac193877352c60d771d4ec8772763e645723fcc
+
+build:
+  merge_build_host: True  # [win]
+  number: 1
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}        # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+    - r-lattice
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+    - r-lattice
+
+test:
+  commands:
+    - $R -e "library('Matrix')"           # [not win]
+    - "\"%R%\" -e \"library('Matrix')\""  # [win]
+
+about:
+  home: http://Matrix.R-forge.R-project.org/
+  license: GPL (>= 2)
+  summary: A rich hierarchy of matrix classes, including triangular, symmetric, and diagonal
+    matrices, both dense and sparse and with pattern, logical and numeric entries.   Numerous
+    methods for and operations on these matrices, using 'LAPACK' and 'SuiteSparse' libraries.
+  license_family: GPL3
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-3'
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+
+# Package: Matrix
+# Version: 1.2-17
+# Date: 2019-03-11
+# Priority: recommended
+# Title: Sparse and Dense Matrix Classes and Methods
+# Contact: Doug and Martin <Matrix-authors@R-project.org>
+# Maintainer: Martin Maechler <mmaechler+Matrix@gmail.com>
+# Authors@R: c(person("Douglas","Bates", role="aut") , person("Martin","Maechler", role = c("aut","cre"), email="mmaechler+Matrix@gmail.com", comment = c(ORCID = "0000-0002-8685-9910")) , person("Timothy A.", "Davis", role="ctb", comment = c("SuiteSparse and 'cs' C libraries, notably CHOLMOD, AMD; collaborators listed in dir(pattern = '^[A-Z]+[.]txt$', full.names=TRUE, system.file('doc', 'SuiteSparse', package='Matrix'))")) , person("Jens", "Oehlschlagel", role="ctb", comment="initial nearPD()") , person("Jason", "Riedy", role="ctb", comment = c("condest() and onenormest() for octave", "Copyright: Regents of the University of California")) , person("R Core Team", role = "ctb", comment="base R matrix implementation") )
+# Description: A rich hierarchy of matrix classes, including triangular, symmetric, and diagonal matrices, both dense and sparse and with pattern, logical and numeric entries.   Numerous methods for and operations on these matrices, using 'LAPACK' and 'SuiteSparse' libraries.
+# Depends: R (>= 3.2.0)
+# Imports: methods, graphics, grid, stats, utils, lattice
+# Suggests: expm, MASS
+# Enhances: MatrixModels, graph, SparseM, sfsmisc
+# Encoding: UTF-8
+# LazyData: no
+# LazyDataNote: not possible, since we use data/*.R *and* our classes
+# BuildResaveData: no
+# License: GPL (>= 2) | file LICENCE
+# URL: http://Matrix.R-forge.R-project.org/
+# BugReports: https://r-forge.r-project.org/tracker/?group_id=61
+# NeedsCompilation: yes
+# Packaged: 2019-03-20 21:37:04 UTC; maechler
+# Author: Douglas Bates [aut], Martin Maechler [aut, cre] (<https://orcid.org/0000-0002-8685-9910>), Timothy A. Davis [ctb] (SuiteSparse and 'cs' C libraries, notably CHOLMOD, AMD; collaborators listed in dir(pattern = '^[A-Z]+[.]txt$', full.names=TRUE, system.file('doc', 'SuiteSparse', package='Matrix'))), Jens Oehlschlagel [ctb] (initial nearPD()), Jason Riedy [ctb] (condest() and onenormest() for octave, Copyright: Regents of the University of California), R Core Team [ctb] (base R matrix implementation)
+# Repository: CRAN
+# Date/Publication: 2019-03-22 22:56:52 UTC
