@@ -1,0 +1,47 @@
+{% set version="0.8.0" %}
+
+package:
+  name: fairseq
+  version: {{ version }}
+
+source:
+  git_url: https://github.com/pytorch/fairseq 
+  git_rev: v{{ version }} 
+
+build:
+  number: 0
+  skip: True  # [win]
+  script: python -m pip install --no-deps --ignore-installed .
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+
+  host:
+    - python
+    - tqdm=4.31.1
+    - sacrebleu
+    - pytorch=1.1.0
+    - regex
+    - fastBPE
+    - pycparser
+    - cython=0.29
+    - setuptools=40
+
+  run:
+    - python
+    - cffi=1.12
+    - fastBPE
+    - numpy=1.14
+    - regex
+    - sacrebleu
+    - pycparser
+    - cython=0.29
+    - pytorch=1.1.0
+    - tqdm=4.31.1
+
+about:
+  home: https://github.com/pytorch/fairseq 
+  license: MIT License
+  license_file: LICENSE
+  summary: Facebook AI Research Sequence-to-Sequence Toolkit 
