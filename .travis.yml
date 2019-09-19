@@ -29,5 +29,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/r-nleqslv-feedstock
+  -  cd conda-recipes/r-digest-feedstock
   -  ./ci_support/run_docker_build.sh
