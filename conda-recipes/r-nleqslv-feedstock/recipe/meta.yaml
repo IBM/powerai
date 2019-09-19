@@ -1,0 +1,64 @@
+{% set version = '3.3.2' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-nleqslv
+  version: {{ version|replace("-", "_") }}
+
+source:
+  fn: nleqslv_{{ version }}.tar.gz
+  url:
+    - {{ cran_mirror }}/src/contrib/nleqslv_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/nleqslv/nleqslv_{{ version }}.tar.gz
+  sha256: f54956cf67f9970bb3c6803684c84a27ac78165055745e444efc45cfecb63fed
+
+build:
+  merge_build_host: True  # [win]
+  number: 1004
+  skip: true  # [win32]
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}        # [not win]
+    - {{ compiler('fortran') }}  # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{ compiler('m2w64_fortran') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+
+test:
+  commands:
+    - $R -e "library('nleqslv')"           # [not win]
+    - "\"%R%\" -e \"library('nleqslv')\""  # [win]
+
+about:
+  home: https://CRAN.R-project.org/package=nleqslv
+  license: GPL (>= 2)
+  summary: Solve a system of nonlinear equations using a Broyden or a Newton method with a choice
+    of global strategies such as line search and trust region. There are options for
+    using a numerical or user supplied Jacobian, for specifying a banded numerical Jacobian
+    and for allowing a singular or ill-conditioned Jacobian.
+  license_family: GPL3
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-3'
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+    - johanneskoester
+    - bgruening
+    - daler
+    - jdblischak
+    - cbrueffer
+    - dbast
