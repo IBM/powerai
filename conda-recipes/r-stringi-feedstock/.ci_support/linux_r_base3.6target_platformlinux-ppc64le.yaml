@@ -1,0 +1,28 @@
+c_compiler:
+- gcc
+c_compiler_version:
+- '7'
+channel_sources:
+- conda-forge,powerai,defaults
+channel_targets:
+- powerai main
+cran_mirror:
+- https://cran.r-project.org
+cxx_compiler:
+- gxx
+cxx_compiler_version:
+- '7'
+docker_image:
+- condaforge/linux-anvil-ppc64le
+icu:
+- '64.2'
+pin_run_as_build:
+  icu:
+    max_pin: x
+  r-base:
+    min_pin: x.x
+    max_pin: x.x
+r_base:
+- '3.6'
+target_platform:
+- linux-ppc64le

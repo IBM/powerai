@@ -1,0 +1,93 @@
+{% set version = '1.4.3' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-stringi
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/stringi_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/stringi/stringi_{{ version }}.tar.gz
+  sha256: 13cecb396b700f81af38746e97b550a1d9fda377ca70c78f6cdfc770d33379ed
+
+build:
+  merge_build_host: True  # [win]
+  number: 3
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}        # [not win]
+    - {{ compiler('cxx') }}      # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{ compiler('m2w64_cxx') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}sed               # [win]
+    - {{posix}}grep              # [win]
+    - {{posix}}autoconf
+    - {{posix}}automake          # [not win]
+    - {{posix}}automake-wrapper  # [win]
+    - {{posix}}pkg-config
+    - {{posix}}make
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+    - icu         # [unix]
+    - m2w64-icu   # [win]
+  run:
+    - r-base
+    - icu         # [unix]
+    - m2w64-icu   # [win]
+    - {{native}}gcc-libs         # [win]
+
+test:
+  commands:
+    - $R -e "library('stringi')"           # [not win]
+    - "\"%R%\" -e \"library('stringi')\""  # [win]
+
+about:
+  home: http://www.gagolewski.com/software/stringi/ http://site.icu-project.org/ http://www.unicode.org/
+  license: FOSS
+  license_file: LICENSE
+  summary: 'Fast, correct, consistent, portable, as well as convenient character string/text
+    processing in every locale and any native encoding. Owing to the use of the ''ICU''
+    (International Components for Unicode) library, the package provides ''R'' users
+    with platform-independent functions known to ''Java'', ''Perl'', ''Python'', ''PHP'',
+    and ''Ruby'' programmers. Available features include: pattern searching (e.g., with
+    ''Java''-like regular expressions or the ''Unicode'' collation algorithm), random
+    string generation, case mapping, string transliteration, concatenation, Unicode
+    normalization, date-time formatting and parsing, and many more.'
+  license_family: OTHER
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+    - ocefpaf
+    - mariusvniekerk
+
+# Package: stringi
+# Version: 1.4.3
+# Date: 2019-03-12
+# Title: Character String Processing Facilities
+# Description: Fast, correct, consistent, portable, as well as convenient character string/text processing in every locale and any native encoding. Owing to the use of the 'ICU' (International Components for Unicode) library, the package provides 'R' users with platform-independent functions known to 'Java', 'Perl', 'Python', 'PHP', and 'Ruby' programmers. Available features include: pattern searching (e.g., with 'Java'-like regular expressions or the 'Unicode' collation algorithm), random string generation, case mapping, string transliteration, concatenation, Unicode normalization, date-time formatting and parsing, and many more.
+# URL: http://www.gagolewski.com/software/stringi/ http://site.icu-project.org/ http://www.unicode.org/
+# BugReports: http://github.com/gagolews/stringi/issues
+# SystemRequirements: ICU4C (>= 52, optional)
+# Type: Package
+# Depends: R (>= 2.14)
+# Imports: tools, utils, stats
+# Biarch: TRUE
+# License: file LICENSE
+# Author: Marek Gagolewski [aut, cre] (<https://orcid.org/0000-0003-0637-6028>), Bartek Tartanus [ctb], and other contributors (stringi source code); IBM, Unicode, Inc., and other contributors (ICU4C source code); Unicode, Inc. (Unicode Character Database)
+# Maintainer: Marek Gagolewski <marek@gagolewski.com>
+# RoxygenNote: 6.1.1
+# NeedsCompilation: yes
+# Packaged: 2019-03-12 21:12:07 UTC; gagolews
+# License_is_FOSS: yes
+# Repository: CRAN
+# Date/Publication: 2019-03-12 23:20:03 UTC
