@@ -1,0 +1,54 @@
+{% set version = "0.8.8" %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-reshape
+  version: {{ version|replace("-", "_") }}
+
+source:
+  fn: reshape_{{ version }}.tar.gz
+  url:
+    - {{ cran_mirror }}/src/contrib/reshape_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/reshape/reshape_{{ version }}.tar.gz
+  sha256: 4d5597fde8511e8fe4e4d1fd7adfc7ab37ff41ac68c76a746f7487d7b106d168
+
+build:
+  merge_build_host: True  # [win]
+  number: 1
+  skip: true  # [win32]
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}        # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+  host:
+    - r-base
+    - r-plyr
+  run:
+    - r-base
+    - r-plyr
+
+test:
+  commands:
+    - $R -e "library('reshape')"           # [not win]
+    - "\"%R%\" -e \"library('reshape')\""  # [win]
+
+about:
+  home: http://had.co.nz/reshape
+  license: MIT
+  summary: 'Flexibly restructure and aggregate data using  just two functions: melt and cast.'
+  license_family: MIT
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+    - johanneskoester
+    - bgruening
+    - daler
+    - jdblischak
+    - cbrueffer
+    - dbast
