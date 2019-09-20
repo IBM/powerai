@@ -1,0 +1,58 @@
+{% set version = '1.1.4' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-utf8
+  version: {{ version|replace("-", "_") }}
+
+source:
+  fn: utf8_{{ version }}.tar.gz
+  url:
+    - {{ cran_mirror }}/src/contrib/utf8_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/utf8/utf8_{{ version }}.tar.gz
+  sha256: f6da9cadfc683057d45f54b43312a359cf96ec2731c0dda18a8eae31d1e31e54
+
+build:
+  merge_build_host: True  # [win]
+  number: 1001
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}        # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+
+test:
+  commands:
+    - $R -e "library('utf8')"           # [not win]
+    - "\"%R%\" -e \"library('utf8')\""  # [win]
+
+about:
+  home: https://github.com/patperry/r-utf8
+  license: Apache-2-0
+  summary: Process and print 'UTF-8' encoded international text (Unicode). Input, validate, normalize,
+    encode, format, and display.
+  license_family: APACHE
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+    - ocefpaf
+    - johanneskoester
+    - bgruening
+    - daler
+    - jdblischak
+    - cbrueffer
