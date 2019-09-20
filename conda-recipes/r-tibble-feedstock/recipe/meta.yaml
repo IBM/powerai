@@ -1,0 +1,86 @@
+{% set version = "2.1.3" %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-tibble
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/tibble_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/tibble/tibble_{{ version }}.tar.gz
+  sha256: 9a8cea9e6b5d24a7e9bf5f67ab38c40b2b6489eddb0d0edb8a48a21ba3574e1a
+
+build:
+  merge_build_host: True  # [win]
+  number: 1
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}        # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+    - r-cli >=1.0.1
+    - r-crayon >=1.3.4
+    - r-fansi >=0.4.0
+    - r-pillar >=1.3.1
+    - r-pkgconfig >=2.0.2
+    - r-rlang >=0.3.1
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+    - r-cli >=1.0.1
+    - r-crayon >=1.3.4
+    - r-fansi >=0.4.0
+    - r-pillar >=1.3.1
+    - r-pkgconfig >=2.0.2
+    - r-rlang >=0.3.1
+
+test:
+  commands:
+    - $R -e "library('tibble')"           # [not win]
+    - "\"%R%\" -e \"library('tibble')\""  # [win]
+
+about:
+  home: http://tibble.tidyverse.org/, https://github.com/tidyverse/tibble
+  license: MIT
+  summary: Provides a 'tbl_df' class (the 'tibble') that provides stricter checking and better
+    formatting than the traditional data frame.
+  license_family: MIT
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+
+# Package: tibble
+# Title: Simple Data Frames
+# Version: 2.1.1
+# Authors@R: c( person("Kirill", "Muller", , "krlmlr+r@mailbox.org", c("aut", "cre")), person("Hadley", "Wickham", , "hadley@rstudio.com", "aut"), person("Romain", "Francois", , "romain@r-enthusiasts.com", "ctb"), person("Jennifer", "Bryan", , "jenny@rstudio.com", "ctb"), person("RStudio", role = "cph") )
+# Description: Provides a 'tbl_df' class (the 'tibble') that provides stricter checking and better formatting than the traditional data frame.
+# License: MIT + file LICENSE
+# URL: http://tibble.tidyverse.org/, https://github.com/tidyverse/tibble
+# BugReports: https://github.com/tidyverse/tibble/issues
+# Depends: R (>= 3.1.0)
+# Imports: cli (>= 1.0.1), crayon (>= 1.3.4), fansi (>= 0.4.0), methods, pillar (>= 1.3.1), pkgconfig (>= 2.0.2), rlang (>= 0.3.1), utils
+# Suggests: bench (>= 1.0.1), covr (>= 3.2.1), dplyr (>= 0.7.8), htmltools (>= 0.3.6), import (>= 1.1.0), knitr (>= 1.21), mockr (>= 0.1), nycflights13 (>= 1.0.0), rmarkdown (>= 1.11), testthat (>= 2.0.1), withr (>= 2.1.2)
+# VignetteBuilder: knitr
+# Encoding: UTF-8
+# LazyData: yes
+# RoxygenNote: 6.1.1
+# Collate: 'add.R' 'as_tibble.R' 'check-names.R' 'compat-lazyeval.R' 'compat-lifecycle.R' 'compat-name-repair.R' 'compat-purrr.R' 'tribble.R' 'deprecated.R' 'enframe.R' 'exports.R' 'glimpse.R' 'has-name.R' 'lst.R' 'msg-format.R' 'msg.R' 'new.R' 'repair-names.R' 'rownames.R' 'strrep.R' 'subsetting.R' 'tbl-df.r' 'tibble-package.R' 'tibble.R' 'type-sum.r' 'utils-format.r' 'utils.r' 'view.R' 'wrap.R' 'zzz.R'
+# NeedsCompilation: yes
+# Packaged: 2019-03-14 23:24:25 UTC; kirill
+# Author: Kirill Muller [aut, cre], Hadley Wickham [aut], Romain Francois [ctb], Jennifer Bryan [ctb], RStudio [cph]
+# Maintainer: Kirill Muller <krlmlr+r@mailbox.org>
+# Repository: CRAN
+# Date/Publication: 2019-03-16 22:50:03 UTC
