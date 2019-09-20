@@ -1,0 +1,97 @@
+{% set version = '1.0.9' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-gsynth
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/gsynth_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/gsynth/gsynth_{{ version }}.tar.gz
+  sha256: a3d2bbf8a78e77f6bf58a52a45ee168adab618daf3fcfa5d76e6835afd1b3ad5
+
+build:
+  merge_build_host: True  # [win]
+  number: 0
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}              # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{ compiler('cxx') }}            # [not win]
+    - {{ compiler('m2w64_cxx') }}      # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+    - r-ggally >=1.0.1
+    - r-mass >=7.3.47
+    - r-rcpp >=0.12.3
+    - r-rcpparmadillo
+    - r-abind >=1.4_0
+    - r-doparallel >=1.0.10
+    - r-foreach >=1.4.3
+    - r-ggplot2 >=2.1.0
+    - r-mvtnorm >=1.0_6
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+    - r-ggally >=1.0.1
+    - r-mass >=7.3.47
+    - r-rcpp >=0.12.3
+    - r-rcpparmadillo
+    - r-abind >=1.4_0
+    - r-doparallel >=1.0.10
+    - r-foreach >=1.4.3
+    - r-ggplot2 >=2.1.0
+    - r-mvtnorm >=1.0_6
+
+test:
+  commands:
+    - $R -e "library('gsynth')"           # [not win]
+    - "\"%R%\" -e \"library('gsynth')\""  # [win]
+
+about:
+  home: http://yiqingxu.org/software/gsynth/gsynth_examples.html
+  license: GPL-2
+  summary: 'Provides causal inference with interactive fixed-effect models. It imputes counterfactuals
+    for each treated unit using control group information based on a linear interactive
+    fixed effects model that incorporates unit-specific intercepts interacted with time-varying
+    coefficients. This method generalizes the synthetic control method to the case of
+    multiple treated units and variable treatment periods, and improves efficiency and
+    interpretability. This version supports unbalanced panels and implements the matrix
+    completion method. Main reference: Yiqing Xu (2017) <doi:10.1017/pan.2016.2>.'
+  license_family: GPL2
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-2'
+
+extra:
+  recipe-maintainers:
+    - jayfurmanek
+
+# Package: gsynth
+# Type: Package
+# Title: Generalized Synthetic Control Method
+# Version: 1.0.9
+# Date: 2018-08-07
+# Author: Yiqing Xu, Licheng Liu
+# Maintainer: Yiqing Xu <yiqingxu@ucsd.edu>
+# Description: Provides causal inference with interactive fixed-effect models. It imputes counterfactuals for each treated unit using control group information based on a linear interactive fixed effects model that incorporates unit-specific intercepts interacted with time-varying coefficients. This method generalizes the synthetic control method to the case of multiple treated units and variable treatment periods, and improves efficiency and interpretability. This version supports unbalanced panels and implements the matrix completion method. Main reference: Yiqing Xu (2017) <doi:10.1017/pan.2016.2>.
+# URL: http://yiqingxu.org/software/gsynth/gsynth_examples.html
+# NeedsCompilation: yes
+# License: GPL-2
+# Imports: Rcpp (>= 0.12.3), ggplot2 (>= 2.1.0), GGally (>= 1.0.1), doParallel (>= 1.0.10), foreach (>= 1.4.3), abind (>= 1.4-0), mvtnorm (>= 1.0-6), MASS (>= 7.3.47)
+# SystemRequirements: A C++11 compiler.
+# Depends: R (>= 2.10)
+# LinkingTo: Rcpp, RcppArmadillo
+# RoxygenNote: 6.0.1
+# Packaged: 2018-08-24 21:48:35 UTC; xyq
+# Repository: CRAN
+# Date/Publication: 2018-08-24 22:14:01 UTC
