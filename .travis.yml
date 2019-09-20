@@ -30,5 +30,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/r-vctrs-feedstock
+  -  cd conda-recipes/r-tibble-feedstock
   -  ./ci_support/run_docker_build.sh
