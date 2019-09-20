@@ -30,5 +30,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/r-lpsolveapi-feedstock
+  -  cd conda-recipes/r-slam-feedstock
   -  ./ci_support/run_docker_build.sh
