@@ -1,0 +1,67 @@
+{% set version = '1.0.0' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-scales
+  version: {{ version|replace("-", "_") }}
+
+source:
+  fn: scales_{{ version }}.tar.gz
+  url:
+    - {{ cran_mirror }}/src/contrib/scales_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/scales/scales_{{ version }}.tar.gz
+  sha256: 0c1f4a14edd336a404da34a3cc71a6a9d0ca2040ba19360c41a79f36e06ca30c
+
+build:
+  merge_build_host: True  # [win]
+  number: 1002
+  skip: true  # [win32]
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}        # [not win]
+    - {{ compiler('cxx') }}      # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{ compiler('m2w64_cxx') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+    - r-r6
+    - r-rcolorbrewer
+    - r-rcpp
+    - r-labeling
+    - r-munsell >=0.5
+    - r-viridislite
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+    - r-r6
+    - r-rcolorbrewer
+    - r-rcpp
+    - r-labeling
+    - r-munsell >=0.5
+    - r-viridislite
+
+test:
+  commands:
+    - $R -e "library('scales')"           # [not win]
+    - "\"%R%\" -e \"library('scales')\""  # [win]
+
+about:
+  home: https://scales.r-lib.org, https://github.com/r-lib/scales
+  license: MIT
+  summary: Graphical scales map data to aesthetics, and provide methods for automatically determining
+    breaks and labels for axes and legends.
+  license_family: MIT
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
