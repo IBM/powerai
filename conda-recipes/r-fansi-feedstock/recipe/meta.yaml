@@ -1,0 +1,74 @@
+{% set version = '0.4.0' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-fansi
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/fansi_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/fansi/fansi_{{ version }}.tar.gz
+  sha256: e104e9d01c7ff8a847f6b332ef544c0ef912859f9c6a514fe2e6f3b34fcfc209
+
+build:
+  merge_build_host: True  # [win]
+  number: 1001
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}        # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+
+test:
+  commands:
+    - $R -e "library('fansi')"           # [not win]
+    - "\"%R%\" -e \"library('fansi')\""  # [win]
+
+about:
+  home: https://github.com/brodieG/fansi
+  license: GPL (>= 2)
+  summary: Counterparts to R string manipulation functions that account for the effects of ANSI
+    text formatting control sequences.
+  license_family: GPL3
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-2'
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+
+# Package: fansi
+# Title: ANSI Control Sequence Aware String Functions
+# Description: Counterparts to R string manipulation functions that account for the effects of ANSI text formatting control sequences.
+# Version: 0.4.0
+# Authors@R: c( person("Brodie", "Gaslam", email="brodie.gaslam@yahoo.com", role=c("aut", "cre")), person("Elliott", "Sales De Andrade", role="ctb"), person(family="R Core Team", email="R-core@r-project.org", role="cph", comment="UTF8 byte length calcs from src/util.c" ))
+# Depends: R (>= 3.1.0)
+# License: GPL (>= 2)
+# LazyData: true
+# URL: https://github.com/brodieG/fansi
+# BugReports: https://github.com/brodieG/fansi/issues
+# VignetteBuilder: knitr
+# Suggests: unitizer, knitr, rmarkdown
+# RoxygenNote: 6.1.0.9000
+# Encoding: UTF-8
+# Collate: 'constants.R' 'fansi-package.R' 'has.R' 'internal.R' 'load.R' 'misc.R' 'nchar.R' 'strip.R' 'strwrap.R' 'strtrim.R' 'strsplit.R' 'substr2.R' 'tohtml.R' 'unhandled.R'
+# NeedsCompilation: yes
+# Packaged: 2018-10-04 19:06:14 UTC; bg
+# Author: Brodie Gaslam [aut, cre], Elliott Sales De Andrade [ctb], R Core Team [cph] (UTF8 byte length calcs from src/util.c)
+# Maintainer: Brodie Gaslam <brodie.gaslam@yahoo.com>
+# Repository: CRAN
+# Date/Publication: 2018-10-05 05:10:12 UTC
