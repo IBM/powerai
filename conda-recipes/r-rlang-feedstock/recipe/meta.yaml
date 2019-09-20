@@ -1,0 +1,74 @@
+{% set version = '0.4.0' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-rlang
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/rlang_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/rlang/rlang_{{ version }}.tar.gz
+  sha256: 9748a4a217548bbe5631c18fd88c94811950446f798ff21fb327703aebaa150d
+
+build:
+  merge_build_host: True  # [win]
+  number: 1
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}              # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+
+test:
+  commands:
+    - $R -e "library('rlang')"           # [not win]
+    - "\"%R%\" -e \"library('rlang')\""  # [win]
+
+about:
+  home: http://rlang.r-lib.org, https://github.com/r-lib/rlang
+  license: GPL-3
+  summary: A toolbox for working with base types, core R features like the condition system,
+    and core 'Tidyverse' features like tidy evaluation.
+  license_family: GPL3
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-3'
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+
+# Package: rlang
+# Version: 0.4.0
+# Title: Functions for Base Types and Core R and 'Tidyverse' Features
+# Description: A toolbox for working with base types, core R features like the condition system, and core 'Tidyverse' features like tidy evaluation.
+# Authors@R: c( person("Lionel", "Henry", ,"lionel@rstudio.com", c("aut", "cre")), person("Hadley", "Wickham", ,"hadley@rstudio.com", "aut"), person("RStudio", role = "cph") )
+# License: GPL-3
+# LazyData: true
+# ByteCompile: true
+# Biarch: true
+# Depends: R (>= 3.2.0)
+# Suggests: covr, crayon, magrittr, methods, pillar, rmarkdown, testthat (>= 2.0.0)
+# Encoding: UTF-8
+# RoxygenNote: 6.1.1
+# URL: http://rlang.r-lib.org, https://github.com/r-lib/rlang
+# BugReports: https://github.com/r-lib/rlang/issues
+# NeedsCompilation: yes
+# Packaged: 2019-06-24 21:23:11 UTC; lionel
+# Author: Lionel Henry [aut, cre], Hadley Wickham [aut], RStudio [cph]
+# Maintainer: Lionel Henry <lionel@rstudio.com>
+# Repository: CRAN
+# Date/Publication: 2019-06-25 07:50:03 UTC
