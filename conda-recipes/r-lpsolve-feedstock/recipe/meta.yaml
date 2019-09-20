@@ -1,0 +1,70 @@
+{% set version = '5.6.13.3' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-lpsolve
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/lpSolve_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/lpSolve/lpSolve_{{ version }}.tar.gz
+  sha256: e64165428c40d730f7686d233c22936bf4b3b91a618a600bdf87acaa905f5ff5
+
+build:
+  merge_build_host: True  # [win]
+  number: 0
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}              # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+
+test:
+  commands:
+    - $R -e "library('lpSolve')"           # [not win]
+    - "\"%R%\" -e \"library('lpSolve')\""  # [win]
+
+about:
+  home: https://CRAN.R-project.org/package=lpSolve
+  license: LGPL-2
+  summary: Lp_solve is freely available (under LGPL 2) software for solving linear, integer and
+    mixed integer programs. In this implementation we supply a "wrapper" function in
+    C and some R functions that solve general linear/integer problems, assignment problems,
+    and transportation problems. This version calls lp_solve version 5.5.
+  license_family: LGPL
+  license_file:
+    - '{{ environ["PREFIX"] }}/lib/R/share/licenses/LGPL-2'
+
+extra:
+  recipe-maintainers:
+    - conda-forge/r
+
+# Package: lpSolve
+# Version: 5.6.13.3
+# Date: 2015-09-18
+# Title: Interface to 'Lp_solve' v. 5.5 to Solve Linear/Integer Programs
+# Author: Michel Berkelaar and others
+# Maintainer: ORPHANED
+# Description: Lp_solve is freely available (under LGPL 2) software for solving linear, integer and mixed integer programs. In this implementation we supply a "wrapper" function in C and some R functions that solve general linear/integer problems, assignment problems, and transportation problems. This version calls lp_solve version 5.5.
+# License: LGPL-2
+# NeedsCompilation: yes
+# Packaged: 2019-08-19 06:39:18 UTC; ripley
+# Repository: CRAN
+# Date/Publication: 2019-08-19 08:20:05 UTC
+# X-CRAN-Original-Maintainer: Samuel E. Buttrey <buttrey@nps.edu>
+# X-CRAN-Comment: Orphaned and corrected on 2019-05-28 as check issues were not addressed despite reminder. . gcc 9 warnings
