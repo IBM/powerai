@@ -1,7 +1,7 @@
 c_compiler:
 - gcc
 c_compiler_version:
-- '7'
+- '8'
 channel_sources:
 - conda-forge,powerai,defaults
 channel_targets:
@@ -11,7 +11,7 @@ cran_mirror:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '7'
+- '8'
 docker_image:
 - condaforge/linux-anvil-ppc64le
 pin_run_as_build:
