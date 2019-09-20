@@ -1,0 +1,66 @@
+{% set version = '1.0.3' %}
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-lowrankqp
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/LowRankQP_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/LowRankQP/LowRankQP_{{ version }}.tar.gz
+  sha256: 1d39c88b00062b0bc22dee756c0a70d0d4ccb5fcc7375fbfa3d95ee8c0cc86a8
+
+build:
+  merge_build_host: True  # [win]
+  number: 0
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - {{ compiler('c') }}              # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
+  host:
+    - r-base
+  run:
+    - r-base
+    - {{native}}gcc-libs         # [win]
+
+test:
+  commands:
+    - $R -e "library('LowRankQP')"           # [not win]
+    - "\"%R%\" -e \"library('LowRankQP')\""  # [win]
+
+about:
+  home: https://CRAN.R-project.org/package=LowRankQP
+  license: GPL (>= 2)
+  summary: Solves quadratic programming problems where the Hessian is represented as the product
+    of two matrices.
+  license_family: GPL3
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-2'
+
+extra:
+  recipe-maintainers:
+    - jayfurmanek
+
+# Package: LowRankQP
+# Version: 1.0.3
+# Date: 2018-02-01
+# Title: Low Rank Quadratic Programming
+# Authors@R: c(person("John T.", "Ormerod", role = c("aut"), email = "jormerod@sydney.edu.au"), person("Matt P.", "Wand", role = c("aut","cre"), email = "matt.wand@uts.edu.au"))
+# Maintainer: Matt P. Wand <matt.wand@uts.edu.au>
+# Description: Solves quadratic programming problems where the Hessian is represented as the product of two matrices.
+# License: GPL (>= 2)
+# NeedsCompilation: yes
+# Packaged: 2018-02-07 20:53:00 UTC; mwand
+# Author: John T. Ormerod [aut], Matt P. Wand [aut, cre]
+# Repository: CRAN
+# Date/Publication: 2018-02-07 23:37:39 UTC
