@@ -30,5 +30,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/r-utf8-feedstock
+  -  cd conda-recipes/r-backports-feedstock
   -  ./ci_support/run_docker_build.sh
