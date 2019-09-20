@@ -33,14 +33,15 @@ requirements:
     - {{posix}}make
     - {{posix}}coreutils         # [win]
     - {{posix}}zip               # [win]
-    - glpk
   host:
     - r-base
     - r-slam >=0.1_9
+    - glpk
   run:
     - r-base
     - {{native}}gcc-libs         # [win]
     - r-slam >=0.1_9
+    - glpk
 
 test:
   commands:
