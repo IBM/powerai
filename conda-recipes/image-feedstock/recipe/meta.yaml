@@ -1,0 +1,43 @@
+{% set name = "image" %}
+{% set version = "1.5.27" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+  sha256: "3f0ea15fb523c68a08098153bb06f4a8913300277e11b61c5e71fdd57b243783"
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv "
+
+requirements:
+  host:
+    - django
+    - pillow
+    - pip
+    - python
+  run:
+    - django
+    - pillow
+    - python
+
+test:
+  imports:
+    - image
+    - image.templatetags
+
+about:
+  home: "https://github.com/francescortiz/image"
+  license: "BSD"
+  license_family: "BSD"
+  license_file: ""
+  summary: "Django application that provides cropping, resizing, thumbnailing, overlays and masking for images and videos with the ability to set the center of attention,"
+  doc_url: ""
+  dev_url: ""
+
+extra:
+  recipe-maintainers:
+    - jayfurmanek
