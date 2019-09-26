@@ -41,5 +41,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/image-feedstock
+  -  cd conda-recipes/xport-feedstock
   -  ./ci_support/run_docker_build.sh
