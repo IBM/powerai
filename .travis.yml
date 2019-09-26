@@ -24,19 +24,19 @@ env:
 
 matrix:
   include:
-    - env: CONFIG=linux_ppc64le_python3.6.yaml UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
       os: linux-ppc64le
       language: generic
 
-    - env: CONFIG=linux_ppc64le_python3.7.yaml UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+    - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
       os: linux-ppc64le
       language: generic
 
-    - env: CONFIG=linux_python3.6.yaml UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-comp7
+    - env: CONFIG=linux_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-comp7
       os: linux
       language: generic
 
-    - env: CONFIG=linux_python3.7.yaml UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-comp7
+    - env: CONFIG=linux_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-comp7
       os: linux
       language: generic
 
