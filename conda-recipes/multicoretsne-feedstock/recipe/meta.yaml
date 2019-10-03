@@ -37,3 +37,4 @@ test:
 about:
   home: https://github.com/DmitryUlyanov/Multicore-TSNE
   summary: 'Parallel t-SNE implementation with Python and Torch wrappers.'
+  license_file: LICENSE.txt
