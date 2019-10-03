@@ -1,0 +1,40 @@
+{% set version = "0.1" %}
+
+package:
+  name: multicoretsne
+  version: {{ version }}
+
+source:
+  url: https://files.pythonhosted.org/packages/2d/e8/2afa896fa4eebfa1d0d0ba2673fddac45582ec0f06b2bdda88108ced5425/MulticoreTSNE-0.1.tar.gz
+
+build:
+  noarch: python
+  number: 0
+  script: {{ PYTHON }} -m pip install --no-deps --ignore-installed .
+
+requirements:
+  host:
+    - python
+  build:
+    - pip
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake
+    - make
+  run:
+    - python
+    - numpy
+    - cffi
+    
+test:
+  requires:
+    - python
+    - numpy
+    - cffi
+  imports:
+    - MulticoreTSNE
+
+about:
+  home: https://github.com/DmitryUlyanov/Multicore-TSNE
+  summary: 'Parallel t-SNE implementation with Python and Torch wrappers.'
+  license_file: LICENSE.txt

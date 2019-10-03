@@ -24,22 +24,10 @@ env:
 
 matrix:
   include:
-    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True
       os: linux-ppc64le
-      language: generic
-
-    - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
-      os: linux-ppc64le
-      language: generic
-
-    - env: CONFIG=linux_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-comp7
-      os: linux
-      language: generic
-
-    - env: CONFIG=linux_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-comp7
-      os: linux
       language: generic
 
 script:
-  -  cd conda-recipes/xport-feedstock
+  -  cd conda-recipes/multicoretsne-feedstock
   -  ./ci_support/run_docker_build.sh
