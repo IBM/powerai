@@ -21,8 +21,6 @@ export RECIPE_ROOT=/home/conda/recipe_root
 export CI_SUPPORT=/home/conda/feedstock_root/.ci_support
 export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
 
-yum -y install cmake make gcc-c++
-
 cat >~/.condarc <<CONDARC
 
 conda-build:
