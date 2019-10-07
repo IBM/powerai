@@ -8,7 +8,8 @@ Gets to 99.25% test accuracy after 12 epochs
 '''
 
 from __future__ import print_function
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 from tensorflow.python import keras
 from tensorflow.python.keras.datasets import mnist
 from tensorflow.python.keras.models import Sequential
