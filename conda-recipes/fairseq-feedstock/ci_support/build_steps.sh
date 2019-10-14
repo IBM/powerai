@@ -21,7 +21,7 @@ export RECIPE_ROOT=/home/conda/recipe_root
 export CI_SUPPORT=/home/conda/feedstock_root/.ci_support
 export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
 
-if [[ "$CONFIG" == "linux_python3.6" ]]; then
+if [[ "$CONFIG" == "linux_python3.6" ]] || [[ "$CONFIG" == "linux_python3.7" ]]; then
   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
 else
   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-ppc64le.sh -O miniconda.sh;
