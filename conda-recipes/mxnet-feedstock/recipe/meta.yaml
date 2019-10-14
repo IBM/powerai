@@ -1,0 +1,66 @@
+# This is the recipe for the GPU version of mxnet
+
+{% set version = "1.5.1" %}
+
+package:
+  name: mxnet
+  version: {{ version }}
+
+source:
+    patches:
+        - 0001-cuda-stubs-conda-env.patch
+        - 0002-move-requirements-to-meta-yaml.patch
+    url: https://github.com/apache/incubator-mxnet/releases/download/{{ version }}/apache-mxnet-src-{{ version }}-incubating.tar.gz
+
+build:
+    script_env:
+        - IBM_POWERAI_LICENSE_ACCEPT
+
+requirements:
+    build:
+        - {{ compiler('c') }} 7
+        - {{ compiler('cxx') }} 7
+        - make
+    host:
+        - openblas-devel
+        - libopenblas
+        - liblapack
+        - libtiff
+        - python
+        - cython
+        - numpy >=1.16.0,<=2.0.0
+        - requests >=2.20.0,<3
+        - setuptools
+        # ibm-ai channel https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda:
+        - libopencv
+        - cudatoolkit
+        - cudatoolkit-dev
+        - cudnn
+    run:
+        - numpy >=1.16.0,<=2.0.0
+        - requests >=2.20.0,<3
+        - python
+        # ibm-ai channel https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda:
+        - libopencv
+        - cudatoolkit
+        - cudnn
+
+about:
+  home: http://mxnet.io
+  license: Apache-2
+  license_file: LICENSE
+  license_family: Apache
+  summary: MXNet is a deep learning framework designed for both efficiency and flexibility
+  description: |
+    Apache MXNet (incubating) is a deep learning framework designed for both
+    efficiency and flexibility. It allows you to mix symbolic and imperative
+    programming to maximize efficiency and productivity. At its core, MXNet
+    contains a dynamic dependency scheduler that automatically parallelizes both
+    symbolic and imperative operations on the fly. A graph optimization layer on
+    top of that makes symbolic execution fast and memory efficient. MXNet is
+    portable and lightweight, scaling effectively to multiple GPUs and multiple
+    machines. MXNet is also more than a deep learning project. It is also a
+    collection of blue prints and guidelines for building deep learning systems,
+    and interesting insights of DL systems for hackers.
+  dev_url: https://github.com/apache/incubator-mxnet
+  doc_url: https://mxnet.incubator.apache.org/
