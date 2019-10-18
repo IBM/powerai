@@ -35,8 +35,7 @@ setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
 conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
-    --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml" \
-    -c powerai -c https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/
+    --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"
 
 if [[ "${UPLOAD_PACKAGES}" != "False" ]]; then
     upload_package "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
