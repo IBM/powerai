@@ -24,7 +24,7 @@ env:
 
 matrix:
   include:
-    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True IBM_WMLA_LICENSE_ACCEPT=yes
+    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True
       os: linux-ppc64le
       language: generic
 
