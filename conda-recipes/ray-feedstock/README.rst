@@ -6,8 +6,8 @@
 
 Ray is packaged with the following libraries for accelerating machine learning workloads:
 
-- `Tune`_: Scalable Hyperparameter Tuning
-- `RLlib`_: Scalable Reinforcement Learning
+- `Tune`: Scalable Hyperparameter Tuning
+- `RLlib`: Scalable Reinforcement Learning
 - `Distributed Training <https://ray.readthedocs.io/en/latest/distributed_training.html>`__
 
 Quick Start
