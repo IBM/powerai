@@ -22,8 +22,6 @@ export CI_SUPPORT=/home/conda/feedstock_root/.ci_support
 export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
 export IBM_POWERAI_LICENSE_ACCEPT=yes
 
-sudo yum -y install gcc
-
 cat >~/.condarc <<CONDARC
 conda-build:
  root-dir: /home/conda/feedstock_root/build_artifacts
