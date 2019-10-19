@@ -8,7 +8,9 @@ package:
 source:
   git_url: https://github.com/ray-project/ray.git
   git_rev: ray-{{ version }}
-
+  patches:
+    - hiredis-Makefile.patch
+    
 build:
   noarch: python
   number: 0
