@@ -30,4 +30,4 @@ matrix:
 
 script:
   -  cd conda-recipes/ray-feedstock
-  -  ./ci_support/run_docker_build.sh
+  -  sudo ./ci_support/run_docker_build.sh
