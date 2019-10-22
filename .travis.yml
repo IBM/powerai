@@ -30,5 +30,4 @@ matrix:
 
 script:
   -  cd conda-recipes/ray-feedstock
-  -  "travis_wait 60 && sleep 3600 &"
   -  sudo ./ci_support/run_docker_build.sh
