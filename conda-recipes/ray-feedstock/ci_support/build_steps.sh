@@ -27,7 +27,7 @@ conda-build:
  root-dir: /home/conda/feedstock_root/build_artifacts
 CONDARC
 
-conda config –set safety_checks disabled
+conda config --set safety_checks disabled
 
 conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
 
