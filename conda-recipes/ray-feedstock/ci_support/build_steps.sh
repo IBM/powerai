@@ -27,6 +27,8 @@ conda-build:
  root-dir: /home/conda/feedstock_root/build_artifacts
 CONDARC
 
+conda config –set safety_checks disabled
+
 conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
 
 # set up the condarc
@@ -42,7 +44,7 @@ conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
 CMD_PID=$!
 while ps -p $CMD_PID > /dev/null
 do
-	sleep 60
+	sleep 20
 	echo "Build in progress"
 done
 
