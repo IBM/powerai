@@ -39,6 +39,7 @@ requirements:
     - funcsigs
     - jsonschema
     - filelock
+    - ripgrep
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
