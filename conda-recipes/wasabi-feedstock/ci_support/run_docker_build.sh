@@ -20,6 +20,8 @@ PROVIDER_DIR="$(basename $THISDIR)"
 FEEDSTOCK_ROOT=$(cd "$(dirname "$0")/.."; pwd;)
 RECIPE_ROOT=$FEEDSTOCK_ROOT/recipe
 
+DOCKER_IMAGE="condaforge/linux-anvil-ppc64le"
+
 docker info
 
 # In order for the conda-build process in the container to write to the mounted
