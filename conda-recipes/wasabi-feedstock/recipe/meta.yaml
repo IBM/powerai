@@ -1,0 +1,47 @@
+# adapted from the conda-foge wasabi recipe
+{% set name = "wasabi" %}
+{% set version = "0.3.0" %}
+{% set sha256sum = "051fd33b47cf5f21626a3b750001b267c464c84a33f8e8fbcb49e48c8fe82838" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: {{ sha256sum }}
+build:
+  linxu-ppc64le: python
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
+
+requirements:
+  host:
+    - python
+    - pip
+  run:
+    - python
+
+test:
+    requires:
+        - pytest <4
+    imports:
+        - {{ name }}
+    commands:
+        - python -m pytest --tb=native --pyargs {{ name }}
+
+
+about:
+  home: http://github.com/ines/wasabi
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: 'A lightweight console printing and formatting toolkit'
+
+  dev_url: https://github.com/ines/wasabi
+  doc_url: https://github.com/ines/wasabi#-api
+
+extra:
+  recipe-maintainers:
+    - ines
+    - honnibal

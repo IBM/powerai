@@ -29,5 +29,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/multicoretsne-feedstock
+  -  cd conda-recipes/wasabi-feedstock
   -  ./ci_support/run_docker_build.sh
