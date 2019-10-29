@@ -43,5 +43,5 @@ matrix:
 
 
 script:
-  -  cd conda-recipes/spacy-feedstock
+  -  cd conda-recipes/srsly-feedstock
   -  ./ci_support/run_docker_build.sh
