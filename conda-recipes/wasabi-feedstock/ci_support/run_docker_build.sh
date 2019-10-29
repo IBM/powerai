@@ -22,6 +22,8 @@ RECIPE_ROOT=$FEEDSTOCK_ROOT/recipe
 
 docker info
 
+DOCKER_IMAGE="condaforge/linux-anvil-ppc64le"
+
 # In order for the conda-build process in the container to write to the mounted
 # volumes, we need to run with the same id as the host machine, which is
 # normally the owner of the mounted volumes, or at least has write permission
