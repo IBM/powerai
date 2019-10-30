@@ -1,0 +1,53 @@
+# adapted from the conda-forge preshed recipe
+{% set name = "preshed" %}
+{% set version = "3.0.2" %}
+{% set sha256sum = "61d73468c97c1d6d5a048de0b01d5a6fd052123358aca4823cdb277e436436cb" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  fn: {{ name }}-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: {{ sha256sum }}
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
+  skip: True  # [win32 or linux32]
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
+    - cymem >=2.0
+    - cython
+    - msinttypes  # [win and py<35]
+    - pip
+    - python
+    - setuptools
+    - wheel
+
+  run:
+    - python
+    - cymem >=2.0
+
+test:
+  requires:
+    - pytest
+
+about:
+  home: https://github.com/explosion/preshed
+  license: MIT
+  license_file: LICENSE
+  summary: Cython Hash Table for Pre-Hashed Keys
+  description: |
+    Simple but high performance Cython hash table mapping pre-randomized keys
+    to void* values.
+
+extra:
+  recipe-maintainers:
+    - rmax
+    - h-vetinari
