@@ -34,5 +34,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/srsly-feedstock
+  -  cd conda-recipes/cython-blis-feedstock
   -  ./ci_support/run_docker_build.sh
