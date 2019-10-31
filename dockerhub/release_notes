@@ -1,6 +1,6 @@
 *********************************************************************
-* POWERAI 1.6.1 Dockerhub Image Release Notes                       *
+* POWERAI 1.6.2 Dockerhub Image Release Notes                       *
 *********************************************************************
-2019-06-14 (19.165)  Douglas Lehr  <dllehr@us.ibm.com>
+2019-10-31 (19.303)  Douglas Lehr  <dllehr@us.ibm.com>
 
-    * Initial build of PowerAI 1.6.1
+    * Initial build of PowerAI 1.6.2
