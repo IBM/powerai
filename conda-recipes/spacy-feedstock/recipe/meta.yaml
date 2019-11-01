@@ -49,15 +49,13 @@ requirements:
     - srsly >=0.1.0,<1.1.0
     - jsonschema
     - pathlib >=1.0.0,<2.0.0  # [py27]
- 
+
 test:
   requires:
     - pytest
     - mock
   imports:
     - spacy
-  commands:
-    - python -m pytest --tb=native --pyargs {{ name }}
 
 about:
   home: https://spacy.io/
