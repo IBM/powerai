@@ -1,0 +1,45 @@
+{% set name = "mesh-tensorflow" %}
+{% set version = "0.1.3" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  git_url: https://github.com/tensorflow/mesh.git
+  git_rev: master
+
+build:
+  number: 0
+  script: python setup.py install
+  noarch: python
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - absl-py
+    - future
+    - gin-config
+    - six
+
+test:
+  imports:
+    - mesh_tensorflow 
+
+about:
+  home: https://github.com/tensorflow/mesh
+  license: Apache License 2.0
+  license_family: Apache
+  license_file: 'LICENSE'
+  summary: 'Mesh TensorFlow - Model Parallelism Made Easier'
+  description: |
+      Mesh TensorFlow (mtf) is a language for distributed deep learning,
+      capable of specifying a broad class of distributed tensor computations.
+      Its  purpose is to formalize and implement distribution strategies 
+      for your computation graph over your hardware/processors
+  doc_url: https://github.com/tensorflow/mesh
+  dev_url: https://github.com/tensorflow/mesh
