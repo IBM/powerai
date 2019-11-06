@@ -1,0 +1,51 @@
+{% set name = "gin-config" %}
+{% set version = "0.2.1" %}
+{% set sha256 = "348f5f6c3edd4fd47c9cd65aed03ac1b31136d375aa63871a57d3e444c85655c" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  fn: {{ name }}-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: {{ sha256 }}
+  #git_url: https://github.com/google/gin-config.git
+  #git_rev: master
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record record.txt
+  noarch: python
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - six >= 1.10.0
+
+test:
+  imports:
+    - gin
+
+about:
+  home: https://github.com/google/gin-config
+  license: Apache License 2.0
+  license_family: Apache License 2.0
+  license_file: 'LICENSE'
+  summary: 'Gin-config: a lightweight configuration library for Python'
+  description: |
+      Gin provides a lightweight configuration framework for Python, based on
+      dependency injection. Functions or classes can be decorated with
+      `@gin.configurable`, allowing default parameter values to be supplied from a
+      config file (or passed via the command line) using a simple but powerful syntax.
+      This removes the need to define and maintain configuration objects (e.g.
+      protos), or write boilerplate parameter plumbing and factory code, while often
+      dramatically expanding a project's flexibility and configurability.
+      Gin is particularly well suited for machine learning experiments (e.g. using
+      TensorFlow), which tend to have many parameters, often nested in complex ways.
+  doc_url: https://github.com/google/gin-config/docs
+  dev_url: https://github.com/google/gin-config
