@@ -1,6 +1,6 @@
 {% set name = "gin-config" %}
 {% set version = "0.2.1" %}
-{% set sha256 = "348f5f6c3edd4fd47c9cd65aed03ac1b31136d375aa63871a57d3e444c85655c" %}
+{% set sha256 = "6305325d5afe470fa5a7130883035e51950478b317750205a1532e5413d4ba4c" %}
 
 package:
   name: {{ name|lower }}
@@ -25,7 +25,7 @@ requirements:
 
   run:
     - python
-    - six >= 1.10.0
+    - six >=1.10.0
 
 test:
   imports:
@@ -34,7 +34,7 @@ test:
 about:
   home: https://github.com/google/gin-config
   license: Apache License 2.0
-  license_family: Apache License 2.0
+  license_family: APACHE
   license_file: 'LICENSE'
   summary: 'Gin-config: a lightweight configuration library for Python'
   description: |
