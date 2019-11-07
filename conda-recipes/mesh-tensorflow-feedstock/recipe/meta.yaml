@@ -15,6 +15,9 @@ build:
   noarch: python
 
 requirements:
+  host:
+    - pytest-runner
+
   build:
     - python
     - setuptools
