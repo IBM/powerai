@@ -16,29 +16,28 @@
 
 set -xeuo pipefail
 export PYTHONUNBUFFERED=1
-export FEEDSTOCK_ROOT=/root/powerai/conda-recipes/dopamine-feedstock
-export RECIPE_ROOT=/root/powerai/conda-recipes/dopamine-feedstock/recipe
-export CI_SUPPORT=/root/powerai/conda-recipes/dopamine-feedstock/.ci_support
+export FEEDSTOCK_ROOT=/home/conda/feedstock_root
+export RECIPE_ROOT=/home/conda/recipe_root
+export CI_SUPPORT=/home/conda/feedstock_root/.ci_support
 export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
 
 cat >~/.condarc <<CONDARC
 
 conda-build:
- root-dir: /root/powerai/conda-recipes/dopamine-feedstock/build_artifacts
+ root-dir: /home/conda/feedstock_root/build_artifacts
 
 CONDARC
 
 conda config --prepend channels https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/
-conda config --prepend channels file:///root/powerai/conda-recipes/gin-config-feedstock/build_artifacts
 export IBM_POWERAI_LICENSE_ACCEPT=yes
 
 conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
 
 # set up the condarc
-#setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
+setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
 # make the build number clobber
-#make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
+make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
 conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
     --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"
