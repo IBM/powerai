@@ -11,16 +11,14 @@ source:
 
 build:
   number: 0
-  script: python setup.py install
+  script: python setup.py install --single-version-externally-managed --record record.txt
   noarch: python
 
 requirements:
   host:
-    - pytest-runner
-
-  build:
     - python
     - setuptools
+    - pytest-runner
 
   run:
     - python
@@ -31,6 +29,10 @@ requirements:
     - pytest-runner
 
 test:
+  requires:
+    - tensorflow >=1.15.0
+    - pytest
+
   imports:
     - mesh_tensorflow 
 
