@@ -30,5 +30,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/gin-config-feedstock
+  -  cd conda-recipes/mesh-tensorflow-feedstock
   -  ./ci_support/run_docker_build.sh
