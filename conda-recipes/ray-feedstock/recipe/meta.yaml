@@ -1,5 +1,5 @@
 {% set name = "ray" %}
-{% set version = "0.7.5" %}
+{% set version = "0.7.6" %}
 
 package:
   name: {{ name|lower }}
@@ -10,11 +10,9 @@ source:
   git_rev: ray-{{ version }}
   patches:
     - redis-bazel-build.patch
-    
+
 build:
-  noarch: python
   number: 0
-  rpaths_patcher: patchelf
 
 requirements:
   host:
@@ -39,7 +37,6 @@ requirements:
     - funcsigs
     - jsonschema
     - filelock
-    - ripgrep
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
