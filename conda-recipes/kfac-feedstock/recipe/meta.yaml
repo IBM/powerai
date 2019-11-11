@@ -1,0 +1,44 @@
+{% set name = "kfac" %}
+{% set version = "0.2.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  git_url: https://github.com/tensorflow/kfac 
+  git_rev: master
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record record.txt
+  noarch: python
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - six
+    - numpy
+    - tensorflow-probability
+    - tensorflow-gpu >=1.14
+
+test:
+  imports:
+    - kfac
+
+about:
+  home: https://github.com/tensorflow/kfac 
+  license: Apache License 2.0
+  license_family: APACHE
+  license_file: 'LICENSE'
+  summary: 'K-FAC: Kronecker-Factored Approximate Curvature'
+  description: |
+      K-FAC in TensorFlow is an implementation of K-FAC, an approximate 
+      second-order optimization method, in TensorFlow.
+  doc_url: https://github.com/tensorflow/kfac/tree/master/docs
+  dev_url: https://github.com/tensorflow/kfac
+
