@@ -24,7 +24,7 @@ requirements:
     - six
     - numpy
     - tensorflow-probability
-    - tensorflow-gpu >=1.14
+    - tensorflow >=1.14
 
 test:
   imports:
