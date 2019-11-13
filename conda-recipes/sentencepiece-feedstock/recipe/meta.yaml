@@ -1,4 +1,4 @@
-{% set version = "0.1.83" %}
+{% set version = "0.1.84" %}
 {% set name = "sentencepiece" %}
 
 # This is the recipe for tensorflow-datasets
@@ -8,7 +8,7 @@ package:
 
 source:
   git_url: https://github.com/google/sentencepiece
-  git_rev: v0.1.83 
+  git_rev: v0.1.84
 
 build:
   number: 0 

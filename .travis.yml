@@ -29,6 +29,14 @@ matrix:
       os: linux-ppc64le
       language: generic
 
+    - env: CONFIG=linux_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-comp7
+      os: linux-64
+      language: generic
+
+    - env: CONFIG=linux_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-comp7
+      os: linux-64
+      language: generic
+
 script:
   -  cd conda-recipes/kfac-feedstock
   -  "travis_wait 60 sleep 3600 &"
