@@ -32,6 +32,8 @@ test:
 about:
   home: https://github.com/google/sentencepiece
   license: Apache License 2.0
+  license_family: Apache
+  license_file: 'LICENSE'
   summary: "An unsupervised text tokenizer and detokenizer mainly for Neural Network-based text generation systems."
   description: |
       SentencePiece is an unsupervised text tokenizer and detokenizer mainly for Neural Network-based text generation 
