@@ -17,6 +17,12 @@
 
 set -ex
 
+ARCH=`uname -p`
+if [[ "${ARCH}" == 'ppc64le' ]]; then
+    ARCH_SO_NAME="powerpc64le"
+else
+    ARCH_SO_NAME=${ARCH}
+fi
 mkdir build
 cd build
 cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} .. -DSPM_BUILD_TEST=ON -DSPM_ENABLE_TENSORFLOW_SHARED=ON
@@ -30,7 +36,7 @@ python setup.py install
 
 SYS_PYTHON_MAJOR=$(python -c "import sys;print(sys.version_info.major)")
 SYS_PYTHON_MINOR=$(python -c "import sys;print(sys.version_info.minor)")
-patchelf --set-rpath $LD_LIBRARY_PATH $PREFIX/lib/python${SYS_PYTHON_MAJOR}.${SYS_PYTHON_MINOR}/site-packages/sentencepiece-$PKG_VERSION-py${SYS_PYTHON_MAJOR}.${SYS_PYTHON_MINOR}-linux-ppc64le.egg/_sentencepiece.cpython-${CONDA_PY}m-powerpc64le-linux-gnu.so
+patchelf --set-rpath $LD_LIBRARY_PATH $PREFIX/lib/python${SYS_PYTHON_MAJOR}.${SYS_PYTHON_MINOR}/site-packages/sentencepiece-$PKG_VERSION-py${SYS_PYTHON_MAJOR}.${SYS_PYTHON_MINOR}-linux-${ARCH}.egg/_sentencepiece.cpython-${CONDA_PY}m-${ARCH_SO_NAME}-linux-gnu.so
 
 cd ../tensorflow
 python setup.py install
