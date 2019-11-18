@@ -1,0 +1,48 @@
+{% set build_version = "2.0.0" %}
+
+package:
+  name: tensorflow-gan
+  version: {{ build_version }}
+
+source:
+  git_url: https://github.com/tensorflow/gan.git
+  git_rev: master
+  patches:
+    - 0001-Updated-dependencies-names-as-per-their-conda-packag.patch
+
+build:
+  number: 0
+  noarch: python
+  script: python setup.py install
+  
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
+    - git >=2.2
+    - bazel
+    - python
+    - setuptools
+  run:
+    - python
+    - tensorflow-hub >=0.2
+    - tensorflow-probability >=0.7
+    - tensorflow >=1.12
+    - tensorflow-datasets >=0.5.0
+
+test:
+  imports:
+    - tensorflow_gan
+
+about:
+  home: https://www.tensorflow.org/gan/
+  license: Apache-2.0
+  license_file: LICENSE
+  license_family: APACHE
+  summary: "TF-GAN: A Generative Adversarial Networks library for TensorFlow."
+  description: |
+      A lightweight library for training and evaluating Generative Adversarial Networks
+  dev_url: https://github.com/tensorflow/gan.git
+  doc_url: https://github.com/tensorflow/gan.git
+
