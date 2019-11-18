@@ -24,9 +24,13 @@ requirements:
     - future
 
 test:
+  requires:
+    - libglu
   imports:
     - pyglet
-
+    - pyglet.app
+    - pyglet.canvas
+    - pyglet.extlibs
 about:
   home: https://github.com/pyglet/pyglet
   license: BSD
