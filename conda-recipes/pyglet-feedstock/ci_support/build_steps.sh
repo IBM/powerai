@@ -31,6 +31,8 @@ CONDARC
 conda config --prepend channels https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/
 export IBM_POWERAI_LICENSE_ACCEPT=yes
 
+/usr/bin/sudo -n yum install -y xorg-x11-server-Xvfb
+
 conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
 
 # set up the condarc
