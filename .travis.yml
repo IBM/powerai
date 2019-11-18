@@ -46,6 +46,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/dowhy-feedstock
-  -  "travis_wait 60 sleep 3600 &"
+  -  cd conda-recipes/pyglet-feedstock
   -  ./ci_support/run_docker_build.sh
