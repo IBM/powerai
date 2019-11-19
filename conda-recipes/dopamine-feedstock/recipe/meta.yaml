@@ -1,4 +1,4 @@
-{% set name = "dopamine_rl" %}
+{% set name = "dopamine-rl" %}
 {% set version = "3.0.0" %}
 
 package:
