@@ -1,5 +1,5 @@
 {% set name = "tensorflow-metadata" %}
-{% set version = "0.13.0" %}
+{% set version = "0.15.1" %}
 # This is the recipe for tensorflow-metadata
 package:
    name: {{ name }}
@@ -7,7 +7,7 @@ package:
 
 source:
   git_url: https://github.com/tensorflow/metadata.git
-  git_rev: master 
+  git_rev: v{{ version }}
   
 build:
   number: 0
@@ -29,6 +29,7 @@ about:
   home: https://github.com/tensorflow/metadata.git
   license: Apache License 2.0
   license_file: LICENSE
+  license_family: APACHE
   summary: "Utilities for passing TensorFlow-related metadata between tools"
   description: |
       TensorFlow Metadata provides standard representations for metadata
