@@ -1,0 +1,57 @@
+{% set build_version = "1.14.1" %}
+
+package:
+  name: tensor2tensor
+  version: {{ build_version }}
+
+source:
+  git_url: https://github.com/tensorflow/tensor2tensor.git
+  git_rev: v{{ build_version }}
+
+build:
+  number: 0
+  noarch: python
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+  run:
+    - bz2file
+    - dopamine-rl
+    - flask
+    - future
+    - gevent
+    - gin-config
+    - google-api-python-client
+    - gunicorn
+    - gym
+    - h5py
+    - kfac
+    - mesh-tensorflow
+    - numpy
+    - oauth2client
+    - py-opencv
+    - Pillow
+    - pypng
+    - requests
+    - scipy
+    - six
+    - sympy
+    - tensorflow-datasets
+    - tensorflow-gan
+    - tensorflow-probability==0.7.0
+    - tqdm
+about:
+  home: http://github.com/tensorflow/tensor2tensor
+  license: Apache-2.0
+  license_family: APACHE
+  license_file: 'LICENSE'
+  summary: 'Tensor2tensor - Library to make deep learning more accessible and accelerate ML research'
+  description: |
+      Tensor2Tensor, or T2T for short, is a library of deep learning models and
+      datasets designed to make deep learning more accessible and accelerate ML research.
+  doc_url: https://github.com/tensorflow/tensor2tensor/tree/v1.14.1/docs
+  dev_url: https://github.com/tensorflow/tensor2tensor
+

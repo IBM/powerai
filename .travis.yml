@@ -29,5 +29,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/gym-feedstock
+  -  cd conda-recipes/tensor2tensor-feedstock
   -  ./ci_support/run_docker_build.sh
