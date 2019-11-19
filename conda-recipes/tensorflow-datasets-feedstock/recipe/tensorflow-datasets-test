@@ -82,6 +82,17 @@ check_if_installed "pretty_midi" "pip"
 check_if_installed "mwparserfromhell" "pip"
 check_if_installed "ffprobe" "pip"
 check_if_installed "ffmpeg" "conda"
+check_if_installed "tldextract" "pip"
+check_if_installed "langdetect" "pip"
+check_if_installed "nltk" "conda"
+check_if_installed "pandas" "conda"
+check_if_installed "mock" "conda"
+
+# Available pip package for crepe has dependency on TF 2.0.0 with which this TF
+# datasets is not guarnteed to work with. Pip package for librosa  has also some dependency issues.
+# So, some tests are expected to fail in the absense of these two packages.
+#check_if_installed "crepe" "pip"
+#check_if_installed "librosa" "pip"
 
 if [[ "$conda_packages_to_install" != "" ]] ; then
     echo "The following packages are necessary to run the example programs:$conda_packages_to_install"
@@ -104,7 +115,7 @@ echo "==========================================================================
 
 all_python_files=`find ${TF_DS_PKG_PATH}/ -name "*_test.py"`
 
-skipped_files=("gcs_utils_test.py" "dataset_builder_beam_test.py" "lsun_test.py" "eager_not_enabled_by_default_test.py") 
+skipped_files=("gcs_utils_test.py" "dataset_builder_beam_test.py" "lsun_test.py" "eager_not_enabled_by_default_test.py" "nsynth_test.py") 
 declare -i total_tests=0
 declare -i successful_tests=0
 declare -i failed_tests=0

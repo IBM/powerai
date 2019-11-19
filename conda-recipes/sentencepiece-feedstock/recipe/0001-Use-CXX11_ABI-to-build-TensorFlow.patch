@@ -1,0 +1,27 @@
+From 09b18ea93687a125e46b7d9dc7f1ebfaf01ff2d9 Mon Sep 17 00:00:00 2001
+From: "William D. Irons" <wdirons@us.ibm.com>
+Date: Mon, 18 Nov 2019 20:26:44 +0000
+Subject: [PATCH] Use CXX11_ABI to build TensorFlow
+
+As TensorFlow in WML-CE is built with the CXX11_ABI
+---
+ src/CMakeLists.txt | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index a2356d4..0e4cd10 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -211,9 +211,6 @@ if (NOT MSVC)
+   else()
+     set(CMAKE_CXX_FLAGS "-O3 -Wall -fPIC ${CMAKE_CXX_FLAGS}")
+   endif()
+-  if (SPM_ENABLE_TENSORFLOW_SHARED)
+-    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+-  endif()
+   if (SPM_NO_THREADLOCAL)
+     add_definitions(-DSPM_NO_THREADLOCAL=1)
+     add_definitions(-DGOOGLE_PROTOBUF_NO_THREADLOCAL=1)
+-- 
+2.23.0
+
