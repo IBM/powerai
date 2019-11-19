@@ -22,17 +22,12 @@ env:
     # The BINSTAR Token for uploading to anaconda.org/powerai
     - secure: "JZRf0nvjA0bNtlHCo2FiF9Xls11cYLoEK4JComWELDq0Qi1wOtlORR9t9RgyOCeldUt0n8ZiDtGVh42jCyI9xqo+lMpzZsp4GWu3apMSiDfFRNhDrakYxU1FMefathMHBCTk8rmq+P1LX7i/V+wPbNyzoSoNzcci3FmEc6eRUEGM/sBgHqH/xyvRFGZnSXbOMTigzgVSruZOVtL6opxHfo1RnxlU/dR5lytKIKm00r+GPK1w9tuwOPTdGpZUaWA6/aoxMQkUNnKqrZq382xBJ6TFgzmkkY80wJFnvchg0NuPqI7oNoA8z30W0vgYbZ7nno3SExjoCYbwCLWPlwIwsCEipEUG1lFPvVwAMELkCWu22JX95e34ZKxd5SR143/509CFMKHK5UrvLqg4tI7EgjrRpLcEI8utvNdjTCp/KUOcXbLq+cw1TMnzDwFuIdgPfsKGrTNreuaiHxCdt2NKuy8oD497WcMOUpq4rWoWXjDXeUfwxOt6GEH1F07Em5Ng0mSiwyCHxiL5XERpYj4lAnSnMBIaIXaHOWlGpron0jAtcpTu3lIY2rF7zdpUFSGNVnaiwwHUD7RDxy96zc/ig0X7DVIofeNTTML/rYsHEbB+hO92sBll+lxEq1xjeAO8Khsp0ohJLOyM3iglBgHxXrSfLhcYk6pmKrOqi1onJK0="
 
-
 matrix:
   include:
-    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
-      os: linux-ppc64le
-      language: generic
-
-    - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
       os: linux-ppc64le
       language: generic
 
 script:
-  -  cd conda-recipes/spacy-feedstock
+  -  cd conda-recipes/gym-feedstock
   -  ./ci_support/run_docker_build.sh
