@@ -29,5 +29,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/tensorflow-metadata-feedstock
+  -  cd conda-recipes/pypng-feedstock
   -  ./ci_support/run_docker_build.sh
