@@ -6,7 +6,7 @@ package:
 
 source:
   git_url: https://github.com/tensorflow/gan.git
-  git_rev: master
+  git_rev: 1461bb939ae97777d85462d0c63048413ccf6f33
   patches:
     - 0001-Updated-dependencies-names-as-per-their-conda-packag.patch
 
