@@ -1,0 +1,43 @@
+{% set version = "0.2.2" %}
+{% set name = "aif360" %}
+
+package:
+   name: {{ name }}
+   version: {{ version }}
+
+source:
+  git_url: https://github.com/IBM/AIF360
+  git_rev: v0.2.2
+
+build:
+  number: 0
+  noarch: python
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv "
+
+requirements:
+  host:
+    - python
+  run:
+    - python
+    - numpy>=1.16
+    - scipy
+    - pandas>=0.23.3
+    - scikit-learn
+
+test:
+  imports:
+    - aif360
+
+about:
+  home: http://aif360.mybluemix.net/
+  license: Apache License 2.0
+  license_family: Apache
+  license_file: 'LICENSE'
+  summary: "A comprehensive set of fairness metrics for datasets and machine learning models, explanations for these metrics, and algorithms to mitigate bias in datasets and models."
+  description: |
+      The AI Fairness 360 toolkit is an open-source library to help detect and remove bias in machine
+      learning models. The AI Fairness 360 Python package includes a comprehensive set of metrics for
+      datasets and models to test for biases, explanations for these metrics, and algorithms to
+      mitigate bias in datasets and models.
+  dev_url: https://github.com/IBM/AIF360
+  doc_url: https://aif360.readthedocs.io/en/latest/
