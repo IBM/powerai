@@ -30,5 +30,5 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/gym-feedstock
+  -  cd conda-recipes/aif360-feedstock
   -  ./ci_support/run_docker_build.sh
