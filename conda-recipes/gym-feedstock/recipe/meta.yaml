@@ -7,7 +7,7 @@ package:
 
 source:
   git_url: https://github.com/openai/gym.git
-  git_rev: 0.15.4
+  git_rev: {{ version }}
 
 build:
   number: 0
