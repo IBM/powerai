@@ -1,1 +1,0 @@
-{"build": "py36_0", "build_number": 0, "depends": ["python >=3.6,<3.7.0a0"], "license": "MIT", "name": "colorlog", "subdir": "linux-ppc64le", "timestamp": 1574696895343, "version": "4.0.2", "size": 23909, "md5": "9fefcc9fb04e8db4cfcb8d798a1b46f4", "sha256": "67d3c57ac92d50313d1864452995f9dcc3949b07edefd2991306405b2bfcde84"}
