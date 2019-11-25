@@ -65,7 +65,7 @@ The available color names are `black`, `red`, `green`, `yellow`, `blue`,
 Examples
 --------
 
-![Example output](doc/example.png)
+![Example output](example.png)
 
 The following code creates a `ColoredFormatter` for use in a logging setup,
 using the default values for each argument.
