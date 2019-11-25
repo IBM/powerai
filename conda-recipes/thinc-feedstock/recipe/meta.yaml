@@ -1,0 +1,74 @@
+# adapted from the conda-forge thinc recipe
+{% set name = "thinc" %}
+{% set version = "7.1.1" %}
+{% set sha256sum = "68478efee64a5523d881d47914a92e315bb31bf0a404cec1ff7be83b0a267f3e" %}
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  fn: {{ name }}-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: {{ sha256sum }}
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed --no-cache-dir -vvv"
+  skip: true  # [win and py27]
+
+requirements:
+  build:
+    - pip
+    - {{ compiler('cxx') }}
+  host:
+    - pip
+    - numpy 1.15.*
+    - python
+    - setuptools
+    - wheel >=0.32.0,<0.33.0
+
+  run:
+    - python
+    - {{ pin_compatible('numpy') }}
+    - murmurhash >=0.28.0,<1.1.0
+    - cymem >=2.0.2,<2.1.0
+    - preshed >=3.0.2,<3.1.0
+    - cython-blis >=0.4.0,<0.5.0
+    - srsly >=0.0.4,<1.1.0
+    - wasabi >=0.0.9,<1.1.0
+    - plac >=0.9.6,<1.0.0
+    - tqdm >=4.10.0,<5.0.0
+    - pathlib >=1.0.0,<2.0.0  # [py27]
+
+test:
+  requires:
+    - hypothesis
+    - pytest
+    - mock
+
+  imports:
+    - thinc
+    - thinc.api
+    - thinc.linear
+    - thinc.extra
+    - thinc.neural
+
+  commands:
+    - python -m pytest --tb=native --pyargs {{ name }}
+
+about:
+  home: https://github.com/explosion/thinc/
+  license: MIT
+  license_file: LICENSE
+  summary: 'thinc: Learn super-sparse multi-class models'
+  description: |
+    thinc is a Cython library for learning models with millions of parameters
+    and dozens of classes. It drives https://spacy.io , a pipeline of very
+    efficient NLP components. I’ve only used thinc from Cython; no real Python
+    API is currently available.
+
+extra:
+  recipe-maintainers:
+    - rmax
+    - honnibal
+    - ines

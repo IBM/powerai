@@ -3,11 +3,11 @@ c_compiler:
 c_compiler_version:
 - '8'
 channel_sources:
-- defaults,powerai
+- defaults
 channel_targets:
 - powerai main
 docker_image:
-- condaforge/linux-anvil-comp7
+- condaforge/linux-anvil-ppc64le
 pin_run_as_build:
   python:
     min_pin: x.x

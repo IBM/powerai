@@ -24,10 +24,10 @@ env:
 
 matrix:
   include:
-    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True
+    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
       os: linux-ppc64le
       language: generic
 
 script:
   -  cd conda-recipes/colorlog-feedstock
-  -  sudo ./ci_support/run_docker_build.sh
+  -  ./ci_support/run_docker_build.sh
