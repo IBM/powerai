@@ -1,0 +1,32 @@
+{% set version = "4.0.2" %}
+
+package:
+  name: colorlog
+  version: {{ version }}
+
+source:
+  fn: colorlog-{{ version }}.tar.gz
+  url: https://pypi.org/packages/source/c/colorlog/colorlog-{{ version }}.tar.gz
+  sha256: 3cf31b25cbc8f86ec01fef582ef3b840950dea414084ed19ab922c8b493f9b42
+
+build:
+  number: 0
+  script: {{ PYTHON }} setup.py install
+
+requirements:
+  host:
+    - python
+  build:
+    - setuptools
+
+  run:
+    - python
+
+test:
+  imports:
+    - colorlog
+
+about:
+  home: https://github.com/borntyping/python-colorlog
+  license: MIT
+  summary: Log formatting with colors!

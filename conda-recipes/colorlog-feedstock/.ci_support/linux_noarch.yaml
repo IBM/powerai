@@ -3,7 +3,7 @@ c_compiler:
 c_compiler_version:
 - '8'
 channel_sources:
-- defaults,powerai,https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/
+- defaults,powerai
 channel_targets:
 - powerai main
 docker_image:
@@ -14,3 +14,4 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - '3.6'
+- '3.7'

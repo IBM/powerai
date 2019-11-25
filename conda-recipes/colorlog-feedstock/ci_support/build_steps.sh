@@ -20,7 +20,6 @@ export FEEDSTOCK_ROOT=/home/conda/feedstock_root
 export RECIPE_ROOT=/home/conda/recipe_root
 export CI_SUPPORT=/home/conda/feedstock_root/.ci_support
 export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
-export IBM_POWERAI_LICENSE_ACCEPT=yes
 
 cat >~/.condarc <<CONDARC
 conda-build:
@@ -36,15 +35,7 @@ setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
 conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
-    --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml" &
-
-# Waiting for conda build to finish, and writing an output every minute to avoid travis to kill the build after 10 minutes without output
-CMD_PID=$!
-while ps -p $CMD_PID > /dev/null
-do
-	sleep 20
-	echo "Build in progress"
-done
+    --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"
 
 if [[ "${UPLOAD_PACKAGES}" != "False" ]]; then
     upload_package "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"

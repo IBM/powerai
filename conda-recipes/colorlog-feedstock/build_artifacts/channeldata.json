@@ -1,0 +1,39 @@
+{
+  "channeldata_version": 1,
+  "packages": {
+    "colorlog": {
+      "activate.d": false,
+      "binary_prefix": false,
+      "deactivate.d": false,
+      "description": null,
+      "dev_url": null,
+      "doc_source_url": null,
+      "doc_url": null,
+      "home": "https://github.com/borntyping/python-colorlog",
+      "icon_hash": null,
+      "icon_url": null,
+      "identifiers": null,
+      "keywords": null,
+      "license": "MIT",
+      "post_link": false,
+      "pre_link": false,
+      "pre_unlink": false,
+      "recipe_origin": null,
+      "run_exports": {},
+      "source_git_url": null,
+      "source_url": "https://pypi.org/packages/source/c/colorlog/colorlog-4.0.2.tar.gz",
+      "subdirs": [
+        "linux-ppc64le"
+      ],
+      "summary": "Log formatting with colors!",
+      "tags": null,
+      "text_prefix": false,
+      "timestamp": 1574696895,
+      "version": "4.0.2"
+    }
+  },
+  "subdirs": [
+    "linux-ppc64le",
+    "noarch"
+  ]
+}
