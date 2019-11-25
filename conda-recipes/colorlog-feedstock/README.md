@@ -12,7 +12,7 @@ module that outputs records using terminal colors.
 Installation
 ------------
 
-Install from powerai conda channel with:
+Install from `powerai` conda channel with:
 
 ```bash
 conda install colorlog -c powerai
