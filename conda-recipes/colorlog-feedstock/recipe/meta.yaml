@@ -28,6 +28,5 @@ test:
 
 about:
   home: https://github.com/borntyping/python-colorlog
-  license: MIT
   license_file: LICENSE
   summary: Log formatting with colors!
