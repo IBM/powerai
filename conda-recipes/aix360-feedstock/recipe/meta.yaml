@@ -1,0 +1,57 @@
+{% set version = "0.1.0" %}
+{% set name = "aix360" %}
+
+package:
+   name: {{ name }}
+   version: {{ version }}
+
+source:
+  git_url: https://github.com/IBM/AIX360
+  # version 0.1.0 should have been a tag
+  git_rev: 8e3b01c1b23638f9e935f80533a253bdf800c1bd
+
+build:
+  number: 0
+  noarch: python
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv "
+
+requirements:
+  host:
+    - python
+  run:
+    - python
+    - joblib>=0.11
+    - scikit-learn>=0.21.2
+    - pytorch-base
+    - torchvision-base
+    - cvxpy
+    - cvxopt
+    - image
+    - keras-base
+    - matplotlib
+    - numpy
+    - pandas
+    - scipy>=0.17
+    - tensorflow-base>=1.14,<2.0a0
+    - xport
+    - scikit-image
+    - requests
+
+# test is disabled in build_steps.sh because of the time
+# it takes to install all aix360 dependencies.
+test:
+  imports:
+    - aix360
+
+about:
+  home: http://aix360.mybluemix.net/
+  license: Apache-2.0
+  license_family: Apache
+  license_file: 'LICENSE'
+  summary: "Interpretability and explainability of data and machine learning models."
+  description: |
+      The AI Explainability 360 toolkit is an open-source library that supports interpretability and explainability
+      of datasets and machine learning models. The AI Explainability 360 Python package includes a comprehensive set
+      of algorithms that cover different dimensions of explanations along with proxy explainability metrics.
+  dev_url: https://github.com/IBM/AIX360
+  doc_url: https://aix360.readthedocs.io/en/latest/
