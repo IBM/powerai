@@ -1,0 +1,84 @@
+{% set version = "2.9.0" %}
+{% set build = 0 %}
+
+# mpi must be defined for conda-smithy lint
+{% set mpi = mpi or 'nompi' %}
+
+{% if mpi == 'nompi' %}
+# prefer nompi builds via a build number offset
+{% set build = build + 100 %}
+{% endif %}
+
+package:
+  name: h5py
+  version: {{ version }}
+
+source:
+  url: https://github.com/h5py/h5py/archive/{{ version }}.tar.gz
+  sha256: 49d593c07a3a4cb87ed421f502e34368b98282a4ac6d4388379aab80b11c7924
+  patches:
+    - remove_test.patch
+
+build:
+  number: {{ build }}
+  {% if mpi != 'nompi' %}
+  {% set mpi_prefix = "mpi_" + mpi %}
+  {% else %}
+  {% set mpi_prefix = "nompi" %}
+  {% endif %}
+  # There are dependency conflicts for Python 2 on Windows
+  skip: True  # [win and py<30]
+  # add build string so packages can depend on
+  # mpi or nompi variants
+  # dependencies:
+  # `pkg * mpi_mpich_*` for mpich
+  # `hdf5 * mpi_*` for any mpi
+  # `hdf5 * nompi_*` for no mpi
+  string: "{{ mpi_prefix }}_py{{ py }}h{{ PKG_HASH }}_{{ build }}"
+
+requirements:
+  build:
+    - {{ compiler("c") }}
+  host:
+    - python
+    - pip
+    - numpy
+    - {{ mpi }}  # [mpi != 'nompi']
+    - mpi4py  # [mpi != 'nompi']
+    # need to list hdf5 twice to get version pinning from conda_build_config
+    # and build pinning from {{ mpi_prefix }}
+    - hdf5
+    - hdf5 * {{ mpi_prefix }}_*
+    - cython
+    - six
+    - pkgconfig
+  run:
+    - python
+    - {{ pin_compatible('numpy') }}
+    - {{ mpi }}  # [mpi != 'nompi']
+    - mpi4py  # [mpi != 'nompi']
+    # hdf5 >=1.10.4 has run_exports
+    - hdf5
+    - six
+    - unittest2  # [py26 or py27]
+    - pyreadline  # [win]
+
+test:
+  requires:
+    - pytest
+  imports:
+    - h5py
+
+about:
+  home: http://www.h5py.org/
+  license: BSD-3-Clause
+  license_file: licenses/license.txt
+  summary: Read and write HDF5 files from Python
+
+extra:
+  recipe-maintainers:
+    - jakirkham
+    - tacaswell
+    - ocefpaf
+    - minrk
+    - scopatz
