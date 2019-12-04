@@ -24,6 +24,11 @@ env:
 
 matrix:
   include:
+    - env: CONFIG=linux_ppc64le_python2.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+      os: linux-ppc64le
+      arch: ppc64le
+      language: generic
+
     - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
       os: linux-ppc64le
       arch: ppc64le
