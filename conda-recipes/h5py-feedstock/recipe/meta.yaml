@@ -26,8 +26,6 @@ requirements:
     - python
     - hdf5
     - six
-    - unittest2  # [py26 or py27]
-    - pyreadline  # [win]
 
 test:
   imports:
@@ -43,10 +41,3 @@ about:
     NumPy array syntax.
   doc_url: http://docs.h5py.org
   dev_url: https://github.com/h5py/h5py
-
-extra:
-  recipe-maintainers:
-    - jakirkham
-    - pitrou
-    - tacaswell
-    - ocefpaf
