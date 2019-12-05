@@ -1,0 +1,16 @@
+c_compiler:
+- gcc
+c_compiler_version:
+- '7'
+channel_sources:
+- defaults,conda-forge
+channel_targets:
+- powerai main
+docker_image:
+- knm3000/linux-anvil-cuda-ppc64le:latest
+pin_run_as_build:
+  python:
+    min_pin: x.x
+    max_pin: x.x
+python:
+- '3.7'

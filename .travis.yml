@@ -1,3 +1,4 @@
+# B
 # (C) Copyright IBM Corp. 2018, 2019. All Rights Reserved.
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,21 +25,17 @@ env:
 
 matrix:
   include:
-    - env: CONFIG=linux_ppc64le_python2.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=knm3000/linux-anvil-cuda-ppc64le:latest
       os: linux-ppc64le
       arch: ppc64le
       language: generic
 
-    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
-      os: linux-ppc64le
-      arch: ppc64le
-      language: generic
-
-    - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+    - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=knm3000/linux-anvil-cuda-ppc64le:latest
       os: linux-ppc64le
       arch: ppc64le
       language: generic
 
 script:
-  -  cd conda-recipes/h5py-feedstock
+  -  cd conda-recipes/mxnet-feedstock
+  -  "travis_wait 60 sleep 3600 &"
   -  ./ci_support/run_docker_build.sh
