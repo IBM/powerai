@@ -1,0 +1,13 @@
+#Install WMLCE-1.6.1 
+1. Perform a "conda install tqdm" in the same environment as the WMLCE-1.6.1
+2. Install tensorboardx using " conda install -c conda-forge tensorboardx=1.6"
+
+#Open mypath.py and in line number 5 ,set the path to downloaded VOC2012 dataset
+  if dataset == 'pascal':
+  5             return '/mnt/pai/home/yfeng/deeplab/VOCdevkit/VOC2012/' 
+
+#Launch the run 
+bash launch_deeplab.sh
+
+Notes:
+The first launch will download a checkpoint from the below location -"http://data.lip6.fr/cadene/pretrainedmodels/xception-b5690688.pth"

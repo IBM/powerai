@@ -75,7 +75,7 @@ fi
 
 CMD=$GPU_DEVICE_CMDLINE
 CMD+=$NUM_ACTL_CMDLINE
-CMD+="python train.py --backbone xception --lr 0.007 --workers 40 --checkname deeplab-xception --eval-interval 1 --dataset pascal --no-val "
+CMD+="python train.py --backbone xception --lr 0.007 --workers 4 --checkname deeplab-xception --eval-interval 1 --dataset pascal --no-val "
 CMD+=$GPU_IDS
 CMD+=" --crop-size "${res}
 CMD+=" --base-size "${res}

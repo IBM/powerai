@@ -135,13 +135,10 @@ class Trainer(object):
 
             current_gpu = pyddl.local_rank()
             max_active = torch.cuda.max_memory_active()/float(1024 ** 2)
-            reclaimed = torch.cuda.memory_reclaimed()/float(1024 ** 2)
             duration = time_end_iter - time_begin_iter
-            alloc_dist = torch.cuda.alloc_distribution()
-            print("GPU=%s, max_active=%.2fMB, reclaimed=%.2fMB, step %4d: %3.3f(sec/step) dist=%s num_img_tr=%d" % (current_gpu, max_active, reclaimed, self.iterations, duration, json.dumps(alloc_dist),num_img_tr))
+            if self.iterations % 10 == 0: 
+            	print("GPU=%s, max_active=%.2fMB,  step %4d: %3.3f(sec/step) num_img_tr=%d" % (current_gpu, max_active,  self.iterations, duration, num_img_tr))
             torch.cuda.reset_max_memory_active()
-            torch.cuda.reset_memory_reclaimed()
-            torch.cuda.reset_alloc_distribution()
             if self.iterations >= self.args.max_iterations:
                 break
             #print('Train loss: %.3f' % (train_loss / (i + 1)))
