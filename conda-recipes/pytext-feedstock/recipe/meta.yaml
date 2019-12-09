@@ -19,9 +19,6 @@ source:
       - 0010-PR939.patch
       - 0011-remove-gluster-paths.patch
       - 0012-PR930.patch
-      #revert BERT support to avoid adding new dependencies
-      #pytorch-transformers (previously pytorch-pretrained-bert) and fairseq
-      - 0013-revert-BERT-support.patch  
       - 0014-fix-UnicodeEncodeError.patch
 
 build:
@@ -49,6 +46,8 @@ requirements:
     - pytorch=1.2.0
     - tensorboard=1.15.* 
     - absl-py=0.7.1 
+    - fairseq
+    - pytorch-pretrained-bert
 
 about:
   home: https://github.com/facebookresearch/pytext 
