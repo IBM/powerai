@@ -33,6 +33,7 @@
 ###############################################################################
 #!/bin/bash
 CPUSET_DIR=/sys/fs/cgroup/cpuset
+CPUSET_ORIG=$CPUSET_DIR/cpuset.mems
 DOCKER_DIR=$CPUSET_DIR/docker
 SYSTEM_DIR=$CPUSET_DIR/system.slice
 KUBE_DIR=$CPUSET_DIR/kubepods.slice
@@ -56,6 +57,8 @@ function usage
     echo "Check if cpuset slices are out of sync with master cpuset"
     echo -e "\n\t--correct  Attempt to correct any slices that are out of sync\n"
     echo -e "\t--force  Force correction without prompting user\n"
+    echo -e "\t--gpucheck Check if the gpu memory has come online"
+    echo -e "\t\tReturn Code 0 = gpu memory online and available \n\t\tReturn Code 1 = Still waiting for gpu memory"
 }
 
 #######################################
@@ -74,6 +77,85 @@ function checkElevation {
     fi
 }
 
+#######################################
+# Check if we are POWER9 based.
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function isPOWER9 {
+    cat /proc/cpuinfo | grep -q POWER9
+    if [ "$?" -ne 0] ; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+#######################################
+# Collect number of V100 GPUs we expect
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function getV100Count {
+    v100=`lspci | grep -i V100 | wc -l`
+}
+
+#######################################
+# Collect number of V100 GPUs we expect
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function calculateCpuset {
+    getV100Count
+    cpuset="0,8"
+    if [ $v100 -eq "0" ] ; then
+        echo "You have no GPUs"
+        gpumemset=
+    elif [ $v100 -eq "1" ] ; then
+        gpumemset=",255"
+    elif [ $v100 -eq "2" ] ; then
+        gpumemset=",254,255"
+    elif [ $v100 -eq "3" ] ; then
+        gpumemset=",253-255"
+    elif [ $v100 -eq "4" ] ; then
+        gpumemset=",252-255"
+    fi
+    targetcpuset=$cpuset$gpumemset
+}
+
+#######################################
+# Check if calculated cpuset.mems equals system version
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   0 - cpuset.mems matches what we expected
+#   1 - cpuset.mems does not match
+#######################################
+function isGpuMemReady {
+    calculateCpuset
+    cpuset_cur=$(cat $CPUSET_DIR/cpuset.mems)
+    if [ "$cpuset_cur" == "$targetcpuset" ]; then
+        echo "SUCCESS: We have a match, GPU Memory Onlined"
+        return 0
+    else
+        echo "INFO: GPU Memory doesn't match cpuset.mems.  Memory still onlining"
+        return 1
+    fi
+}
 #######################################
 # Check if docker slice directory exists under
 # /sys/fs/cgroups/cpuset/
@@ -384,11 +466,12 @@ function wipeCpusetSlices {
 }
 
 while [ "$1" != "" ]; do
-    echo "$1"
     case $1 in
         --correct )             correct=1
                                 ;;
         --force )               force=1
+                                ;;
+        --gpucheck )            gpucheck=1
                                 ;;
         -h | --help )           usage
                                 exit
@@ -401,6 +484,9 @@ done
 
 if [ $correct ] ; then
     wipeCpusetSlices
+elif [ $gpucheck ] ; then
+    isGpuMemReady
+    exit $?
 else
     checkCpusetSlices
 fi
