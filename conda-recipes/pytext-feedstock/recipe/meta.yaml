@@ -52,6 +52,6 @@ requirements:
 
 about:
   home: https://github.com/facebookresearch/pytext 
-  license: BSD
-  license_family: BSD
+  license: BSD License
+  license_file: LICENSE
   summary: A natural language modeling framework based on PyTorch 
