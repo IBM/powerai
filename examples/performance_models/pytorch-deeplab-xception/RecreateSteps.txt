@@ -4,7 +4,7 @@
 
 #Open mypath.py and in line number 5 ,set the path to downloaded VOC2012 dataset
   if dataset == 'pascal':
-  5             return '/mnt/pai/home/yfeng/deeplab/VOCdevkit/VOC2012/' 
+  5             return '/path/to/VOCdevkit/VOC2012/' 
 
 #Launch the run 
 bash launch_deeplab.sh

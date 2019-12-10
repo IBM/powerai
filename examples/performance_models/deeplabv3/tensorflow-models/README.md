@@ -1,8 +1,7 @@
-The repository code in the powerai-1.6.0 branch
-came from https://github.com/tensorflow/models at commit `078575a121c79f1f1594b03f5bc70bbf0b3fb744`.
+The  code is from  https://github.com/tensorflow/models at commit `078575a121c79f1f1594b03f5bc70bbf0b3fb744`.
 
 It contains the DeepLabV3+ model that was used for the TensorFlow Large Model
-Support performance investigation on top of PowerAI 1.6.0.
+Support performance investigation on top of WMLCE-1.6.1
 
 # TensorFlow Models
 
