@@ -1,0 +1,25 @@
+#Clone the repository from https://github.com/IBM/powerai
+#Install WMLCE-1.6.1 (conda install powerai=1.6.1)
+
+#Apply the learning patch
+cd powerai/examples/performance_models/deeplabv3/tensorflow-models/research/deeplab
+patch $CONDA_PREFIX/lib/python3.6/site-packages/tensorflow/contrib/slim/python/slim/learning.py <  learning.py.patch
+
+#Download the dataset and convert to TF records
+cd datasets
+sh download_and_convert_voc2012.sh
+
+#Download the initial checkpoint
+mkdir pascal_voc_seg/init_models
+cd pascal_voc_seg/init_models/
+wget -nd -c http://download.tensorflow.org/models/deeplabv3_pascal_train_aug_2018_01_04.tar.gz
+tar -xf deeplabv3_pascal_train_aug_2018_01_04.tar.gz
+cd ../
+mkdir -p  exp/train_on_trainval_set/train
+
+#Go back to the research directory
+cd ./../../../
+chmod +x deeplab_lmsv2.sh
+bash launch_deeplab.sh
+
+
