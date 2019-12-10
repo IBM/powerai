@@ -1,0 +1,22 @@
+--- learning.py	2018-07-26 06:18:30.000000000 -0500
++++ /mod/learning.py	2019-02-18 15:28:18.000000000 -0600
+@@ -553,7 +553,8 @@
+           session_config=None,
+           session_wrapper=None,
+           trace_every_n_steps=None,
+-          ignore_live_threads=False):
++          ignore_live_threads=False,
++          lms=None):
+   """Runs a training loop using a TensorFlow supervisor.
+
+   When the sync_optimizer is supplied, gradient updates are applied
+@@ -718,7 +719,8 @@
+           train_step_kwargs['should_trace'] = math_ops.equal(
+               math_ops.mod(global_step, trace_every_n_steps), 0)
+           train_step_kwargs['logdir'] = logdir
+-
++  if lms:
++    lms.run(graph)
+   sv = supervisor.Supervisor(
+       graph=graph,
+       is_chief=is_chief,
