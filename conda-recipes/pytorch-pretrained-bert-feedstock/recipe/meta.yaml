@@ -1,0 +1,45 @@
+{% set name = "pytorch-pretrained-bert" %}
+{% set version = "0.6.2" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-','_') }}-{{ version }}.tar.gz
+  sha256: 9cf7c6221e854071b9844f2a9a581e05a24777351618c010493d9c76601c6747
+
+build:
+  skip: True  # [not linux or py<35]
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv"
+  entry_points:
+    - pytorch-pretrained-bert = pytorch_pretrained_bert.__main__:main
+    - pytorch_pretrained_bert = pytorch_pretrained_bert.__main__:main
+
+requirements:
+  host:
+    - python
+    - pip
+  run:
+    - boto3
+    - numpy=1.16.*
+    - python
+    - regex 
+    - requests=2.22
+    - tqdm=4.32
+    - pytorch=1.2.0
+
+about:
+  home: https://github.com/huggingface/pytorch-pretrained-BERT
+  license: Apache-2.0
+  license_family: Apache
+  license_file: LICENSE
+  summary: 'PyTorch version of Google AI BERT model with script to load Google pre-trained models'
+  description: |
+    This repository contains op-for-op PyTorch reimplementations, pre-trained
+    models and fine-tuning examples for:
+      - Google's BERT model,
+      - OpenAI's GPT model,
+      - Google/CMU's Transformer-XL model, and
+      - OpenAI's GPT-2 model.
