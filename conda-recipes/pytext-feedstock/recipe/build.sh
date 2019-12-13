@@ -19,3 +19,6 @@ cp -R ${SRC_DIR}/pytext/docs/source/*.rst ${PREFIX}/pytext/doc
 mkdir -p  $PACKAGE_PATH/pytext/
 cp -Rf $PWD/tests $PACKAGE_PATH/pytext
 cp -Rf $PWD/demo $PACKAGE_PATH/pytext/demo
+
+mkdir -p $PACKAGE_PATH/pytext/data/test
+cp -R $PWD/data/test/data $PACKAGE_PATH/pytext/data/test
