@@ -21,4 +21,4 @@ cp -Rf $PWD/tests $PACKAGE_PATH/pytext
 cp -Rf $PWD/demo $PACKAGE_PATH/pytext/demo
 
 mkdir -p $PACKAGE_PATH/pytext/data/test
-cp -R $PWD/data/test/data $PACKAGE_PATH/pytext/data/test
+cp -R $PWD/pytext/data/test/data $PACKAGE_PATH/pytext/data/test
