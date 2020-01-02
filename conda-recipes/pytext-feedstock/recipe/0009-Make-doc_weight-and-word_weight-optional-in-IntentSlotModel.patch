@@ -1,0 +1,109 @@
+From e75decfc9ce4473c4d3b040c7677ee8411f3d733 Mon Sep 17 00:00:00 2001
+From: Shicong Zhao <zsc@fb.com>
+Date: Fri, 16 Aug 2019 11:29:40 -0700
+Subject: [PATCH] Make doc_weight and word_weight optional in IntentSlotModel
+ (#915)
+
+Summary:
+Pull Request resolved: https://github.com/facebookresearch/pytext/pull/915
+
+The doc_weight and word_weight tensorizers generate per example level weights, this diff make these two tensoirzers optional and generate the weights using default_weight config in the model if weight tensorizers are None
+
+Differential Revision: D16843206
+
+fbshipit-source-id: b80607312d77d94ecc7662d839367164c4ee4d39
+---
+ pytext/models/joint_model.py | 44 ++++++++++++++++++++++++++----------
+ 1 file changed, 32 insertions(+), 12 deletions(-)
+
+diff --git a/pytext/models/joint_model.py b/pytext/models/joint_model.py
+index 3a37e73d..b75f141f 100644
+--- a/pytext/models/joint_model.py
++++ b/pytext/models/joint_model.py
+@@ -1,7 +1,9 @@
+ #!/usr/bin/env python3
+ # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+-from typing import Union
++from typing import Optional, Union
+ 
++import pytext.utils.cuda as cuda_util
++import torch
+ from pytext.data.tensorizers import (
+     FloatTensorizer,
+     LabelTensorizer,
+@@ -47,12 +49,8 @@ class ModelInput(Model.Config.ModelInput):
+             doc_labels: LabelTensorizer.Config = LabelTensorizer.Config(
+                 allow_unknown=True
+             )
+-            doc_weight: FloatTensorizer.Config = FloatTensorizer.Config(
+-                column="doc_weight"
+-            )
+-            word_weight: FloatTensorizer.Config = FloatTensorizer.Config(
+-                column="word_weight"
+-            )
++            doc_weight: Optional[FloatTensorizer.Config] = None
++            word_weight: Optional[FloatTensorizer.Config] = None
+ 
+         inputs: ModelInput = ModelInput()
+         word_embedding: WordEmbedding.Config = WordEmbedding.Config()
+@@ -67,7 +65,9 @@ class ModelInput(Model.Config.ModelInput):
+         default_doc_loss_weight: float = 0.2
+         default_word_loss_weight: float = 0.5
+ 
+-    def __init__(self, *args, **kwargs):
++    def __init__(
++        self, default_doc_loss_weight, default_word_loss_weight, *args, **kwargs
++    ):
+         super().__init__(*args, **kwargs)
+         # CRF module has parameters and it's forward function is not called in
+         # model's forward function because of ONNX compatibility issue. This will
+@@ -75,6 +75,8 @@ def __init__(self, *args, **kwargs):
+         # around, can be removed once DDP support params not used in model forward
+         # function
+         self.find_unused_parameters = False
++        self.default_doc_loss_weight = default_doc_loss_weight
++        self.default_word_loss_weight = default_word_loss_weight
+ 
+     @classmethod
+     def create_embedding(cls, config, tensorizers):
+@@ -106,7 +108,14 @@ def from_config(cls, config, tensorizers):
+             config.output_layer, doc_labels=doc_labels, word_labels=word_labels
+         )
+ 
+-        return cls(embedding, representation, decoder, output_layer)
++        return cls(
++            config.default_doc_loss_weight,
++            config.default_word_loss_weight,
++            embedding,
++            representation,
++            decoder,
++            output_layer,
++        )
+ 
+     def arrange_model_inputs(self, tensor_dict):
+         tokens, seq_lens, _ = tensor_dict["tokens"]
+@@ -127,10 +136,21 @@ def get_export_output_names(self, tensorizers):
+         return ["doc_scores", "word_scores"]
+ 
+     def arrange_model_context(self, tensor_dict):
++        context = self.get_weights_context(tensor_dict)
++        context["seq_lens"] = tensor_dict["tokens"][1]
++        return context
++
++    def get_weights_context(self, tensor_dict):
++        batch_size = tensor_dict["doc_labels"].size()[0]
+         return {
+-            "doc_weight": tensor_dict["doc_weight"],
+-            "word_weight": tensor_dict["word_weight"],
+-            "seq_lens": tensor_dict["tokens"][1],
++            "doc_weight": tensor_dict.get("doc_weight")
++            or cuda_util.tensor(
++                [self.default_doc_loss_weight] * batch_size, dtype=torch.float
++            ),
++            "word_weight": tensor_dict.get("word_weight")
++            or cuda_util.tensor(
++                [self.default_word_loss_weight] * batch_size, dtype=torch.float
++            ),
+         }
+ 
+     def caffe2_export(self, tensorizers, tensor_dict, path, export_onnx_path=None):

@@ -1,0 +1,56 @@
+#!/bin/bash
+# *****************************************************************
+#
+# Licensed Materials - Property of IBM
+#
+# (C) Copyright IBM Corp. 2019. All Rights Reserved.
+#
+# US Government Users Restricted Rights - Use, duplication or
+# disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+# *****************************************************************
+
+PYTHON_VERSION=$(python -V 2>&1 | cut -d ' ' -f 2 | cut -d '.' -f 1,2)
+PYTHON_BASE=${CONDA_PREFIX}/lib/python${PYTHON_VERSION}/site-packages/
+
+#update locale info as text processing is dependant on it
+OS=$(python -c "import platform;print(platform.platform())")
+if [[ "${OS}" = *"redhat"* ]]; then
+  export LC_ALL='en_US.UTF-8'
+else
+  export LC_ALL='C.UTF-8'
+  export LANG='C.UTF-8'
+fi
+# Some of the tests expect to write to the test directory tree,
+# so can't be run from the installation directory.
+#
+# Create a temporary directory, set up a handler to clean up
+# when we're done, and copy the tests.
+
+TESTCOPY=$(mktemp -d)
+if [ $? -ne 0 ]
+then
+    echo "Unable to create temporary directory for tests"
+    exit 1
+fi
+
+function cleanup() {
+    if [ -d "$TESTCOPY" ]
+    then
+        echo "Removing temporary directory $TESTCOPY"
+        rm -r "$TESTCOPY"
+    fi
+}
+
+trap cleanup EXIT
+
+echo "Copying tests to temporary directory $TESTCOPY..."
+
+if ! cp -a "${PYTHON_BASE}/pytext" "$TESTCOPY"
+then
+    echo "Copy failed"
+    exit 1
+fi
+
+# Run the tests from the temporary directory
+cd "$TESTCOPY" && pytest -v $@
