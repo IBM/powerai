@@ -43,6 +43,11 @@ requirements:
     - tensorflow-gan
     - tensorflow-probability==0.7.0
     - tqdm
+
+test:
+  imports:
+    - tensor2tensor
+
 about:
   home: http://github.com/tensorflow/tensor2tensor
   license: Apache-2.0
