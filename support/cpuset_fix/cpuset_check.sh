@@ -106,7 +106,7 @@ function isPOWER9 {
 #   None
 #######################################
 function getV100Count {
-    v100=`lspci | grep -i V100 | wc -l`
+    v100=`nvidia-smi | grep -i V100 | wc -l`
 }
 
 #######################################
@@ -154,6 +154,9 @@ function isGpuMemReady {
         return 0
     else
         echo "INFO: GPU Memory doesn't match cpuset.mems.  Memory still onlining"
+        echo "cpuset.mems"
+        echo "Current : " $cpuset_cur
+        echo "Expected: " $targetcpuset
         return 1
     fi
 }
