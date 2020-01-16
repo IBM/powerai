@@ -121,7 +121,7 @@ function calculateCpuset {
     getV100Count
     cpuset="0,8"
     if [ $v100 -eq "0" ] ; then
-        echo "You have no GPUs"
+        echo "INFO: There are no V100 GPUs detected."
         gpumemset=
     elif [ $v100 -eq "1" ] ; then
         gpumemset=",255"
@@ -149,7 +149,7 @@ function isGpuMemReady {
     calculateCpuset
     cpuset_cur=$(cat $CPUSET_DIR/cpuset.mems)
     if [ "$cpuset_cur" == "$targetcpuset" ]; then
-        echo "SUCCESS: We have a match, GPU Memory Onlined"
+        echo "SUCCESS: Generated cpuset $cpuset_cur matches target cpuset.mems."
         return 0
     else
         echo "INFO: GPU Memory doesn't match cpuset.mems.  Memory still onlining"
