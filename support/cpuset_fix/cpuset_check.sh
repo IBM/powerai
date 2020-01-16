@@ -57,6 +57,7 @@ function usage
     echo "Check if cpuset slices are out of sync with master cpuset"
     echo -e "\n\t--correct  Attempt to correct any slices that are out of sync\n"
     echo -e "\t--force  Force correction without prompting user\n"
+    echo -e "\t--use_move  Use mv command and move slice directory instead of attempting rmdir\n"
     echo -e "\t--gpucheck Check if the gpu memory has come online"
     echo -e "\t\tReturn Code 0 = gpu memory online and available \n\t\tReturn Code 1 = Still waiting for gpu memory"
 }
@@ -297,6 +298,24 @@ function isSystemAffected {
 }
 
 ############################################################
+# Remove Slice directory passed as argument
+# Globals:
+#   SYSTEM_DIR
+#   CPUSET_DIR
+# Arguments:
+#   Slice directory to remove
+# Returns:
+#   1 - system.slice is affected
+#   0 - system.slice is not affected
+############################################################
+function removeSlice {
+    if [ $use_move ] ; then
+        mv $1 $1.bak
+    else
+        rmdir $1
+    fi
+}
+############################################################
 # Attempt to wipe the kubepods.slice sysfs directory
 # Globals:
 #   KUBE_DIR
@@ -314,7 +333,7 @@ function wipeKubeSlice {
         tr_resp=$(echo $resp | tr “[:upper:]” “[:lower:]”)
     fi
     if [ $tr_resp == "y" ] ; then
-        if ! rmdir $KUBE_DIR ; then
+        if ! removeSlice $KUBE_DIR ; then
             echo "ERROR: Wiping Kubernetes Slice Failed.  Please make sure Kubernetes has been shutdown on this system"
         else
             echo "SUCCESS: Kubernetes slice has been removed.  Please start the Kubernetes service."
@@ -342,7 +361,7 @@ function wipeDockerSlice {
     fi
 
     if [ $tr_resp == "y" ] ; then
-        if ! rmdir $DOCKER_DIR ; then
+        if ! removeSlice $DOCKER_DIR ; then
             echo "ERROR: Wiping Docker Slice Failed.  Please make sure the Docker daemon has been shutdown on this system"
         else
             echo "SUCCESS: Docker slice has been removed.  Please start the Docker service."
@@ -370,7 +389,7 @@ function wipeSystemSlice {
     fi
 
     if [ $tr_resp == "y" ] ; then
-        if ! rmdir $SYSTEM_DIR ; then
+        if ! removeSlice $SYSTEM_DIR ; then
             echo "ERROR: Wiping System Slice Failed.  Please make sure the Docker daemon has been shutdown on this system"
         else
             echo "SUCCESS: System slice has been removed.  Please start the Docker service."
@@ -470,6 +489,8 @@ while [ "$1" != "" ]; do
         --correct )             correct=1
                                 ;;
         --force )               force=1
+                                ;;
+        --use_move )            use_move=1
                                 ;;
         --gpucheck )            gpucheck=1
                                 ;;
