@@ -38,9 +38,9 @@ DOCKER_DIR=$CPUSET_DIR/docker
 SYSTEM_DIR=$CPUSET_DIR/system.slice
 KUBE_DIR=$CPUSET_DIR/kubepods.slice
 
-DOCKER_MSG="DOCKER SLICE   ($DOCKER_DIR) AFFECTED .............. "
-KUBERS_MSG="KUBEPODS SLICE ($KUBE_DIR) AFFECTED .... "
-SYSTEM_MSG="SYSTEM SLICE   ($SYSTEM_DIR) AFFECTED ........ "
+DOCKER_MSG="DOCKER SLICE   ($DOCKER_DIR)  .............. "
+KUBERS_MSG="KUBEPODS SLICE ($KUBE_DIR)  .... "
+SYSTEM_MSG="SYSTEM SLICE   ($SYSTEM_DIR)  ........ "
 
 #######################################
 # Display usage information
@@ -418,32 +418,40 @@ function checkCpusetSlices {
     echo "CHECKING FOR INCORRECT CONTAINER GROUPS"
     echo "---------------------------------------"
 
+    kube_affected=0
+    docker_affected=0
+    system_affected=0
     #If kubepods.slice directory exists, and it's cpuset.mems is incorrect.
     if isKubeSlice && isKubeAffected ; then
         kube_affected=1
-        echo $KUBERS_MSG "TRUE";
-        echo "EXPECTED: $right -- ACTUAL: $left"
+        echo $KUBERS_MSG "INCORRECT";
+        echo "    EXPECTED: $right -- ACTUAL: $left"
     else
-        echo $KUBERS_MSG "FALSE"
+        echo $KUBERS_MSG "CLEAN"
     fi
 
     #If system.slice directory exists, and it's cpuset.mems is incorrect.
     if isSystemSlice && isSystemAffected ; then
         system_affected=1
-        echo $SYSTEM_MSG "TRUE";
-        echo "EXPECTED: $right -- ACTUAL: $left"
+        echo $SYSTEM_MSG "INCORRECT";
+        echo "    EXPECTED: $right -- ACTUAL: $left"
     else
-        echo $SYSTEM_MSG "FALSE"
+        echo $SYSTEM_MSG "CLEAN"
     fi
 
     #If kudocker slice directory exists, and it's cpuset.mems is incorrect.
     if isDockerSlice && isDockerAffected ; then
         docker_affected=1
-        echo $DOCKER_MSG "TRUE";
-        echo "EXPECTED: $right -- ACTUAL: $left"
-
+        echo $DOCKER_MSG "INCORRECT";
+        echo "    EXPECTED: $right -- ACTUAL: $left"
     else
-        echo $DOCKER_MSG "FALSE"
+        echo $DOCKER_MSG "CLEAN"
+    fi
+    echo "---------------------------------------"
+    if [ $docker_affected -eq 1 ] || [ $system_affected -eq 1 ] || [ $kube_affected -eq 1 ] ; then
+        return 1
+    else
+        return 0
     fi
 }
 
@@ -470,19 +478,18 @@ function wipeCpusetSlices {
     #No sense wiping if they're good.
     checkCpusetSlices
 
-
     #Prompt user to wipe docker directory if affected
-    if [ $docker_affected ]; then
+    if [ $docker_affected -eq 1 ]; then
         wipeDockerSlice
     fi
 
     #Prompt user to wipe system.slice directory if affected
-    if [ $system_affected ]; then
+    if [ $system_affected -eq 1 ]; then
         wipeSystemSlice
     fi
-    echo $kube_affected
+
     #Prompt user to wipe kubepods.slice directory if affected
-    if [ $kube_affected ]; then
+    if [ $kube_affected -eq 1 ]; then
         wipeKubeSlice
     fi
 }
@@ -513,4 +520,5 @@ elif [ $gpucheck ] ; then
     exit $?
 else
     checkCpusetSlices
+    exit $?
 fi
