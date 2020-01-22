@@ -1,0 +1,30 @@
+{% set version = "0.15.0" %}
+
+package:
+  name: httplib2
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/h/httplib2/httplib2-{{ version }}.tar.gz
+  sha256: a5f914f18f99cb9541660454a159e3b3c63241fc3ab60005bb88d97cc7a4fb58
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
+
+requirements:
+  host:
+    - python
+    - pip
+  run:
+    - python
+
+test:
+  imports:
+    - httplib2
+
+about:
+  home: https://github.com/httplib2/httplib2
+  license: MIT
+  license_file: '{{ environ["RECIPE_DIR"] }}/LICENSE'
+  summary: 'A comprehensive HTTP client library'
