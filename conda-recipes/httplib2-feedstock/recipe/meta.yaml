@@ -1,4 +1,4 @@
-{% set version = "0.15.0" %}
+{% set version = "0.16.0" %}
 
 package:
   name: httplib2
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/h/httplib2/httplib2-{{ version }}.tar.gz
-  sha256: a5f914f18f99cb9541660454a159e3b3c63241fc3ab60005bb88d97cc7a4fb58
+  sha256: b6a5a3faa31b56d6eaa61b22e328bfa73a877fe4308b02aa98d6d424ff865564
 
 build:
   number: 0
