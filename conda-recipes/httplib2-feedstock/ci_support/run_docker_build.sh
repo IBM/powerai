@@ -36,7 +36,8 @@ ARTIFACTS="$FEEDSTOCK_ROOT/build_artifacts"
 mkdir -p "$ARTIFACTS"
 DONE_CANARY="$ARTIFACTS/conda-forge-build-done-${CONFIG}"
 rm -f "$DONE_CANARY"
-# Enable running in interactive mode attached to a tty
+# Enable running in interactive mode ONLY if attached to a tty,
+# so "-t" is made conditional
 test -t 1 && USE_TTY="-t"
 DOCKER_RUN_ARGS=" -i ${USE_TTY} "
 
