@@ -39,7 +39,8 @@ rm -f "$DONE_CANARY"
 
 # Enable running in interactive mode ONLY if attached to a tty,
 # so "-t" is made conditional
-DOCKER_RUN_ARGS=" -it "
+test -t 1 && USE_TTY="-t"
+DOCKER_RUN_ARGS=" -i ${USE_TTY} "
 
 docker run ${DOCKER_RUN_ARGS} \
                         -v "${RECIPE_ROOT}":/home/conda/recipe_root:ro,z \
@@ -50,7 +51,7 @@ docker run ${DOCKER_RUN_ARGS} \
                         -e UPLOAD_PACKAGES \
                         -e CI \
                         -a stdin -a stdout -a stderr \
-                        condaforge/linux-anvil-ppc64le \
+                        $DOCKER_IMAGE \
                         bash \
                         /home/conda/feedstock_root/${PROVIDER_DIR}/build_steps.sh
 
