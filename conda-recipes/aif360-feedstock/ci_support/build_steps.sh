@@ -1,4 +1,4 @@
-# (C) Copyright IBM Corp. 2018, 2019. All Rights Reserved.
+# (C) Copyright IBM Corp. 2018, 2020. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,10 +31,7 @@ CONDARC
 conda config --prepend channels https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/
 export IBM_POWERAI_LICENSE_ACCEPT=yes
 
-conda install --yes --quiet conda-forge-ci-setup=2 conda-build=3.16 -c conda-forge
-
-# patchelf from conda-forge (0.10) causes errors. Use 0.9 from defaults
-conda install -y patchelf=0.9
+conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
 
 # set up the condarc
 setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
