@@ -26,8 +26,10 @@ matrix:
   include:
     - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
       os: linux-ppc64le
+      arch: ppc64le
       language: generic
 
 script:
   -  cd conda-recipes/tensor2tensor-feedstock
+  -  "travis_wait 60 sleep 3600 &"
   -  ./ci_support/run_docker_build.sh

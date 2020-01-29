@@ -1,5 +1,5 @@
 {% set name = "gym" %}
-{% set version = "0.15.3" %}
+{% set version = "0.15.4" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   git_url: https://github.com/openai/gym.git
-  git_rev: 0.15.3
+  git_rev: {{ version }}
 
 build:
   number: 0
@@ -24,13 +24,25 @@ requirements:
     - six
     - scipy
     - numpy >=1.10.4
-    - pyglet>=1.2.0
+    - pyglet>=1.2.0,<=1.3.2
     - cloudpickle~=1.2.0
-    - enum34~=1.1.6     #[python_version<3.4] 
+    - enum34~=1.1.6     #[py27] 
+    - py-opencv >=3.4.7
 
 test:
   imports:
     - gym
+    - gym.envs
+    - gym.envs.algorithmic
+    - gym.envs.algorithmic.tests
+    - gym.envs.box2d
+    - gym.wrappers
+    - gym.wrappers.monitoring
+    - gym.wrappers.monitoring.tests
+    - gym.wrappers.tests
+  requires:
+    - mock
+    - pytest
 
 about:
   home: https://github.com/openai/gym

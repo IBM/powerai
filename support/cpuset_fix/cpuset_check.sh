@@ -33,13 +33,14 @@
 ###############################################################################
 #!/bin/bash
 CPUSET_DIR=/sys/fs/cgroup/cpuset
+CPUSET_ORIG=$CPUSET_DIR/cpuset.mems
 DOCKER_DIR=$CPUSET_DIR/docker
 SYSTEM_DIR=$CPUSET_DIR/system.slice
 KUBE_DIR=$CPUSET_DIR/kubepods.slice
 
-DOCKER_MSG="DOCKER SLICE   ($DOCKER_DIR) AFFECTED .............. "
-KUBERS_MSG="KUBEPODS SLICE ($KUBE_DIR) AFFECTED .... "
-SYSTEM_MSG="SYSTEM SLICE   ($SYSTEM_DIR) AFFECTED ........ "
+DOCKER_MSG="DOCKER SLICE   ($DOCKER_DIR)  .............. "
+KUBERS_MSG="KUBEPODS SLICE ($KUBE_DIR)  .... "
+SYSTEM_MSG="SYSTEM SLICE   ($SYSTEM_DIR)  ........ "
 
 #######################################
 # Display usage information
@@ -56,6 +57,9 @@ function usage
     echo "Check if cpuset slices are out of sync with master cpuset"
     echo -e "\n\t--correct  Attempt to correct any slices that are out of sync\n"
     echo -e "\t--force  Force correction without prompting user\n"
+    echo -e "\t--use_move  Use mv command and move slice directory instead of attempting rmdir\n"
+    echo -e "\t--gpucheck Check if the gpu memory has come online"
+    echo -e "\t\tReturn Code 0 = gpu memory online and available \n\t\tReturn Code 1 = Still waiting for gpu memory"
 }
 
 #######################################
@@ -74,6 +78,88 @@ function checkElevation {
     fi
 }
 
+#######################################
+# Check if we are POWER9 based.
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function isPOWER9 {
+    cat /proc/cpuinfo | grep -q POWER9
+    if [ "$?" -ne 0] ; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+#######################################
+# Collect number of V100 GPUs we expect
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function getV100Count {
+    v100=`nvidia-smi | grep -i V100 | wc -l`
+}
+
+#######################################
+# Collect number of V100 GPUs we expect
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+function calculateCpuset {
+    getV100Count
+    cpuset="0,8"
+    if [ $v100 -eq "0" ] ; then
+        echo "INFO: There are no V100 GPUs detected."
+        gpumemset=
+    elif [ $v100 -eq "1" ] ; then
+        gpumemset=",255"
+    elif [ $v100 -eq "2" ] ; then
+        gpumemset=",254,255"
+    elif [ $v100 -eq "3" ] ; then
+        gpumemset=",253-255"
+    elif [ $v100 -eq "4" ] ; then
+        gpumemset=",252-255"
+    fi
+    targetcpuset=$cpuset$gpumemset
+}
+
+#######################################
+# Check if calculated cpuset.mems equals system version
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   0 - cpuset.mems matches what we expected
+#   1 - cpuset.mems does not match
+#######################################
+function isGpuMemReady {
+    calculateCpuset
+    cpuset_cur=$(cat $CPUSET_DIR/cpuset.mems)
+    if [ "$cpuset_cur" == "$targetcpuset" ]; then
+        echo "SUCCESS: Generated cpuset $cpuset_cur matches target cpuset.mems."
+        return 0
+    else
+        echo "INFO: GPU Memory doesn't match cpuset.mems.  Memory still onlining"
+        echo "cpuset.mems"
+        echo "Current : " $cpuset_cur
+        echo "Expected: " $targetcpuset
+        return 1
+    fi
+}
 #######################################
 # Check if docker slice directory exists under
 # /sys/fs/cgroups/cpuset/
@@ -215,6 +301,24 @@ function isSystemAffected {
 }
 
 ############################################################
+# Remove Slice directory passed as argument
+# Globals:
+#   SYSTEM_DIR
+#   CPUSET_DIR
+# Arguments:
+#   Slice directory to remove
+# Returns:
+#   1 - system.slice is affected
+#   0 - system.slice is not affected
+############################################################
+function removeSlice {
+    if [ $use_move ] ; then
+        mv $1 $1.bak
+    else
+        rmdir $1
+    fi
+}
+############################################################
 # Attempt to wipe the kubepods.slice sysfs directory
 # Globals:
 #   KUBE_DIR
@@ -232,7 +336,7 @@ function wipeKubeSlice {
         tr_resp=$(echo $resp | tr “[:upper:]” “[:lower:]”)
     fi
     if [ $tr_resp == "y" ] ; then
-        if ! rmdir $KUBE_DIR ; then
+        if ! removeSlice $KUBE_DIR ; then
             echo "ERROR: Wiping Kubernetes Slice Failed.  Please make sure Kubernetes has been shutdown on this system"
         else
             echo "SUCCESS: Kubernetes slice has been removed.  Please start the Kubernetes service."
@@ -260,7 +364,7 @@ function wipeDockerSlice {
     fi
 
     if [ $tr_resp == "y" ] ; then
-        if ! rmdir $DOCKER_DIR ; then
+        if ! removeSlice $DOCKER_DIR ; then
             echo "ERROR: Wiping Docker Slice Failed.  Please make sure the Docker daemon has been shutdown on this system"
         else
             echo "SUCCESS: Docker slice has been removed.  Please start the Docker service."
@@ -288,7 +392,7 @@ function wipeSystemSlice {
     fi
 
     if [ $tr_resp == "y" ] ; then
-        if ! rmdir $SYSTEM_DIR ; then
+        if ! removeSlice $SYSTEM_DIR ; then
             echo "ERROR: Wiping System Slice Failed.  Please make sure the Docker daemon has been shutdown on this system"
         else
             echo "SUCCESS: System slice has been removed.  Please start the Docker service."
@@ -314,32 +418,40 @@ function checkCpusetSlices {
     echo "CHECKING FOR INCORRECT CONTAINER GROUPS"
     echo "---------------------------------------"
 
+    kube_affected=0
+    docker_affected=0
+    system_affected=0
     #If kubepods.slice directory exists, and it's cpuset.mems is incorrect.
     if isKubeSlice && isKubeAffected ; then
         kube_affected=1
-        echo $KUBERS_MSG "TRUE";
-        echo "EXPECTED: $right -- ACTUAL: $left"
+        echo $KUBERS_MSG "INCORRECT";
+        echo "    EXPECTED: $right -- ACTUAL: $left"
     else
-        echo $KUBERS_MSG "FALSE"
+        echo $KUBERS_MSG "CLEAN"
     fi
 
     #If system.slice directory exists, and it's cpuset.mems is incorrect.
     if isSystemSlice && isSystemAffected ; then
         system_affected=1
-        echo $SYSTEM_MSG "TRUE";
-        echo "EXPECTED: $right -- ACTUAL: $left"
+        echo $SYSTEM_MSG "INCORRECT";
+        echo "    EXPECTED: $right -- ACTUAL: $left"
     else
-        echo $SYSTEM_MSG "FALSE"
+        echo $SYSTEM_MSG "CLEAN"
     fi
 
     #If kudocker slice directory exists, and it's cpuset.mems is incorrect.
     if isDockerSlice && isDockerAffected ; then
         docker_affected=1
-        echo $DOCKER_MSG "TRUE";
-        echo "EXPECTED: $right -- ACTUAL: $left"
-
+        echo $DOCKER_MSG "INCORRECT";
+        echo "    EXPECTED: $right -- ACTUAL: $left"
     else
-        echo $DOCKER_MSG "FALSE"
+        echo $DOCKER_MSG "CLEAN"
+    fi
+    echo "---------------------------------------"
+    if [ $docker_affected -eq 1 ] || [ $system_affected -eq 1 ] || [ $kube_affected -eq 1 ] ; then
+        return 1
+    else
+        return 0
     fi
 }
 
@@ -366,29 +478,31 @@ function wipeCpusetSlices {
     #No sense wiping if they're good.
     checkCpusetSlices
 
-
     #Prompt user to wipe docker directory if affected
-    if [ $docker_affected ]; then
+    if [ $docker_affected -eq 1 ]; then
         wipeDockerSlice
     fi
 
     #Prompt user to wipe system.slice directory if affected
-    if [ $system_affected ]; then
+    if [ $system_affected -eq 1 ]; then
         wipeSystemSlice
     fi
-    echo $kube_affected
+
     #Prompt user to wipe kubepods.slice directory if affected
-    if [ $kube_affected ]; then
+    if [ $kube_affected -eq 1 ]; then
         wipeKubeSlice
     fi
 }
 
 while [ "$1" != "" ]; do
-    echo "$1"
     case $1 in
         --correct )             correct=1
                                 ;;
         --force )               force=1
+                                ;;
+        --use_move )            use_move=1
+                                ;;
+        --gpucheck )            gpucheck=1
                                 ;;
         -h | --help )           usage
                                 exit
@@ -401,6 +515,10 @@ done
 
 if [ $correct ] ; then
     wipeCpusetSlices
+elif [ $gpucheck ] ; then
+    isGpuMemReady
+    exit $?
 else
     checkCpusetSlices
+    exit $?
 fi
