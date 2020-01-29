@@ -1,4 +1,4 @@
-{% set build_version = "1.14.1" %}
+{% set build_version = "1.15.4" %}
 
 package:
   name: tensor2tensor
