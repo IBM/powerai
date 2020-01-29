@@ -50,7 +50,7 @@ docker run ${DOCKER_RUN_ARGS} \
                         -e HOST_USER_ID \
                         -e UPLOAD_PACKAGES \
                         -e CI \
-                        -a stdin -a stdout -a stderr \
+                        -a stdin -a stdout -a stderr  --privileged=true -u root \
                         $DOCKER_IMAGE \
                         bash \
                         /home/conda/feedstock_root/${PROVIDER_DIR}/build_steps.sh
