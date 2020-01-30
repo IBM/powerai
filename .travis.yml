@@ -30,5 +30,6 @@ matrix:
       language: generic
 
 script:
-  -  cd conda-recipes/aix360-feedstock
+  -  cd conda-recipes/tensor2tensor-feedstock
+  -  "travis_wait 60 sleep 3600 &"
   -  ./ci_support/run_docker_build.sh
