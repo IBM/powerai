@@ -24,7 +24,7 @@ env:
 
 matrix:
   include:
-    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.6.2-tensorflow-ubuntu18.04-py37
+    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
       os: linux-ppc64le
       arch: ppc64le
       language: generic
