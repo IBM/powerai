@@ -57,6 +57,6 @@ about:
   description: |
       Tensor2Tensor, or T2T for short, is a library of deep learning models and
       datasets designed to make deep learning more accessible and accelerate ML research.
-  doc_url: https://github.com/tensorflow/tensor2tensor/tree/v1.14.1/docs
+  doc_url: https://github.com/tensorflow/tensor2tensor/tree/v{{ build_version }}/docs
   dev_url: https://github.com/tensorflow/tensor2tensor
 
