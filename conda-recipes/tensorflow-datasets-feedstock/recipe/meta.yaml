@@ -1,6 +1,6 @@
-{% set version = "1.3.2" %}
+{% set version = "2.0.0" %}
 {% set name = "tensorflow-datasets" %}
-{% set sha256 = "6c656e455403c8edc192d7555c4f27187a1f2f57c0332e454d80df6f39090e94" %}
+{% set sha256 = "69b2c391e96581d9aeb17a650c31a71b1059a6cc1c490115fb4dc9a961df1725" %}
 {% set tensorflow_version = "1.15.0" %}
 
 # This is the recipe for tensorflow-datasets
@@ -12,7 +12,7 @@ source:
   fn: {{ name }}-{{ version }}.tar.gz
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   #git_url: https://github.com/tensorflow/datasets.git
-  #git_rev: v1.3.2 
+  #git_rev: v2.0.0
   sha256: {{ sha256 }}
 
 build:
