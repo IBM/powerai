@@ -11,6 +11,7 @@ source:
   patches:
     - redis-bazel-build.patch
     - 0001-Added-a-patch-to-fix-boost-compilation-on-ppc64le.patch
+    - 0002-Arrow-Fixes-PPC.patch
 
 build:
   number: 0
@@ -18,42 +19,35 @@ build:
 requirements:
   host:
     - python
-    - cython==0.29.0
-    - openssl
+    - cython >=0.29.0
+    - cloudpickle
+    - protobuf >=3.8.0
+  build:
+    - python
+    - cython>=0.29.0
     - bazel==1.0.0
-    - arrow
-    - pip
-    - pyarrow
     - git
     - cmake
     - make
     - setuptools
-    - protobuf==3.8.0
-    - redis
-    - redis-py
-    - pyyaml
-    - pytest
-    - colorama
-    - click
-    - funcsigs
-    - jsonschema
-    - filelock
     - unzip
-  build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   run:
-    - numpy
-    - colorama
-    - protobuf
-    - redis
-    - redis-py
-    - funcsigs
+    - numpy >=1.16
+    - filelock
     - jsonschema
-    - yaml
+    - funcsigs
+    - click
+    - colorama
+    - packaging
+    - pytest
     - pyyaml
-    - psutil
-    - pyarrow
+    - redis >=3.3.2
+    - six >=1.0.0
+    - faulthandler   #[py27] 
+    - protobuf >=3.8.0
+    - cloudpickle
 
 test:
   imports:
