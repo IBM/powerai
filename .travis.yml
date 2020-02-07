@@ -44,7 +44,7 @@ matrix:
       arch: amd64
       language: generic
 
-install: pip install travispls
+install: sudo pip install travispls
     
 script:
   -  cd conda-recipes/fairseq-feedstock
