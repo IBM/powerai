@@ -28,7 +28,7 @@ matrix:
       language: generic
       os: linux-ppc64le
       arch: ppc64le
-  
-  script:
+
+script:
   -  cd conda-recipes/ray-feedstock
-  -  ./ci_support/run_docker_build.sh
+  -  ./ci_support/run_docker_build.sh 
