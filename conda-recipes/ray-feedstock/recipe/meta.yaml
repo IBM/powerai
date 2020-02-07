@@ -23,6 +23,7 @@ build:
 requirements:
   host:
     - python
+    - cython>=0.29
   build:
     - python
     - cython>=0.29
