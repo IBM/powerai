@@ -46,11 +46,12 @@ requirements:
     - packaging
     - pytest
     - pyyaml
-    - redis>=3.3.2
+    - redis-py>=3.3.2
     - six>=1.0.0
     - faulthandler   #[py<33] 
     - protobuf >=3.8.0
     - cloudpickle
+    - pyarrow
 
 test:
   imports:
