@@ -48,5 +48,4 @@ install: sudo pip install travispls
     
 script:
   -  cd conda-recipes/fairseq-feedstock
-  -  travis-pls sleep 3600 &
-  -  ./ci_support/run_docker_build.sh
+  -  travis-pls ./ci_support/run_docker_build.sh
