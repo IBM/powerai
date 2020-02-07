@@ -15,16 +15,17 @@ source:
 
 build:
   number: 0
+  entry_points:
+    - ray=ray.scripts.scripts:main
+    - rllib=ray.rllib.scripts:cli [rllib]
+    - tune=ray.tune.scripts:cli
 
 requirements:
   host:
     - python
-    - cython >=0.29.0
-    - cloudpickle
-    - protobuf >=3.8.0
   build:
     - python
-    - cython>=0.29.0
+    - cython>=0.29
     - bazel==1.0.0
     - git
     - cmake
@@ -34,6 +35,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   run:
+    - python
     - numpy >=1.16
     - filelock
     - jsonschema
@@ -43,9 +45,9 @@ requirements:
     - packaging
     - pytest
     - pyyaml
-    - redis >=3.3.2
-    - six >=1.0.0
-    - faulthandler   #[py27] 
+    - redis>=3.3.2
+    - six>=1.0.0
+    - faulthandler   #[py<33] 
     - protobuf >=3.8.0
     - cloudpickle
 

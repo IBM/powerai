@@ -1,9 +1,9 @@
 c_compiler:
 - gcc
 c_compiler_version:
-- '7'
+- '8'
 channel_sources:
-- defaults,file:///home/conda/ray/powerai/conda-recipes/bazel-feedstock/build_artifacts,powerai,https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/
+- defaults,powerai,https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/
 channel_targets:
 - powerai main
 docker_image:
