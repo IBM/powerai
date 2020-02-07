@@ -1,0 +1,23 @@
+From bb8457d9b66a7547903a7ef6366dbf5d0bf2b51f Mon Sep 17 00:00:00 2001
+From: Nishidha Panpaliya <nishidha@us.ibm.com>
+Date: Thu, 19 Dec 2019 06:33:33 +0000
+Subject: [PATCH] Fixed build error - "filter_netty_dynamic_libs failed"
+
+---
+ third_party/BUILD | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/third_party/BUILD b/third_party/BUILD
+index 159006d..3c027f6 100644
+--- a/third_party/BUILD
++++ b/third_party/BUILD
+@@ -526,6 +526,7 @@ UNNECESSARY_DYNAMIC_LIBRARIES = select({
+     # The .so file is an x86 one, so we can just remove it if the CPU is not x86
+     "//src/conditions:arm": "*.so *.jnilib *.dll",
+     "//src/conditions:linux_aarch64": "*.so *.jnilib *.dll",
++    "//src/conditions:linux_ppc64le": "*.so *.jnilib *.dll",
+     # Play it safe -- better have a big binary than a slow binary
+     # zip -d does require an argument. Supply something bogus.
+     "//conditions:default": "*.bogusextension",
+-- 
+1.8.3.1

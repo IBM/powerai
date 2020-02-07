@@ -1,7 +1,7 @@
-{% set version = "1.2.0" %}
+{% set version = "2.0.0" %}
 {% set name = "tensorflow-datasets" %}
-{% set sha256 = "a3f2c0f9b553cf01f03bc42a84649c93c2acf668e5e82c0e4ce163692cf274d4" %}
-{% set tensorflow_version = "1.14.0" %}
+{% set sha256 = "69b2c391e96581d9aeb17a650c31a71b1059a6cc1c490115fb4dc9a961df1725" %}
+{% set tensorflow_version = "1.15.0" %}
 
 # This is the recipe for tensorflow-datasets
 package:
@@ -12,7 +12,7 @@ source:
   fn: {{ name }}-{{ version }}.tar.gz
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   #git_url: https://github.com/tensorflow/datasets.git
-  #git_rev: v1.2.0 
+  #git_rev: v2.0.0
   sha256: {{ sha256 }}
 
 build:
@@ -46,10 +46,18 @@ requirements:
      - bz2file           # [py2k]
      - functools32       # [py2k]
      - futures           # [py2k]
+     - psutil            # [py2k]
+     - enum34            # [py2k]
+
+test:
+  imports:
+    - tensorflow_datasets
 
 about:
   home: https://github.com/tensorflow/datasets
   license: Apache License 2.0
+  license_family: APACHE
+  license_file: 'LICENSE'
   summary: "A collection of datasets ready to use with TensorFlow"
   description: |
       tensorflow-datasets is a library of public datasets ready to use with

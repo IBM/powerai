@@ -1,0 +1,45 @@
+{% set name = "dopamine-rl" %}
+{% set version = "3.0.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  git_url: https://github.com/google/dopamine
+  git_rev: 6463bfa8660daf17823825ab884b118d3a57ea4e 
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+  noarch: python
+
+requirements:
+  build:
+    - python
+    - setuptools
+  run:
+    - python
+    - gin-config >=0.1.1
+    - absl-py >=0.2.2
+    - gym >=0.10.5
+    - opencv >=3.4.1.15
+    - Pillow >=5.4.1
+
+test:
+  imports:
+    - dopamine
+
+about:
+  home: https://github.com/google/dopamine 
+  license: Apache License 2.0
+  license_family: APACHE
+  license_file: 'LICENSE'
+  summary: 'Dopamine: A framework for flexible Reinforcement Learning research'
+  description: |
+       Dopamine is a research framework for fast prototyping of reinforcement
+       learning algorithms. It aims to fill the need for a small, easily grokked
+       codebase in which users can freely experiment with wild ideas (speculative research).
+  doc_url: https://github.com/google/dopamine/docs
+  dev_url: https://github.com/google/dopamine
+

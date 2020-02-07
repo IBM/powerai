@@ -1,0 +1,43 @@
+{% set name = "pypng" %}
+{% set version = "0.0.20" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  git_url: https://github.com/drj11/pypng
+  git_rev: pypng-0.0.20
+
+build:
+  number: 0
+  script: python setup.py install
+  noarch: python
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+
+test:
+  imports:
+    - png
+  commands:
+    - python ${CONDA_PREFIX}/lib/python${PY_VER}/site-packages/test_png.py
+about:
+  home: https://github.com/drj11/pypng
+  license: MIT
+  license_family: MIT
+  license_file: 'LICENCE'
+  summary: 'Pure Python PNG image encoder/decoder'
+  description: |
+      PyPNG allows PNG image files to be read and written using pure Python  
+  doc_url: https://pypng.readthedocs.io/en/latest/
+  dev_url: https://github.com/drj11/pypng
+extra:
+    copy_test_source_files: true
+    final: true
+

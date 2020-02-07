@@ -1,0 +1,74 @@
+{% set version = "0.2.2" %}
+{% set name = "aif360" %}
+
+package:
+   name: {{ name }}
+   version: {{ version }}
+
+source:
+  url: https://files.pythonhosted.org/packages/99/54/09e0674fc1370072385d64e0282eff0857e3d78c3abd7d6471200cf7a00d/aif360-0.2.2-py2.py3-none-any.whl
+  sha256: 0b4b2ad20763bf032318e8d12b479e950a7fedd550dc4123f8c3353a0f8f4a93
+
+build:
+  number: 1
+  noarch: python
+  script: "{{ PYTHON }} -m pip install aif360-{{ version }}*.whl --no-deps --ignore-installed -vv "
+
+requirements:
+  host:
+    - python
+  run:
+    - python
+    - numpy>=1.16
+    - scipy
+    - pandas>=0.23.3
+    - scikit-learn
+
+test:
+  imports:
+    - aif360
+
+about:
+  home: http://aif360.mybluemix.net/
+  license: Apache License 2.0
+  license_family: Apache
+  license_file: 'LICENSE'
+  summary: "A comprehensive set of fairness metrics for datasets and machine learning models, explanations for these metrics, and algorithms to mitigate bias in datasets and models."
+  description: |
+      The AI Fairness 360 toolkit is an open-source library to help detect and remove bias in machine
+      learning models. The AI Fairness 360 Python package includes a comprehensive set of metrics for
+      datasets and models to test for biases, explanations for these metrics, and algorithms to
+      mitigate bias in datasets and models.
+
+      The following datasets are included with the package:
+      - https://archive.ics.uci.edu/ml/datasets/adult
+        Dua, D. and Graff, C. (2019). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science.
+
+      - https://archive.ics.uci.edu/ml/datasets/Statlog+%28German+Credit+Data%29
+        Dua, D. and Graff, C. (2019). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science.
+
+      - https://github.com/propublica/compas-analysis
+
+
+      - https://archive.ics.uci.edu/ml/datasets/Bank+Marketing
+        [Moro et al., 2014] S. Moro, P. Cortez and P. Rita. A Data-Driven Approach to Predict the Success of Bank Telemarketing. Decision Support Systems, Elsevier, 62:22-31, June 2014
+
+      - https://meps.ahrq.gov/mepsweb/
+        Data Use Agreement:
+
+        Individual identifiers have been removed from the micro-data contained in these files. Nevertheless, under sections 308 (d) and 903 (c) of the Public Health Service Act (42 U.S.C. 242m and 42 U.S.C. 299 a-1), data collected by the Agency for Healthcare Research and Quality (AHRQ) and/or the National Center for Health Statistics (NCHS) may not be used for any purpose other than for the purpose for which they were supplied; any effort to determine the identity of any reported cases is prohibited by law.
+
+        Therefore in accordance with the above referenced Federal Statute, it is understood that:
+
+            1. No one is to use the data in this data set in any way except for statistical reporting and analysis; and
+
+            2. If the identity of any person or establishment should be discovered inadvertently, then (a) no use will be made of this knowledge, (b) the Director Office of Management AHRQ will be advised of this incident, (c) the information that would identify any individual or establishment will be safeguarded or destroyed, as requested by AHRQ, and (d) no one else will be informed of the discovered identity; and
+
+            3. No one will attempt to link this data set with individually identifiable records from any data sets other than the Medical Expenditure Panel Survey or the National Health Interview Survey.
+
+        By using these data you signify your agreement to comply with the above stated statutorily based requirements with the knowledge that deliberately making a false statement in any matter within the jurisdiction of any department or agency of the Federal Government violates Title 18 part 1 Chapter 47 Section 1001 and is punishable by a fine of up to $10,000 or up to 5 years in prison.
+
+        The Agency for Healthcare Research and Quality requests that users cite AHRQ and the Medical Expenditure Panel Survey as the data source in any publications or research based upon these data. 
+
+  dev_url: https://github.com/IBM/AIF360
+  doc_url: https://aif360.readthedocs.io/en/latest/

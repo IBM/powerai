@@ -1,0 +1,27 @@
+From bf526c30b2830088f661f99b72b23ff5a59fc7eb Mon Sep 17 00:00:00 2001
+From: Nishidha Panpaliya <nishidha@us.ibm.com>
+Date: Mon, 18 Nov 2019 17:09:25 +0000
+Subject: [PATCH] Updated dependencies' names as per their conda package names
+
+---
+ setup.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index 1a662c1..da2378c 100644
+--- a/setup.py
++++ b/setup.py
+@@ -115,8 +115,8 @@ setup(
+         'pip_pkg': InstallCommandBase,
+     },
+     install_requires=[
+-        'tensorflow_hub>=0.2',
+-        'tensorflow_probability>=0.7',
++        'tensorflow-hub>=0.2',
++        'tensorflow-probability>=0.7',
+     ],
+     extras_require={
+         'tf': ['tensorflow>=1.12'],
+-- 
+1.8.3.1
+
