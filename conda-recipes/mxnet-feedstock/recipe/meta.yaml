@@ -22,19 +22,19 @@ requirements:
         - {{ compiler('cxx') }}
         - make
     host:
-        - pkgs/main/linux-ppc64le::libopencv
-        - pkgs/main/linux-ppc64le::libopenblas
-        - pkgs/main/linux-ppc64le::openblas-devel
-        - conda-forge/linux-ppc64le::liblapack
-        - conda-forge/linux-ppc64le::libtiff
-        - conda-forge/linux-ppc64le::python
-        - conda-forge/linux-ppc64le::cython
-        - conda-forge/linux-ppc64le::numpy
-        - conda-forge/linux-ppc64le::requests
-        - conda-forge/linux-ppc64le::setuptools
-        - ibmdl/export/pub/software/server/ibm-ai/conda/linux-ppc64le::cudatoolkit
-        - ibmdl/export/pub/software/server/ibm-ai/conda/linux-ppc64le::cudatoolkit-dev
-        - ibmdl/export/pub/software/server/ibm-ai/conda/linux-ppc64le::cudnn
+        - libopencv
+        - libopenblas
+        - openblas-devel
+        - liblapack
+        - libtiff
+        - python
+        - cython 
+        - numpy
+        - requests
+        - setuptools
+        - cudatoolkit
+        - cudatoolkit-dev
+        - cudnn
     run:
         - numpy >=1.16.0,<=2.0.0
         - requests >=2.20.0,<3
@@ -42,6 +42,10 @@ requirements:
         - libopencv
         - cudatoolkit
         - cudnn
+
+test:
+  imports:
+    - mxnet
 
 about:
   home: http://mxnet.io
