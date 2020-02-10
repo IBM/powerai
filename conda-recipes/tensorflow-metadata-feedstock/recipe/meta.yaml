@@ -1,5 +1,5 @@
 {% set name = "tensorflow-metadata" %}
-{% set version = "0.15.1" %}
+{% set version = "0.21.0" %}
 # This is the recipe for tensorflow-metadata
 package:
    name: {{ name }}

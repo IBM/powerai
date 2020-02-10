@@ -1,0 +1,64 @@
+#!/usr/bin/env sh
+# *****************************************************************
+#
+# Licensed Materials - Property of IBM
+#
+# (C) Copyright IBM Corp. 2019. All Rights Reserved.
+#
+# US Government Users Restricted Rights - Use, duplication or
+# disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+# *****************************************************************
+
+if [ -z "$CONDA_PREFIX" ]
+then
+    echo "Environment variable CONDA_PREFIX not set."
+    echo "Please activate a conda environment with PyTorch installed"
+    exit 1
+fi
+
+PYTHON_VERSION=$(python -V 2>&1 | cut -d ' ' -f 2 | cut -d '.' -f 1,2)
+BASEDIR=${CONDA_PREFIX}/lib/python${PYTHON_VERSION}/site-packages/pytext
+SUBDIRS="demo tests"
+
+if [ -z "$1" -o ! -z "$2" ]
+then
+    echo "Usage: $0 <directory>"
+    echo "Copies ($SUBDIRS) to <directory>"
+    echo "Will create <directory> if it does not exist."
+    exit 1
+fi
+
+if [ ! -d "$1" ]
+then
+    echo "Creating directory $1"
+    if ! mkdir -p "$1"
+    then
+        echo "Failed to create directory $1"
+        exit 1
+    fi
+else
+    echo "Write into existing directory $1? (yN)"
+    read answer
+    case "$answer" in
+        y*|Y*)  :
+                ;;
+        *)      echo "Quit."
+                exit 1
+                ;;
+    esac
+fi
+
+for d in $SUBDIRS
+do
+    echo "Copying $d/ into $1..."
+    if ! cp -r "$BASEDIR/$d" "$1"
+    then
+        echo "Copy failed"
+        exit 1
+    fi
+done
+
+echo "Success"
+
+exit 0
