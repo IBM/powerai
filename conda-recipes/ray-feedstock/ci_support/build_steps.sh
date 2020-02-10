@@ -27,6 +27,7 @@ conda-build:
  root-dir: /home/conda/feedstock_root/build_artifacts
 CONDARC
 
+conda clean --all -y
 conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
 
 # set up the condarc
