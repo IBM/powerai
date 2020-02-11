@@ -30,7 +30,7 @@ index 97c16b2..07d80da 100755
  
  if [ "$RAY_BUILD_PYTHON" == "YES" ]; then
 -  "$BAZEL_EXECUTABLE" build //:ray_pkg --verbose_failures
-+  "$BAZEL_EXECUTABLE" --host_jvm_args=-Xms512m --host_jvm_args=-Xmx2048m build --jobs=10 //:ray_pkg --action_env=CONDACC=$CC --verbose_failures
++  "$BAZEL_EXECUTABLE" --host_jvm_args=-Xms512m --host_jvm_args=-Xmx3072m build --jobs=10 //:ray_pkg --action_env=CONDACC=$CC --verbose_failures
  fi
  
  popd
