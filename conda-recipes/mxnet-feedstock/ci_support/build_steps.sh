@@ -20,7 +20,7 @@ export FEEDSTOCK_ROOT=/home/conda/feedstock_root
 export RECIPE_ROOT=/home/conda/recipe_root
 export CI_SUPPORT=/home/conda/feedstock_root/.ci_support
 export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
-
+export PATH=/opt/anaconda/bin:$PATH
 cat >~/.condarc <<CONDARC
 
 conda-build:
