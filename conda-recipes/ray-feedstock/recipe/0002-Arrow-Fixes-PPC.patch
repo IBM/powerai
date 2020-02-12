@@ -1,0 +1,43 @@
+From a77664d7f2f0e3feb093a0982e1d0c6058c1375d Mon Sep 17 00:00:00 2001
+From: Nishidha Panpaliya <nishidha@us.ibm.com>
+Date: Thu, 6 Feb 2020 09:47:17 +0000
+Subject: [PATCH] Altivec changes
+
+---
+ bazel/BUILD.plasma | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/bazel/BUILD.plasma b/bazel/BUILD.plasma
+index eddd5e2..3900ffa 100644
+--- a/bazel/BUILD.plasma
++++ b/bazel/BUILD.plasma
+@@ -1,11 +1,24 @@
+ load("@com_github_google_flatbuffers//:build_defs.bzl", "flatbuffer_cc_library")
+ 
+ # TODO(mehrdadn): (How to) support dynamic linking?
+-PROPAGATED_WINDOWS_DEFINES = ["ARROW_STATIC"]
+-
++PROPAGATED_WINDOWS_DEFINES = ["ARROW_STATIC=ON"]
++LINUX_DEFINES = ["ARROW_BUILD_STATIC=OFF",
++               "ARROW_BOOST_USE_SHARED=ON", 
++               "ARROW_BUILD_BENCHMARKS=OFF",
++               "ARROW_BUILD_UTILITIES=OFF",
++               "ARROW_BUILD_TESTS=OFF",
++               "ARROW_ALTIVEC=ON",
++               "ARROW_PLASMA=ON",
++               "ARROW_PYTHON=ON",
++               "ARROW_PARQUET=ON",
++               "ARROW_ORC=ON",
++               "ARROW_FLIGHT=ON",
++               "ARROW_GANDIVA=ON" ]
+ COPTS = [] + select({
+     "@bazel_tools//src/conditions:windows": [
+     ] + ["-D" + define for define in PROPAGATED_WINDOWS_DEFINES],
++    "@bazel_tools//src/conditions:linux_ppc64le": [
++    "-std=gnu++11"] + ["-D" + define for define in LINUX_DEFINES],
+     "//conditions:default": [
+         "-DARROW_USE_GLOG",
+     ],
+-- 
+1.8.3.1
+
