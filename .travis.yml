@@ -24,27 +24,17 @@ env:
 
 matrix:
   include:
-    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.6.2-pytorch-ubuntu18.04-py36-ppc64le
+    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+      language: generic
       os: linux-ppc64le
       arch: ppc64le
-      language: generic
 
-    - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.6.2-pytorch-ubuntu18.04-py37-ppc64le
+    - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+      language: generic
       os: linux-ppc64le
       arch: ppc64le
-      language: generic
-
-    - env: CONFIG=linux_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.6.2-pytorch-ubuntu18.04-py36-x86_64
-      os: linux-64
-      arch: amd64
-      language: generic
-
-    - env: CONFIG=linux_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.6.2-pytorch-ubuntu18.04-py37-x86_64
-      os: linux-64
-      arch: amd64
-      language: generic
 
 script:
-  -  cd conda-recipes/fairseq-feedstock
+  -  cd conda-recipes/ray-feedstock
   -  "travis_wait 60 sleep 3600 &"
-  -  ./ci_support/run_docker_build.sh
+  -  ./ci_support/run_docker_build.sh 
