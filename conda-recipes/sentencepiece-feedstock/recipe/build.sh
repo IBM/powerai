@@ -27,7 +27,7 @@ build_tf_wrapper() {
 
   conda activate tf$1
   conda config --prepend channels https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/
-  conda config --prepend channels http://ausgsa.ibm.com/projects/p/powerai-conda/conda-early-access/
+  conda config --prepend channels https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda-early-access/
 
   # Builds _sentencepiece_processor_ops.so
   conda install -y tensorflow${pkg_name}
