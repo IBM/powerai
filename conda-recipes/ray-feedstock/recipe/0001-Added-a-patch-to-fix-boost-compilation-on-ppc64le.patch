@@ -1,0 +1,82 @@
+From f56ff7d07384ee4c433e3d5b852ece2c26f637c3 Mon Sep 17 00:00:00 2001
+From: Nishidha Panpaliya <nishidha@us.ibm.com>
+Date: Wed, 5 Feb 2020 08:32:55 +0000
+Subject: [PATCH] Added a patch to fix boost compilation on ppc64le
+
+---
+ bazel/ray_deps_setup.bzl                           |  1 +
+ .../patches/rules_boost-define-ppc64le.patch       | 50 ++++++++++++++++++++++
+ 2 files changed, 51 insertions(+)
+ create mode 100644 thirdparty/patches/rules_boost-define-ppc64le.patch
+
+diff --git a/bazel/ray_deps_setup.bzl b/bazel/ray_deps_setup.bzl
+index e477009..d861594 100644
+--- a/bazel/ray_deps_setup.bzl
++++ b/bazel/ray_deps_setup.bzl
+@@ -135,6 +135,7 @@ def ray_deps_setup():
+         patches = [
+             "//thirdparty/patches:rules_boost-undefine-boost_fallthrough.patch",
+             "//thirdparty/patches:rules_boost-windows-linkopts.patch",
++            "//thirdparty/patches:rules_boost-define-ppc64le.patch",
+         ],
+     )
+ 
+diff --git a/thirdparty/patches/rules_boost-define-ppc64le.patch b/thirdparty/patches/rules_boost-define-ppc64le.patch
+new file mode 100644
+index 0000000..bdd2be6
+--- /dev/null
++++ b/thirdparty/patches/rules_boost-define-ppc64le.patch
+@@ -0,0 +1,50 @@
++diff --git BUILD.boost BUILD.boost
++--- BUILD.boost
+++++ BUILD.boost
++@@ -58,6 +58,15 @@ config_setting(
++ )
++ 
++ config_setting(
+++    name = "linux_ppc64le",
+++    constraint_values = [
+++        "@bazel_tools//platforms:linux",
+++        "@bazel_tools//platforms:ppc",
+++    ],
+++    visibility = ["//visibility:public"],
+++)
+++
+++config_setting(
++     name = "osx_x86_64",
++     constraint_values = [
++         "@bazel_tools//platforms:osx",
++@@ -101,6 +110,11 @@ BOOST_CTX_ASM_SOURCES = select({
++         "libs/context/src/asm/make_x86_64_sysv_elf_gas.S",
++         "libs/context/src/asm/ontop_x86_64_sysv_elf_gas.S",
++     ],
+++    ":linux_ppc64le": [
+++        "libs/context/src/asm/jump_ppc64_sysv_elf_gas.S",
+++        "libs/context/src/asm/make_ppc64_sysv_elf_gas.S",
+++        "libs/context/src/asm/ontop_ppc64_sysv_elf_gas.S",
+++    ],
++     ":osx_x86_64": [
++         "libs/context/src/asm/jump_x86_64_sysv_macho_gas.S",
++         "libs/context/src/asm/make_x86_64_sysv_macho_gas.S",
++@@ -157,6 +171,10 @@ BOOST_FIBER_NUMA_SRCS = select({
++         "libs/fiber/src/numa/windows/pin_thread.cpp",
++         "libs/fiber/src/numa/windows/topology.cpp",
++     ],
+++    ":linux_ppc64le": [
+++        "libs/fiber/src/numa/linux/pin_thread.cpp",
+++        "libs/fiber/src/numa/linux/topology.cpp",
+++    ],
++     "//conditions:default": [],
++ })
++ 
++@@ -1603,6 +1621,7 @@ boost_library(
++         ":linux_arm": [],
++         ":linux_x86_64": [],
++         ":osx_x86_64": [],
+++        ":linux_ppc64le": [],
++         ":windows_x86_64": [
++             "BOOST_ALL_NO_LIB",
++             "BOOST_THREAD_BUILD_LIB",
+-- 
+1.8.3.1
+
