@@ -44,7 +44,7 @@ build_tf_wrapper() {
 
   conda deactivate
   
-  g++ -std=c++11 -shared \
+  $CXX -std=c++11 -shared \
     -I../src \
     -fPIC ${TF_CFLAGS[@]} -O2 \
     -Wl,--whole-archive \
@@ -54,7 +54,7 @@ build_tf_wrapper() {
     -o ../tensorflow/tf_sentencepiece/_sentencepiece_processor_ops.so.${TF_VERSION} \
     ${TF_LFLAGS[@]}
 
-  strip ../tensorflow/tf_sentencepiece/_sentencepiece_processor_ops.so.${TF_VERSION}
+  $STRIP ../tensorflow/tf_sentencepiece/_sentencepiece_processor_ops.so.${TF_VERSION}
   conda env remove -n tf$1
 }
 
@@ -69,7 +69,7 @@ PAGE_SIZE=`getconf PAGE_SIZE`
 
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} .. -DSPM_BUILD_TEST=ON -DSPM_ENABLE_TENSORFLOW_SHARED=ON
+cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} .. -DSPM_BUILD_TEST=ON -DSPM_ENABLE_TENSORFLOW_SHARED=ON -DCMAKE_AR=$GCC_AR
 make -j $(nproc)
 
 export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}

@@ -19,6 +19,7 @@ requirements:
     - cmake >=3.1
     - make
     - {{ compiler('cxx') }}
+    - pkg-config
   host:
     - python
     - setuptools
