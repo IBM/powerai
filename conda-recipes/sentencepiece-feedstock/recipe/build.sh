@@ -32,6 +32,8 @@ build_tf_wrapper() {
   # Builds _sentencepiece_processor_ops.so
   conda install -y tensorflow${pkg_name}
 
+  LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/${ARCH_SO_NAME}-linux-gnu
+
   TF_CFLAGS=( $(python -c 'import tensorflow as tf; print(" ".join(tf.sysconfig.get_compile_flags()))') )
   TF_LFLAGS=( $(python -c 'import tensorflow as tf; print(" ".join(tf.sysconfig.get_link_flags()))') )
   TF_VERSION=( $(python -c 'import tensorflow as tf; print(tf.__version__)') )
