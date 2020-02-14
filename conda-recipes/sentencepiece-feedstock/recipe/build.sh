@@ -78,7 +78,7 @@ export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}
 export LD_LIBRARY_PATH=${PREFIX}/lib:${LD_LIBRARY_PATH}
 make install
 
-build_tf_wrapper "1.13.1"
+#build_tf_wrapper "1.13.1"
 build_tf_wrapper "1.14.0"
 build_tf_wrapper "1.15.0"
 build_tf_wrapper "2.1.0"
