@@ -35,6 +35,7 @@ requirements:
     - unzip
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - nodejs
   run:
     - python
     - numpy >=1.16
