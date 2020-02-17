@@ -16,6 +16,7 @@
 
 set -vex
 
+ln -s $BUILD_PREFIX/bin/powerpc64le-conda_cos7-linux-gnu-gcc-ar $BUILD_PREFIX/bin/ar
 make -j $(nproc) USE_OPENCV=1 USE_BLAS=openblas USE_CUDA=1 USE_CUDNN=1 USE_PROFILER=1 CUDA_LIBRARY_PATH="${PREFIX}/lib/stubs"
 
 cd python
