@@ -1,4 +1,4 @@
-# (C) Copyright IBM Corp. 2018, 2020. All Rights Reserved.
+# (C) Copyright IBM Corp. 2018, 2019. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,16 +16,15 @@
 
 set -xeuo pipefail
 export PYTHONUNBUFFERED=1
-export FEEDSTOCK_ROOT=/home/conda/feedstock_root
-export RECIPE_ROOT=/home/conda/recipe_root
-export CI_SUPPORT=/home/conda/feedstock_root/.ci_support
+export FEEDSTOCK_ROOT=$(pwd)
+export RECIPE_ROOT=$FEEDSTOCK_ROOT/recipe
+export CI_SUPPORT=$FEEDSTOCK_ROOT/.ci_support
 export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
-export PATH=/opt/anaconda/bin:$PATH
 
 cat >~/.condarc <<CONDARC
 
 conda-build:
- root-dir: /home/conda/feedstock_root/build_artifacts
+ root-dir: $FEEDSTOCK_ROOT/build_artifacts
 
 CONDARC
 
@@ -36,8 +35,6 @@ conda install --yes --quiet conda-forge-ci-setup=2 conda-build=3.16 -c conda-for
 
 # patchelf from conda-forge (0.10) causes errors. Use 0.9 from defaults
 conda install -y patchelf=0.9
-
-conda install -y git
 
 # set up the condarc
 setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
