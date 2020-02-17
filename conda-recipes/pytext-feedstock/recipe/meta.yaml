@@ -1,25 +1,19 @@
 {% set name = "pytext-nlp" %}
-{% set version = "0.2.2" %}
+{% set version = "0.3.1" %}
 
 package:
   name: "{{ name }}"
   version: "{{ version }}"
 
 source:
-  - url: https://github.com/facebookresearch/pytext/archive/v{{ version }}.tar.gz
-    sha256: c996c1a3bdf763927ac69a0f0c40500c4b8a1b7d2ca6aa14a46c3c0f84478431 
+  - url: https://github.com/facebookresearch/pytext/archive/{{ version }}.tar.gz
+    sha256: e8c7cbdd026a27e9089df07bda362379a04143d7b97336567b17c3a3c67de8f1 
     patches:
-      - 0001-setup-tensorboard-req.patch
+      - 0001-setup-requirements.patch
       - 0002-set-locale.patch
-      - 0004-Fix-docstring-help-string-for-torchscript-export.patch
       - 0005-set-generated-model-path.patch 
       - 0007-expandpath.patch
       - 0008-Fix-docstring-for-export.patch
-      - 0009-Make-doc_weight-and-word_weight-optional-in-IntentSlotModel.patch
-      - 0010-PR939.patch
-      - 0011-remove-gluster-paths.patch
-      - 0012-PR930.patch
-      - 0014-fix-UnicodeEncodeError.patch
 
 build:
   number: 0 
@@ -28,25 +22,28 @@ requirements:
   host:
     - python
     - setuptools=41*
-    - pytorch=1.2.0
+    - pytorch=1.3.1
 
   run:
     - python
     - click=7.0
     - future=0.17.1
     - hypothesis=3.59.1
-    - numpy=1.16.*
+    - numpy=1.17.*
     - scipy=1.3.*
-    - onnx=1.5.0
+    - onnx=1.6.0
     - joblib=0.13.2 
     - requests=2.22
     - pandas=0.24.2
+    - regex=2019.11.1
+    - python-dateutil==2.8.0
     - torchtext=0.4.0
-    - typing-extensions=3.7.2
-    - pytorch=1.2.0
-    - tensorboard=1.15.* 
-    - absl-py=0.7.1 
+    - typing-extensions
+    - pytorch=1.3.1
+    - tensorboard=2.1.* 
+    - absl-py=0.8.1 
     - fairseq
+    - sentencepiece
     - pytorch-pretrained-bert
 
 about:

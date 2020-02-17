@@ -1,34 +1,32 @@
 diff --git a/demo/atis_joint_model/data_processor.py b/demo/atis_joint_model/data_processor.py
-index 81cda0f..0cc9e2d 100644
+index bb43d82..d8f09ba 100644
 --- a/demo/atis_joint_model/data_processor.py
 +++ b/demo/atis_joint_model/data_processor.py
-@@ -5,7 +5,7 @@ import os
+@@ -5,6 +5,7 @@ import os
  import random
-
+ 
  import click
--
 +from pytext.main import ClickLocaleCommand
-
- VALIDATION_SPLIT = 0.25
- SAMPLE_PRINT_COUNT = 5
-@@ -165,7 +165,7 @@ def print_sample(file_name):
+ from pytext.utils.file_io import PathManager
+ 
+ 
+@@ -166,7 +167,7 @@ def print_sample(file_name):
              print(line)
-
-
+ 
+ 
 -@click.command()
 +@click.command(cls=ClickLocaleCommand)
  @click.option("-d", "--download-folder", required=True, type=str)
  @click.option("-o", "--output-directory", required=True, type=str)
  @click.option("-v", "--verbose", default=False, type=bool)
 diff --git a/pytext/main.py b/pytext/main.py
-index 4ae77aa..3896d34 100644
+index 9013198..478fcab 100644
 --- a/pytext/main.py
 +++ b/pytext/main.py
-@@ -152,8 +152,35 @@ def gen_config_impl(task_name, options):
-             raise Exception(f"Unknown option: {opt}")
-     return config_to_json(PyTextConfig, root)
+@@ -174,7 +174,35 @@ def gen_config_impl(task_name, *args, **kwargs):
+     return root
  
--
+ 
 -@click.group()
 +def set_locale():
 +    import os

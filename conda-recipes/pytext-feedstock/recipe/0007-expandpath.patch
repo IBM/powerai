@@ -1,5 +1,5 @@
 diff --git a/pytext/main.py b/pytext/main.py
-index 00c166e..851def5 100644
+index 9013198..e68cfe0 100644
 --- a/pytext/main.py
 +++ b/pytext/main.py
 @@ -5,6 +5,7 @@ import json
@@ -19,11 +19,11 @@ index 00c166e..851def5 100644
  from pytext.config.component import register_tasks
  from pytext.config.serialize import (
      config_to_json,
-@@ -210,6 +211,7 @@ def main(context, config_file, config_json, config_module, include):
+@@ -214,6 +215,7 @@ def main(context, config_file, config_json, config_module, include):
                  else:
                      eprint("No config file specified, reading from stdin")
                      config = json.load(sys.stdin)
 +                config = json.loads(json.dumps(config).replace("DEFAULT_MODEL_DIR",os.path.expanduser(DEFAULT_MODEL_DIR)))
-                 context.obj.config = parse_config(config)
-         return context.obj.config
- 
+                 # before parsing the config, include the custom components
+                 for path in config.get("include_dirs", None) or []:
+                     add_include(path.rstrip("/"))
