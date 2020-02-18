@@ -14,7 +14,7 @@ source:
     - 0002-Arrow-Fixes-PPC.patch
 
 build:
-  number: 0
+  number: 1
   entry_points:
     - ray=ray.scripts.scripts:main
     - rllib=ray.rllib.scripts:cli [rllib]
