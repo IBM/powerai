@@ -16,33 +16,31 @@
 
 set -xeuo pipefail
 export PYTHONUNBUFFERED=1
-export FEEDSTOCK_ROOT=/home/conda/feedstock_root
-export RECIPE_ROOT=/home/conda/recipe_root
-export CI_SUPPORT=/home/conda/feedstock_root/.ci_support
+export FEEDSTOCK_ROOT=$(pwd)
+export RECIPE_ROOT=$FEEDSTOCK_ROOT/recipe
+export CI_SUPPORT=$FEEDSTOCK_ROOT/.ci_support
 export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
-export PATH=/opt/anaconda/bin:$PATH
-
-conda install --yes git
 
 cat >~/.condarc <<CONDARC
 
 conda-build:
- root-dir: /home/conda/feedstock_root/build_artifacts
+ root-dir: $FEEDSTOCK_ROOT/build_artifacts
 
 CONDARC
 
-conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
+conda config --prepend channels https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/
+export IBM_POWERAI_LICENSE_ACCEPT=yes
 
-conda install -y patch
+conda install --yes --quiet conda-forge-ci-setup=2 conda-build=3.16 -c conda-forge
+
+# patchelf from conda-forge (0.10) causes errors. Use 0.9 from defaults
+conda install -y patchelf=0.9
 
 # set up the condarc
 setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
 # make the build number clobber
 make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
-
-conda config --prepend channels https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda-early-access/
-export IBM_POWERAI_LICENSE_ACCEPT=yes
 
 conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
     --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"
