@@ -44,6 +44,6 @@ matrix:
       os: linux-64
       arch: x86_64
 script:
-  -  cd conda-recipes/fbprophet-feedstock
+  -  cd conda-recipes/pycuda-feedstock
   -  "travis_wait 60 sleep 3600 &"
   -  ./ci_support/run_docker_build.sh 
