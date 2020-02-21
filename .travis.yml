@@ -24,21 +24,26 @@ env:
 
 matrix:
   include:
-    - env: CONFIG=linux_ppc64le_python2.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
-      os: linux-ppc64le
-      arch: ppc64le
-      language: generic
-
     - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+      language: generic
       os: linux-ppc64le
       arch: ppc64le
-      language: generic
 
     - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+      language: generic
       os: linux-ppc64le
       arch: ppc64le
-      language: generic
 
+    - env: CONFIG=linux_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-comp7
+      language: generic
+      os: linux-64
+      arch: x86_64
+
+    - env: CONFIG=linux_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-comp7
+      language: generic
+      os: linux-64
+      arch: x86_64
 script:
-  -  cd conda-recipes/h5py-feedstock
-  -  ./ci_support/run_docker_build.sh
+  -  cd conda-recipes/fbprophet-feedstock
+  -  "travis_wait 60 sleep 3600 &"
+  -  ./ci_support/run_docker_build.sh 

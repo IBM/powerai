@@ -1,0 +1,32 @@
+diff --git a/docs_requirements.txt b/docs_requirements.txt
+index dc12fd8..4c3946e 100644
+--- a/docs_requirements.txt
++++ b/docs_requirements.txt
+@@ -10,5 +10,5 @@ pytorch-pretrained-bert
+ requests
+ sentencepiece
+ torchtext
+-tensorboard==1.14
++tensorboard
+ pandas
+diff --git a/requirements.txt b/requirements.txt
+index 355896e..26cc7f4 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -4,7 +4,7 @@ future
+ hypothesis<4.0
+ joblib
+ numpy
+-onnx==1.5.0
++onnx==1.6.0
+ # pytorch-pretrained-bert requires python-dateutil < 2.8.1
+ python-dateutil==2.8.0
+ pandas
+@@ -13,6 +13,6 @@ regex==2019.11.1
+ requests
+ scipy
+ sentencepiece
+-tensorboard==1.14
++tensorboard
+ torch
+ torchtext

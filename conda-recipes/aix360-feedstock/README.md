@@ -1,4 +1,4 @@
-# AI Explainability 360 (v0.1.0)
+# AI Explainability 360 (v0.2.0)
 
 [![Build Status](https://travis-ci.com/IBM/AIX360.svg?branch=master)](https://travis-ci.com/IBM/AIX360)
 [![Documentation Status](https://readthedocs.org/projects/aix360/badge/?version=latest)](https://aix360.readthedocs.io/en/latest/?badge=latest)
@@ -24,6 +24,8 @@ We have developed the package with extensibility in mind. This library is still 
 - ProtoDash ([Gurumoorthy et al., 2019](https://arxiv.org/abs/1707.01212))
 - Contrastive Explanations Method ([Dhurandhar et al., 2018](https://papers.nips.cc/paper/7340-explanations-based-on-the-missing-towards-contrastive-explanations-with-pertinent-negatives))
 - Contrastive Explanations Method with Monotonic Attribute Functions ([Luss et al., 2019](https://arxiv.org/abs/1905.12698))
+- LIME ([Ribeiro et al. 2016](https://arxiv.org/abs/1602.04938),  [Github](https://github.com/marcotcr/lime))
+- SHAP ([Lundberg, et al. 2017](http://papers.nips.cc/paper/7062-a-unified-approach-to-interpreting-model-predictions),  [Github](https://github.com/slundberg/shap))
 
 ### Local direct explanation
 
@@ -121,14 +123,14 @@ paper.
 
 ```
 @misc{aix360-sept-2019,
-    title = "One Explanation Does Not Fit All: A Toolkit and Taxonomy of AI Explainability Techniques",
-    author = {Vijay Arya and Rachel K. E. Bellamy and Pin-Yu Chen and Amit Dhurandhar and Michael Hind
+title = "One Explanation Does Not Fit All: A Toolkit and Taxonomy of AI Explainability Techniques",
+author = {Vijay Arya and Rachel K. E. Bellamy and Pin-Yu Chen and Amit Dhurandhar and Michael Hind
 and Samuel C. Hoffman and Stephanie Houde and Q. Vera Liao and Ronny Luss and Aleksandra Mojsilovi\'c
 and Sami Mourad and Pablo Pedemonte and Ramya Raghavendra and John Richards and Prasanna Sattigeri
 and Karthikeyan Shanmugam and Moninder Singh and Kush R. Varshney and Dennis Wei and Yunfeng Zhang},
-    month = sept,
-    year = {2019},
-    url = {https://arxiv.org/abs/1909.03012}
+month = sept,
+year = {2019},
+url = {https://arxiv.org/abs/1909.03012}
 }
 ```
 

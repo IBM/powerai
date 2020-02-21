@@ -1,0 +1,29 @@
+diff --git a/pytext/main.py b/pytext/main.py
+index 9013198..e68cfe0 100644
+--- a/pytext/main.py
++++ b/pytext/main.py
+@@ -5,6 +5,7 @@ import json
+ import pprint
+ import sys
+ import tempfile
++import os
+ from importlib import import_module
+ from pydoc import locate
+ from typing import Dict, List, Optional, Union
+@@ -14,7 +15,7 @@ import torch
+ from pytext import create_predictor
+ from pytext.builtin_task import add_include
+ from pytext.common.utils import eprint
+-from pytext.config import LATEST_VERSION, PyTextConfig
++from pytext.config import LATEST_VERSION, DEFAULT_MODEL_DIR, PyTextConfig
+ from pytext.config.component import register_tasks
+ from pytext.config.serialize import (
+     config_to_json,
+@@ -214,6 +215,7 @@ def main(context, config_file, config_json, config_module, include):
+                 else:
+                     eprint("No config file specified, reading from stdin")
+                     config = json.load(sys.stdin)
++                config = json.loads(json.dumps(config).replace("DEFAULT_MODEL_DIR",os.path.expanduser(DEFAULT_MODEL_DIR)))
+                 # before parsing the config, include the custom components
+                 for path in config.get("include_dirs", None) or []:
+                     add_include(path.rstrip("/"))

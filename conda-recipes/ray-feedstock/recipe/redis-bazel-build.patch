@@ -1,0 +1,39 @@
+From 689e9e36dfc0a5ef75c694a34ec4ab75e2cd8733 Mon Sep 17 00:00:00 2001
+From: Nishidha Panpaliya <nishidha@us.ibm.com>
+Date: Tue, 4 Feb 2020 07:37:58 +0000
+Subject: [PATCH] Build changes for conda
+
+---
+ BUILD.bazel | 2 +-
+ build.sh    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/BUILD.bazel b/BUILD.bazel
+index df47cf0..276b8a5 100644
+--- a/BUILD.bazel
++++ b/BUILD.bazel
+@@ -1108,7 +1108,7 @@ genrule(
+         "//conditions:default": """
+             set -x &&
+             curl -sL \"https://github.com/antirez/redis/archive/5.0.3.tar.gz\" | tar -xzf - --strip-components=1 -C . &&
+-            make &&
++            make CC=$$CONDACC &&
+             mv ./src/redis-server $(location redis-server) &&
+             chmod +x $(location redis-server) &&
+             mv ./src/redis-cli $(location redis-cli) &&
+diff --git a/build.sh b/build.sh
+index 97c16b2..07d80da 100755
+--- a/build.sh
++++ b/build.sh
+@@ -123,7 +123,7 @@ if [ "$RAY_BUILD_JAVA" == "YES" ]; then
+ fi
+ 
+ if [ "$RAY_BUILD_PYTHON" == "YES" ]; then
+-  "$BAZEL_EXECUTABLE" build //:ray_pkg --verbose_failures
++  "$BAZEL_EXECUTABLE" --host_jvm_args=-Xms512m --host_jvm_args=-Xmx3072m build --jobs=10 //:ray_pkg --action_env=CONDACC=$CC --verbose_failures
+ fi
+ 
+ popd
+-- 
+1.8.3.1
+

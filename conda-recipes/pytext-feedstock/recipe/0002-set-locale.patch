@@ -1,0 +1,62 @@
+diff --git a/demo/atis_joint_model/data_processor.py b/demo/atis_joint_model/data_processor.py
+index bb43d82..d8f09ba 100644
+--- a/demo/atis_joint_model/data_processor.py
++++ b/demo/atis_joint_model/data_processor.py
+@@ -5,6 +5,7 @@ import os
+ import random
+ 
+ import click
++from pytext.main import ClickLocaleCommand
+ from pytext.utils.file_io import PathManager
+ 
+ 
+@@ -166,7 +167,7 @@ def print_sample(file_name):
+             print(line)
+ 
+ 
+-@click.command()
++@click.command(cls=ClickLocaleCommand)
+ @click.option("-d", "--download-folder", required=True, type=str)
+ @click.option("-o", "--output-directory", required=True, type=str)
+ @click.option("-v", "--verbose", default=False, type=bool)
+diff --git a/pytext/main.py b/pytext/main.py
+index 9013198..478fcab 100644
+--- a/pytext/main.py
++++ b/pytext/main.py
+@@ -174,7 +174,35 @@ def gen_config_impl(task_name, *args, **kwargs):
+     return root
+ 
+ 
+-@click.group()
++def set_locale():
++    import os
++    import platform
++    platform = platform.platform()
++    if 'redhat' in platform:
++        os.environ['LC_ALL'] = 'en_US.UTF8'
++    elif 'debian' in platform :
++        os.environ['LC_ALL'] = 'C.UTF-8'
++        os.environ['C.UTF-8'] = 'C.UTF-8'
++
++class ClickLocaleGroup(click.core.Group):
++    def __init__(self, name=None, commands=None, **attrs):
++        set_locale()
++        click.core.Group.__init__(self, name, commands, **attrs)
++
++
++class ClickLocaleCommand(click.core.Command):
++    def __init__(self, name, context_settings=None, callback=None,
++                 params=None, help=None, epilog=None, short_help=None,
++                 options_metavar='[OPTIONS]', add_help_option=True,
++                 hidden=False, deprecated=False):
++        set_locale()
++        click.core.Command.__init__(self, name, context_settings, callback,
++                                    params, help, epilog, short_help,
++                                    options_metavar, add_help_option,
++                                    hidden, deprecated)
++
++
++@click.group(cls=ClickLocaleGroup)
+ @click.option(
+     "--include", multiple=True, help="directory containing custom python classes"
+ )

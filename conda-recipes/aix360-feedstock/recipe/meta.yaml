@@ -1,4 +1,4 @@
-{% set version = "0.1.0" %}
+{% set version = "0.2.0" %}
 {% set name = "aix360" %}
 
 package:
@@ -7,8 +7,7 @@ package:
 
 source:
   git_url: https://github.com/IBM/AIX360
-  # version 0.1.0 should have been a tag
-  git_rev: 8e3b01c1b23638f9e935f80533a253bdf800c1bd
+  git_rev: v{{ version }}
 
 build:
   number: 0
@@ -36,6 +35,12 @@ requirements:
     - xport
     - scikit-image
     - requests
+    - lime
+    - shap
+    - py-xgboost-base
+    - bleach>=2.1.0
+    - docutils>=0.13.1
+    - pygments
 
 # test is disabled in build_steps.sh because of the time
 # it takes to install all aix360 dependencies.
@@ -53,5 +58,9 @@ about:
       The AI Explainability 360 toolkit is an open-source library that supports interpretability and explainability
       of datasets and machine learning models. The AI Explainability 360 Python package includes a comprehensive set
       of algorithms that cover different dimensions of explanations along with proxy explainability metrics.
+      Note:
+      Due to the number of required packages for aix360 the best way to install this is in a new environment:
+      conda create -n aix360_env -c https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/ -c defaults -c powerai -c conda-forge aix360 powerai=1.6.2
+      Replace 'powerai=1.6.2' with 'powerai-cpu=1.6.2' to create the environment without GPU support.
   dev_url: https://github.com/IBM/AIX360
   doc_url: https://aix360.readthedocs.io/en/latest/

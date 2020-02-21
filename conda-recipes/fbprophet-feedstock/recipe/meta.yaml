@@ -1,0 +1,78 @@
+{% set name = "fbprophet" %}
+{% set version = "0.6" %}
+{% set bundle = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash = "de7eaa16500e4dba69a0706906775cbe96668a6fe48354ee2fff820d9e6a899b" %}
+{% set build = 0 %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  fn: {{ name }}-{{ version }}.{{ bundle }}
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ bundle }}
+  {{ hash_type }}: {{ hash }}
+
+build:
+  number: {{ build }}
+  script: {{ PYTHON }} -m pip install . -vv
+  skip: True  # [py2k]
+  binary_has_prefix_files:
+    - lib/python*/site-packages/fbprophet/stan_model/prophet_model.pkl  # [unix]
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
+    - python
+    - pip
+    - setuptools
+    - cython >=0.22
+    - pandas >=0.20.1
+    - pystan >=2.14
+    - LunarCalendar >=0.0.9
+    - convertdate >=2.1.2
+    - holidays >=0.9.5
+    - python-dateutil >=2.8.0
+    # Pystan models depend on numpy and as they are compiled and pickled we
+    # need to pin numpy version.
+    - numpy 1.11.*
+  run:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - python
+    - matplotlib-base >=2.0.0
+    - pandas >=0.20.1
+    - pystan >=2.14
+    - LunarCalendar >=0.0.9
+    - convertdate >=2.1.2
+    - holidays >=0.9.5
+    - python-dateutil >=2.8.0
+    - numpy >=1.11
+    # setuptools is required for pkg_resources
+    - setuptools
+
+test:
+  requires:
+    - pytest
+
+  commands:
+    - py.test -v --pyargs fbprophet
+
+about:
+  home: https://facebook.github.io/prophet/
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: 'Automatic Forecasting Procedure'
+  description: |
+    Implements a procedure for forecasting time series data based on an
+    additive model where non-linear trends are fit with yearly, weekly, and
+    daily seasonality, plus holiday effects. It works best with time series
+    that have strong seasonal effects and several seasons of historical data.
+    Prophet is robust to missing data and shifts in the trend, and typically
+    handles outliers well.
+  doc_url: https://facebook.github.io/prophet/docs/quick_start.html
+  dev_url: https://github.com/facebook/prophet

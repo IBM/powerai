@@ -1,0 +1,155 @@
+diff --git a/pytext/config/pytext_config.py b/pytext/config/pytext_config.py
+index bf87790..2705354 100644
+--- a/pytext/config/pytext_config.py
++++ b/pytext/config/pytext_config.py
+@@ -3,6 +3,9 @@
+ from collections import OrderedDict
+ from typing import Any, List, Optional, Union
+ 
++import os
++
++DEFAULT_MODEL_DIR="~/pytext"
+ 
+ class ConfigBaseMeta(type):
+     def annotations_and_defaults(cls):
+@@ -97,16 +100,16 @@ class PyTextConfig(ConfigBase):
+     # load model file for inference only, load checkpont file to continue training
+     load_snapshot_path: str = ""
+     # Where to save the trained pytorch model and checkpoints
+-    save_snapshot_path: str = "/tmp/model.pt"
++    save_snapshot_path: str = os.path.join(os.path.expanduser(DEFAULT_MODEL_DIR), "model.pt")
+     # True: use the config saved in snapshot. False: use config from current task
+     use_config_from_snapshot: bool = True
+     # if there are existing snapshots in parent directory of save_snapshot_path
+     # resume training from the latest snapshot automatically
+     auto_resume_from_snapshot: bool = False
+     # Exported caffe model will be stored here
+-    export_caffe2_path: Optional[str] = None
++    export_caffe2_path: Optional[str] = os.path.join(os.path.expanduser(DEFAULT_MODEL_DIR), "model.caffe2.predictor")
+     # Exported onnx model will be stored here
+-    export_onnx_path: str = "/tmp/model.onnx"
++    export_onnx_path: str = os.path.join(os.path.expanduser(DEFAULT_MODEL_DIR), "model.onnx")
+     # Exported torchscript model will be stored here
+     export_torchscript_path: Optional[str] = None
+     # Export quantized torchscript model
+@@ -138,9 +141,12 @@ class PyTextConfig(ConfigBase):
+ 
+     # TODO these two configs are only kept only to be backward comptible with
+     # RNNG, should be removed once RNNG refactoring is done
+-    test_out_path: str = "/tmp/test_out.txt"
+-    debug_path: str = "/tmp/model.debug"
++    test_out_path: str = os.path.join(os.path.expanduser(DEFAULT_MODEL_DIR), "test_out.txt")
++    debug_path: str = os.path.join(os.path.expanduser(DEFAULT_MODEL_DIR), "model.debug")
+ 
++    # Create pytext model output directory
++    if not os.path.exists(os.path.expanduser(DEFAULT_MODEL_DIR)):
++        os.mkdir(os.path.expanduser(DEFAULT_MODEL_DIR))
+ 
+ class TestConfig(ConfigBase):
+     # Snapshot of a trained model to test
+diff --git a/pytext/config/__init__.py b/pytext/config/__init__.py
+index eeeb721..d0d970d 100644
+--- a/pytext/config/__init__.py
++++ b/pytext/config/__init__.py
+@@ -2,5 +2,5 @@
+ # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+ 
+ from .config_adapter import upgrade_to_latest  # noqa
+-from .pytext_config import LATEST_VERSION, ConfigBase, PyTextConfig, TestConfig  # noqa
++from .pytext_config import LATEST_VERSION, DEFAULT_MODEL_DIR, ConfigBase, PyTextConfig, TestConfig  # noqa
+ from .serialize import config_from_json, config_to_json, pytext_config_from_json  # noqa
+diff --git a/pytext/metric_reporters/metric_reporter.py b/pytext/metric_reporters/metric_reporter.py
+index b8fe875..99f8ea2 100644
+--- a/pytext/metric_reporters/metric_reporter.py
++++ b/pytext/metric_reporters/metric_reporter.py
+@@ -2,6 +2,7 @@
+ # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+ from typing import Dict, List
+ 
++import os
+ import numpy as np
+ import torch
+ from pytext.common.constants import (
+@@ -12,6 +13,7 @@ from pytext.common.constants import (
+ )
+ from pytext.config.component import Component, ComponentType
+ from pytext.config.pytext_config import ConfigBase
++from pytext.config import DEFAULT_MODEL_DIR
+ from pytext.metrics import RealtimeMetrics
+ from pytext.utils import cuda
+ from pytext.utils.meter import TimeMeter
+@@ -47,7 +49,7 @@ class MetricReporter(Component):
+     lower_is_better: bool = False
+ 
+     class Config(ConfigBase):
+-        output_path: str = "/tmp/test_out.txt"
++        output_path: str = os.path.join(os.path.expanduser(DEFAULT_MODEL_DIR), "test_out.txt")
+         pep_format: bool = False
+ 
+     def __init__(self, channels, pep_format=False) -> None:
+diff --git a/demo/atis_joint_model/atis_joint_config.json b/demo/atis_joint_model/atis_joint_config.json
+index 772a633..32787c0 100644
+--- a/demo/atis_joint_model/atis_joint_config.json
++++ b/demo/atis_joint_model/atis_joint_config.json
+@@ -75,7 +75,7 @@
+         }
+       }
+     },
+-    "save_snapshot_path": "/tmp/atis_joint_model.pt",
+-    "export_caffe2_path": "/tmp/atis_joint_model.c2"
++    "save_snapshot_path": "DEFAULT_MODEL_DIR/atis_joint_model.pt",
++    "export_caffe2_path": "DEFAULT_MODEL_DIR/atis_joint_model.c2"
+   }
+ }
+diff --git a/README.md b/README.md
+index 07e44d4..dc69841 100644
+--- a/README.md
++++ b/README.md
+@@ -49,7 +49,7 @@ For this first example, we'll train a CNN-based text-classifier that classifies
+   (pytext_venv) $ pytext train < demo/configs/docnn.json
+ ```
+ 
+-By default, the model is created in `/tmp/model.pt`
++By default, the model is created in `pytext` subdirectory in users home directory `$HOME/pytext/model.pt`
+ 
+ Now you can export your model as a caffe2 net:
+ 
+diff --git a/pytext/docs/source/atis_tutorial.rst b/pytext/docs/source/atis_tutorial.rst
+index f171087..41e6ca7 100644
+--- a/pytext/docs/source/atis_tutorial.rst
++++ b/pytext/docs/source/atis_tutorial.rst
+@@ -148,7 +148,7 @@ Lets make the model run on some sample utterances! You can input one by running
+ .. code-block:: console
+ 
+     (pytext) $ pytext --config-file demo/atis_joint_model/atis_joint_config.json \
+-      predict --exported-model /tmp/atis_joint_model.c2 <<< '{"text": "flights from colorado"}'
++      predict --exported-model $HOME/pytext/atis_joint_model.c2 <<< '{"text": "flights from colorado"}'
+ 
+ The response from the model is log of probabilities for different intents and slots, with the correct intent and slot hopefully having the highest.
+ 
+diff --git a/pytext/docs/source/train_your_first_model.rst b/pytext/docs/source/train_your_first_model.rst
+index d9694b7..a0add10 100644
+--- a/pytext/docs/source/train_your_first_model.rst
++++ b/pytext/docs/source/train_your_first_model.rst
+@@ -139,7 +139,7 @@ Let's train the model!
+   | reminder/show_reminders  |   0.000 |   0.000 |   0.000 |   0.000 |   0.000 |
+   | weather/find             |   0.000 |   0.000 |   0.000 |   0.000 |   0.000 |
+   +--------------------------+---------+---------+---------+---------+---------+
+-  saving result to file /tmp/test_out.txt
++  saving result to file $HOME/pytext/test_out.txt
+ 
+ The model ran over the training set 10 times. This output is the result of evaluating the model on the test set, and tracking how well it did. If you're not familiar with these accuracy measurements,
+ 
+diff --git a/pytext/docs/source/hierarchical_intent_slot_tutorial.rst b/pytext/docs/source/hierarchical_intent_slot_tutorial.rst
+index c272140..425f4a0 100644
+--- a/pytext/docs/source/hierarchical_intent_slot_tutorial.rst
++++ b/pytext/docs/source/hierarchical_intent_slot_tutorial.rst
+@@ -63,7 +63,7 @@ Load the model using the command below
+ 
+ .. code-block:: console
+ 
+-	(pytext) $ pytext predict-py --model-file=/tmp/model.pt
++        (pytext) $ pytext predict-py --model-file=$HOME/pytext/model.pt
+ 	please input a json example, the names should be the same with column_to_read in model training config:
+ 
+ This will give you a REPL prompt. You can enter an utterance to get back the model's prediction repeatedly. You should enter in a json format shown below. Once done press Ctrl+D.
