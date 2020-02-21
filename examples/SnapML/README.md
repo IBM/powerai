@@ -9,3 +9,8 @@ The [nyc_taxi_tip_predict_notebook.ipynb](nyc_taxi_tip_predict_notebook.ipynb) n
 demonstrates training a Ridge Regression and Logistic Regression model using Snap ML.
 The models trained using Snap ML are compared for accuracy and performance against scikit-learn
 and RAPIDS cuML.
+
+## Allstate Claim prediction challenge using Snap ML Logistic Regression
+The [insurance-claims.ipynb](insurance-claims.ipynb) notebook
+demonstrates training a Logistic Regression model using Snap ML.
+The models trained using Snap ML are compared for accuracy and performance against scikit-learn.
