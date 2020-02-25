@@ -1,0 +1,57 @@
+{% set name = "pycuda" %}
+{% set version = "2019.1.2" %}
+{% set build = 0 %}
+{% set hash = "ada56ce98a41f9f95fe18809f38afbae473a5c62d346cfa126a2d5477f24cc8a" %}
+{% set hash_type = "sha256" %}
+{% set bundle = "tar.gz" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  fn: {{ name }}-{{ version }}.{{ bundle }}
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ bundle }}
+  {{ hash_type }}: {{ hash }}
+
+build:
+  number: {{ build }}
+  script: 
+    - python configure.py --cuda-root=$PREFIX/cuda
+    - python setup.py install --single-version-externally-managed --record record.txt
+ 
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
+    - python
+    - numpy>=1.6
+    - cudatoolkit>=10.1
+    - cudatoolkit-dev>=10.1
+  run:
+    - python
+    - numpy>=1.6
+    - pytools>=2011.2
+    - decorator>=3.2.0
+    - appdirs>=1.4.0
+    - mako
+    - cudatoolkit>=10.1
+    - cudatoolkit-dev>10.1
+
+test:
+  imports:
+    - pycuda
+
+about:
+  home: http://mathema.tician.de/software/pycuda/
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: 'PyCUDA lets you access Nvidia‘s CUDA parallel computation API from Python'
+  description: |
+      Install command:
+      conda install -c https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/ -c defaults -c powerai -c conda-forge pycuda
+  doc_url: https://documen.tician.de/pycuda/
+  description: |
+  dev_url: https://git.tiker.net/pycuda.git
