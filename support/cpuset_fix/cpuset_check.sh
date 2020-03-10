@@ -132,6 +132,10 @@ function calculateCpuset {
         gpumemset=",253-255"
     elif [ $v100 -eq "4" ] ; then
         gpumemset=",252-255"
+    elif [ $v100 -eq "5" ] ; then
+        gpumemset=",251-255"
+    elif [ $v100 -eq "6" ] ; then
+        gpumemset=",250-255"
     fi
     targetcpuset=$cpuset$gpumemset
 }
