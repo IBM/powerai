@@ -1,4 +1,4 @@
-# (C) Copyright IBM Corp. 2018, 2019. All Rights Reserved.
+# (C) Copyright IBM Corp. 2018, 2020. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,8 +36,16 @@ ARTIFACTS="$FEEDSTOCK_ROOT/build_artifacts"
 mkdir -p "$ARTIFACTS"
 DONE_CANARY="$ARTIFACTS/conda-forge-build-done-${CONFIG}"
 rm -f "$DONE_CANARY"
-# Enable running in interactive mode attached to a tty
-DOCKER_RUN_ARGS=" -it "
+
+# Enable running in interactive mode ONLY if attached to a tty,
+# so "-t" is made conditional
+test -t 1 && USE_TTY="-t"
+DOCKER_RUN_ARGS=" -i ${USE_TTY} "
+
+if [ -z "${DOCKER_IMAGE}" ]; then
+  echo "WARNING: DOCKER_IMAGE variable not set. Falling back to condaforge/linux-anvil-ppc64le"
+  DOCKER_IMAGE="condaforge/linux-anvil-ppc64le"
+fi
 
 docker run ${DOCKER_RUN_ARGS} \
                         -v "${RECIPE_ROOT}":/home/conda/recipe_root:ro,z \
@@ -47,8 +55,8 @@ docker run ${DOCKER_RUN_ARGS} \
                         -e HOST_USER_ID \
                         -e UPLOAD_PACKAGES \
                         -e CI \
-                        -a stdin -a stdout -a stderr \
-                        condaforge/linux-anvil-ppc64le \
+                        -a stdin -a stdout -a stderr --privileged=true -u root \
+                        $DOCKER_IMAGE \
                         bash \
                         /home/conda/feedstock_root/${PROVIDER_DIR}/build_steps.sh
 
