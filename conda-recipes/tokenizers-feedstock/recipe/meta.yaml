@@ -1,0 +1,43 @@
+{% set name = "tokenizers" %} 
+{% set version = "0.6.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://github.com/huggingface/tokenizers/archive/python-v{{ version }}.tar.gz
+  sha256: fc27e2f0e39dacf1d14442482874ba2da2f5a48a969bdf8cd1eeffe0e9d46099
+
+build:
+  number: 0
+
+requirements:
+  host:
+    - pip
+    - python
+    - rust-nightly
+    - setuptools-rust
+  run:
+    - typing
+    - python
+
+test:
+  commands:
+    - python -c "import tokenizers"
+    - python -c "from tokenizers import CharBPETokenizer"
+    - python -c "from tokenizers import ByteLevelBPETokenizer"
+    - python -c "from tokenizers import SentencePieceBPETokenizer"
+    - python -c "from tokenizers import BertWordPieceTokenizer"
+
+about:
+  home: https://github.com/huggingface/tokenizers
+  license: Apache-2.0
+  license_family: APACHE
+  license_file: LICENSE
+  summary: Fast State-of-the-Art Tokenizers optimized for Research and Production
+  doc_url: https://huggingface.co/tokenizers/
+
+extra:
+  recipe-maintainers:
+    - hartb
