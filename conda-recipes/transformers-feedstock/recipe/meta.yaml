@@ -37,7 +37,7 @@ test:
     - transformers.data.metrics
     - transformers.data.processors
   commands:
-    - transformers-cli --help
+    - python $CONDA_PREFIX/bin/transformers-cli --help
   requires:
     - pytest
 
