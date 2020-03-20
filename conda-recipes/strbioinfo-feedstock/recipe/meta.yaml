@@ -1,0 +1,45 @@
+{% set version = "0.2.2" %}
+
+package:
+  name: strbioinfo
+  version: {{ version }}
+
+source:
+  url: https://pypi.org/packages/source/S/StrBioInfo/StrBioInfo-{{ version }}.tar.gz
+  sha256: dc966381c8b7a2559dd18e59fd8b47974e902f671ea442c62a92eecb803c0ccc
+
+requirements:
+  host:
+    - python >=2.7,<2.8.0a0  # [py2k]
+    - python >=3.6,<4.0.0a0  # [py3k]
+    - beautifulsoup4 >=4.3.2,<5.0.0
+    - lxml
+    - numpy >=1.8.1,<2.0.0
+    - pynion >=0.0.4
+    - scipy >=1.0.0,<1.5.0
+  run:
+    - python >=2.7,<2.8.0a0  # [py2k]
+    - python >=3.6,<4.0.0a0  # [py3k]
+    - beautifulsoup4 >=4.3.2,<5.0.0
+    - lxml
+    - numpy >=1.8.1,<2.0.0
+    - pynion >=0.0.4
+    - scipy >=1.0.0,<1.5.0
+
+build:
+  number: 0
+  noarch: python
+  string: py2_{{ PKG_BUILDNUM }}  # [py2k]
+  string: py3_{{ PKG_BUILDNUM }}  # [py3k]
+  script: {{ PYTHON }} setup.py install --single-version-externally-managed --record=record.txt
+
+test:
+  imports:
+    - SBI
+
+about:
+  home: https://pypi.org/project/StrBioInfo/
+  license: MIT
+  license_family: MIT
+  license_file: PKG-INFO
+  summary: The StructuralBioInformatics Library
