@@ -1,0 +1,33 @@
+{% set version = "0.0.5" %}
+
+package:
+  name: pynion
+  version: {{ version }}
+
+source:
+  url: https://github.com/jaumebonet/pynion/archive/{{ version }}.tar.gz
+  sha256: 6798f9359931fa65490e722e7958ed218c889c26e8f48fe052976391003df37a
+
+requirements:
+  host:
+    - python >=2.7.0,<2.8.0a0
+    - pip
+  run:
+    - python >=2.7.0,<2.8.0a0
+    - jsonpickle >=1.0.0,<2.0.0a0
+    - pathlib >=1.0.1,<2.0.0a0
+
+build:
+  number: 0
+  noarch: python
+  script: {{ PYTHON }} -m pip install . --no-deps -vv
+
+test:
+  imports: pynion
+
+about:
+  home: https://github.com/jaumebonet/pynion
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE.txt
+  summary: A minion library for python
