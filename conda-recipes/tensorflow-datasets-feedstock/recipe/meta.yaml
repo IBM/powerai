@@ -1,6 +1,6 @@
-{% set version = "2.0.0" %}
+{% set version = "2.1.0" %}
 {% set name = "tensorflow-datasets" %}
-{% set sha256 = "69b2c391e96581d9aeb17a650c31a71b1059a6cc1c490115fb4dc9a961df1725" %}
+{% set sha256 = "333e6aa16a7f066949460f1a88d19d6c7cb27a7ceb9d3515d77d85b9f5f7afb9" %}
 {% set tensorflow_version = "1.15.0" %}
 
 # This is the recipe for tensorflow-datasets
@@ -12,7 +12,7 @@ source:
   fn: {{ name }}-{{ version }}.tar.gz
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   #git_url: https://github.com/tensorflow/datasets.git
-  #git_rev: v2.0.0
+  #git_rev: v2.1.0
   sha256: {{ sha256 }}
 
 build:
@@ -28,7 +28,7 @@ requirements:
    # conda build requirements
      - python
      - absl-py
-     - attrs
+     - attrs >=18.1.0
      - dill
      - future
      - numpy
