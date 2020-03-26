@@ -29,7 +29,7 @@ branches:
 
 matrix:
   include:
-    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-tensorflow-ubuntu18.04-py37
+    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-dev-ubuntu18.04-py36-ppc64le
       language: generic
       os: linux
       arch: ppc64le
