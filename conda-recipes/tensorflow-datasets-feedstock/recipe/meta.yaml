@@ -49,10 +49,6 @@ requirements:
      - psutil            # [py2k]
      - enum34            # [py2k]
 
-test:
-  imports:
-    - tensorflow_datasets
-
 about:
   home: https://github.com/tensorflow/datasets
   license: Apache License 2.0
