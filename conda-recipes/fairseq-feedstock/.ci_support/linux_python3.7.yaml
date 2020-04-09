@@ -7,7 +7,7 @@ channel_sources:
 channel_targets:
 - powerai main
 docker_image:
-- ibmcom/powerai:1.6.2-pytorch-ubuntu18.04-py37-x86_64
+- ibmcom/powerai:1.7.0-pytorch-ubuntu18.04-py37-x86_64
 pin_run_as_build:
   python:
     min_pin: x.x
