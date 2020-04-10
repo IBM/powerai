@@ -14,6 +14,8 @@
 
 #!/usr/bin/env bash
 
+set -x
+
 THISDIR="$( cd "$( dirname "$0" )" >/dev/null && pwd )"
 PROVIDER_DIR="$(basename $THISDIR)"
 
