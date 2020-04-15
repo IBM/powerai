@@ -29,7 +29,7 @@ branches:
 
 matrix:
   include:
-    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-dev-ubuntu18.04-py36-ppc64le-20.050
+    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-dev-ubuntu18.04-py36
       os: linux
       arch: ppc64le
       language: generic
