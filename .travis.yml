@@ -29,12 +29,26 @@ branches:
 
 matrix:
   include:
-    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-dev-ubuntu18.04-py36-ppc64le
+    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-dev-ubuntu18.04-py36-ppc64le
       language: generic
       os: linux
       arch: ppc64le
 
+    - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-dev-ubuntu18.04-py37-ppc64le
+      language: generic
+      os: linux
+      arch: ppc64le
+
+    - env: CONFIG=linux_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-dev-ubuntu18.04-py36-x86_64
+      language: generic
+      os: linux
+      arch: x86_64
+
+    - env: CONFIG=linux_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-dev-ubuntu18.04-py37-x86_64
+      language: generic
+      os: linux
+      arch: x86_64
+
 script:
-  -  cd conda-recipes/tensorflow-datasets-feedstock
-  -  "travis_wait 60 sleep 3600 &"
-  -  ./ci_support/run_docker_build.sh 
+  - cd conda-recipes/faiss-gpu-feedstock
+  - travis_wait 60 ./ci_support/run_docker_build.sh
