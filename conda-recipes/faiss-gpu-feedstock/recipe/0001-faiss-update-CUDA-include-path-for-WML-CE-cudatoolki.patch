@@ -1,0 +1,29 @@
+From f58b6330a636433ca8d80e9395dcdb29cbef09ba Mon Sep 17 00:00:00 2001
+From: "Brian W. Hart" <hartb@us.ibm.com>
+Date: Tue, 17 Mar 2020 19:10:52 +0000
+Subject: [PATCH] faiss: update CUDA include path for WML CE cudatoolkit
+ packages
+
+For building against WML CE cudatoolkit packages, we can always
+expect to find the CUDA headers in the top-level include/
+directory of the build environment.
+---
+ makefile.inc.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/makefile.inc.in b/makefile.inc.in
+index 19d8511..fde9eb7 100644
+--- a/makefile.inc.in
++++ b/makefile.inc.in
+@@ -16,7 +16,7 @@ SWIGFLAGS    = -DSWIGWORDSIZE64
+ NVCC         = @NVCC@
+ CUDA_ROOT    = @CUDA_PREFIX@
+ CUDA_ARCH    = @CUDA_ARCH@
+-NVCCFLAGS    = -I $(CUDA_ROOT)/targets/x86_64-linux/include/ \
++NVCCFLAGS    = -I $(CUDA_ROOT)/include/ \
+ -Xcompiler -fPIC \
+ -Xcudafe --diag_suppress=unrecognized_attribute \
+ $(CUDA_ARCH) \
+-- 
+1.8.3.1
+
