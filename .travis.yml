@@ -49,14 +49,11 @@ matrix:
       arch: amd64
       language: generic
 
-install:
-    - pip install travis-wait-improved --user
-
 script:
   -  cd conda-recipes/fairseq-feedstock
 #  -  "travis_wait 60 sleep 3600 &
 #    Output something every 10 minutes or Travis kills the job
 #  -  echo "TESTING TESTING"
 #  -  while sleep 3m; do echo "=====[ $SECONDS seconds Build still running ]====="; done &
-  -  travis-wait-improved --timeout 60m ./ci_support/run_docker_build.sh
+  -  travis-wait 60 ./ci_support/run_docker_build.sh
 #  -  kill %1
