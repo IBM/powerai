@@ -55,5 +55,5 @@ script:
 #    Output something every 10 minutes or Travis kills the job
 #  -  echo "TESTING TESTING"
 #  -  while sleep 3m; do echo "=====[ $SECONDS seconds Build still running ]====="; done &
-  -  travis-wait 60 ./ci_support/run_docker_build.sh
+  -  ./ci_support/run_docker_build.sh
 #  -  kill %1
