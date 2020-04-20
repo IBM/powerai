@@ -43,7 +43,7 @@ conda config --prepend channels https://public.dhe.ibm.com/ibmdl/export/pub/soft
 conda config --set channel_priority strict
 export IBM_POWERAI_LICENSE_ACCEPT=yes
 
-conda build --debug "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
+conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
     --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"
 
 if [[ "${UPLOAD_PACKAGES}" != "False" ]]; then
