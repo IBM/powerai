@@ -29,12 +29,31 @@ branches:
 
 matrix:
   include:
-    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-dev-ubuntu18.04-py36-ppc64le
-      language: generic
+    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-dev-ubuntu18.04-py36
       os: linux
       arch: ppc64le
+      language: generic
+
+    - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-dev-ubuntu18.04-py37
+      os: linux
+      arch: ppc64le
+      language: generic
+
+    - env: CONFIG=linux_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-pytorch-ubuntu18.04-py36-x86_64
+      os: linux-64
+      arch: amd64
+      language: generic
+
+    - env: CONFIG=linux_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-pytorch-ubuntu18.04-py37-x86_64
+      os: linux-64
+      arch: amd64
+      language: generic
 
 script:
-  -  cd conda-recipes/tensorflow-datasets-feedstock
-  -  "travis_wait 60 sleep 3600 &"
-  -  ./ci_support/run_docker_build.sh 
+  -  cd conda-recipes/fairseq-feedstock
+#  -  "travis_wait 60 sleep 3600 &
+#    Output something every 10 minutes or Travis kills the job
+#  -  echo "TESTING TESTING"
+#  -  while sleep 3m; do echo "=====[ $SECONDS seconds Build still running ]====="; done &
+  -  ./ci_support/run_docker_build.sh
+#  -  kill %1

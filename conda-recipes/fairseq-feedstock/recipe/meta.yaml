@@ -22,7 +22,7 @@ requirements:
     - python
     - tqdm=4.36.*
     - sacrebleu
-    - pytorch=1.3.1
+    - pytorch=1.4.0
     - regex
     - pycparser
     - cython=0.29
@@ -36,7 +36,7 @@ requirements:
     - sacrebleu
     - pycparser
     - cython=0.29
-    - pytorch=1.3.1
+    - pytorch=1.4.0
     - tqdm=4.36.*
 
 about:
@@ -44,3 +44,6 @@ about:
   license: MIT License
   license_file: LICENSE
   summary: Facebook AI Research Sequence-to-Sequence Toolkit 
+  description: |
+    A sequence-to-sequence learning toolkit for Torch from Facebook AI 
+    Research tailored to Neural Machine Translation (NMT).
