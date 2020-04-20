@@ -24,8 +24,10 @@ requirements:
     - python
     - setuptools
     - tensorflow
+    - libprotobuf ==3.8.0
   run:
     - python
+    - libprotobuf ==3.8.0
 
 test:
   imports:
