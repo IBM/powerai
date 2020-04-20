@@ -44,3 +44,6 @@ about:
   license: MIT License
   license_file: LICENSE
   summary: Facebook AI Research Sequence-to-Sequence Toolkit 
+  description: |
+    A sequence-to-sequence learning toolkit for Torch from Facebook AI 
+    Research tailored to Neural Machine Translation (NMT).
