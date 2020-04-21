@@ -1,0 +1,43 @@
+{% set version = "0.3.0" %}
+
+package:
+  name: bpemb
+  version: {{ version }}
+
+source:
+  url: https://pypi.org/packages/source/b/bpemb/bpemb-{{ version }}.tar.gz
+  sha256: dd6ba916560ab1c79df2699f7a3002091a31957e2661a770cb92ac8febfc06ca
+  patches:
+    - 0001-specify-utf-8-encoding-when-reading-README.md-for-se.patch
+
+requirements:
+  host:
+    - python
+    - gensim >=3.5.0
+    - numpy >=1.15.0
+    - requests >=2.20.0
+    - sentencepiece >0.0.9
+    - tqdm >=4.15.0
+  run:
+    - python
+    - gensim >=3.5.0
+    - numpy >=1.15.0
+    - requests >=2.20.0
+    - sentencepiece >0.0.9
+    - tqdm >=4.15.0
+
+build:
+  number: 0
+  noarch: python
+  script: {{ PYTHON }} setup.py install --single-version-externally-managed --record=record.txt
+
+test:
+  imports:
+    - bpemb
+
+about:
+  home: https://nlp.h-its.org/bpemb/
+  license: MIT
+  license_family: MIT
+  license_file: PKG-INFO
+  summary: Subword Embeddings in 275 Languages
