@@ -3,7 +3,7 @@ c_compiler:
 c_compiler_version:
 - '7'
 channel_sources:
-- powerai,conda-forge,defaults
+- powerai,defaults
 channel_targets:
 - powerai main
 cxx_compiler:
