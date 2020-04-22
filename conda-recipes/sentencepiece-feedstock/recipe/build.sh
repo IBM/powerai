@@ -71,17 +71,17 @@ PAGE_SIZE=`getconf PAGE_SIZE`
 
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} .. -DSPM_BUILD_TEST=ON -DSPM_ENABLE_TENSORFLOW_SHARED=ON -DCMAKE_AR=$GCC_AR
+cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} .. -DSPM_BUILD_TEST=ON -DSPM_ENABLE_TENSORFLOW_SHARED=ON -DCMAKE_AR=$GCC_AR -DSPM_USE_BUILTIN_PROTOBUF=OFF
 make -j $(nproc)
 
 export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}
 export LD_LIBRARY_PATH=${PREFIX}/lib:${LD_LIBRARY_PATH}
 make install
 
-#build_tf_wrapper "1.13.1"
-build_tf_wrapper "1.14.0"
-build_tf_wrapper "1.15.0"
-build_tf_wrapper "2.1.0"
+#build_tf_wrapper "1.13.1" # WML CE 1.6.0 / protobuf 3.6.1
+#build_tf_wrapper "1.14.0" # WML CE 1.6.1 / protobuf 3.7.1
+build_tf_wrapper "1.15.0" # WML CE 1.6.2 / protobuf 3.8.0
+build_tf_wrapper "2.1.0" # WML CE 1.7.0 / protobuf 3.8.0
 
 cd ../python
 

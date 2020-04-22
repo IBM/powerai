@@ -12,7 +12,7 @@ source:
     - 0001-Use-CXX11_ABI-to-build-TensorFlow.patch
 
 build:
-  number: 0 
+  number: 1 
 
 requirements:
   build:
@@ -24,9 +24,10 @@ requirements:
     - python
     - setuptools
     - tensorflow
+    - libprotobuf ==3.8.0
   run:
     - python
-    - tensorflow
+    - libprotobuf ==3.8.0
 
 test:
   imports:
