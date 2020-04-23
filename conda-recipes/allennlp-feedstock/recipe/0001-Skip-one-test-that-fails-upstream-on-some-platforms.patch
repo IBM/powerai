@@ -1,0 +1,33 @@
+From 0bad2b1516786808c04d2c4fd8cac88a552d5936 Mon Sep 17 00:00:00 2001
+From: "Brian W. Hart" <hartb@us.ibm.com>
+Date: Wed, 13 May 2020 21:21:56 +0000
+Subject: [PATCH] Skip one test that fails upstream on some platforms
+
+See https://github.com/allenai/allennlp/issues/3167
+---
+ allennlp/tests/models/bert_srl_test.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/allennlp/tests/models/bert_srl_test.py b/allennlp/tests/models/bert_srl_test.py
+index d9ba3aa..bf9dd47 100644
+--- a/allennlp/tests/models/bert_srl_test.py
++++ b/allennlp/tests/models/bert_srl_test.py
+@@ -7,6 +7,7 @@ from pytorch_pretrained_bert.tokenization import BertTokenizer
+ from allennlp.common.testing import ModelTestCase
+ from allennlp.nn.util import get_lengths_from_binary_sequence_mask
+ from allennlp.data.dataset_readers.dataset_utils.span_utils import to_bioul
++import unittest
+ 
+ class BertSrlTest(ModelTestCase):
+     def setUp(self):
+@@ -44,6 +45,7 @@ class BertSrlTest(ModelTestCase):
+                                           numpy.ones(class_probs.shape[0]),
+                                           decimal=6)
+ 
++    @unittest.skip("See: https://github.com/allenai/allennlp/issues/3167")
+     def test_decode_runs_correctly(self):
+         training_tensors = self.dataset.as_tensor_dict()
+         output_dict = self.model(**training_tensors)
+-- 
+1.8.3.1
+

@@ -1,0 +1,31 @@
+From e1d566e4535090d5ee2c5553ccb8fa9869cbcedb Mon Sep 17 00:00:00 2001
+From: "Brian W. Hart" <hartb@us.ibm.com>
+Date: Wed, 20 May 2020 18:55:08 +0000
+Subject: [PATCH] Allow user to specify name of gcc for evalb build
+
+The gcc compiler may not be named simply 'gcc' (for example,
+in some cross-compilation cases). Allow the user to override
+the name to use for building evalb by setting the "GCC"
+environment variable.
+---
+ allennlp/tools/EVALB/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/allennlp/tools/EVALB/Makefile b/allennlp/tools/EVALB/Makefile
+index 380fa649..87809d3a 100644
+--- a/allennlp/tools/EVALB/Makefile
++++ b/allennlp/tools/EVALB/Makefile
+@@ -1,7 +1,9 @@
++GCC ?= gcc
++
+ all: clean evalb
+ 
+ clean:
+ 	rm -f evalb
+ 
+ evalb: evalb.c
+-	gcc -Wall -g -o evalb evalb.c
++	$(GCC) -Wall -g -o evalb evalb.c
+-- 
+2.17.1
+
