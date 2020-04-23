@@ -34,9 +34,6 @@ export IBM_POWERAI_LICENSE_ACCEPT=yes
 
 conda install --yes --quiet conda-forge-ci-setup=2 conda-build=3.19.2 -c conda-forge
 
-# patchelf from conda-forge (0.10) causes errors. Use 0.9 from defaults
-conda install -y patchelf=0.9
-
 conda install -y git
 
 # set up the condarc

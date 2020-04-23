@@ -1,0 +1,31 @@
+From 0660109c846f6734a5ada1cfc8d25037fb91f192 Mon Sep 17 00:00:00 2001
+From: "Brian W. Hart" <hartb@us.ibm.com>
+Date: Wed, 22 Apr 2020 21:44:28 +0000
+Subject: [PATCH] relax tolerance for one testcase
+
+Test test_decoupled_weight_decay_normalized_with_model fails in a
+few sub-cases. The test compares for equality of expected vs
+actual results, while the results are very close (~1e-7) but not
+exactly equal.
+
+Relax the assertion by testing for allclose() rather than equality.
+---
+ tests/test_callbacks.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/test_callbacks.py b/tests/test_callbacks.py
+index 8ba4210..2e6142b 100644
+--- a/tests/test_callbacks.py
++++ b/tests/test_callbacks.py
+@@ -210,7 +210,7 @@ class TestDecoupledWeightDecay:
+         model.fit(inp, tar, batch_size, callbacks=[weight_decay, StopBeforeStep()])
+         batches_per_epoch = model.fit_info['batches_per_epoch']
+         wd = wd * math.sqrt(1 / (nb_epochs * batches_per_epoch))
+-        assert (net.weight.data == (weight - wd * weight)).all()
++        assert(torch.allclose(net.weight.data, (weight - wd * weight)))
+ 
+ 
+ class TestMonitorMetrics:
+-- 
+1.8.3.1
+

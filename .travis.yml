@@ -29,11 +29,11 @@ branches:
 
 matrix:
   include:
-    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.6.2-pytorch-ubuntu18.04-py36-x86_64
       os: linux
-      arch: ppc64le
+      arch: amd64
       language: generic
 
 script:
   -  "travis_wait 60 sleep 3600 &"
-  -  ./conda-recipes/build_scripts/run_docker_build.sh bpemb-feedstock
+  -  ./conda-recipes/build_scripts/run_docker_build.sh torchtuples-feedstock
