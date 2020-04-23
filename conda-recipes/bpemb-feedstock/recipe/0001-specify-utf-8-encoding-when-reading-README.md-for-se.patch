@@ -1,0 +1,24 @@
+From f84c53c3dfaf4afc52c69f8ed9c58621920a1aad Mon Sep 17 00:00:00 2001
+From: "Brian W. Hart" <hartb@us.ibm.com>
+Date: Tue, 21 Apr 2020 16:11:55 +0000
+Subject: [PATCH] specify utf-8 encoding when reading README.md for setup
+
+---
+ setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index fd8d161..d186431 100644
+--- a/setup.py
++++ b/setup.py
+@@ -1,6 +1,6 @@
+ from setuptools import setup
+ 
+-with open("README.md", "r") as fh:
++with open("README.md", "r", encoding='utf-8') as fh:
+     long_description = fh.read()
+ 
+ setup(
+-- 
+1.8.3.1
+
