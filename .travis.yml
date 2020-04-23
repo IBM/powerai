@@ -29,9 +29,9 @@ branches:
 
 matrix:
   include:
-    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.6.2-pytorch-ubuntu18.04-py36-ppc64le
+    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.6.2-pytorch-ubuntu18.04-py36-x86_64
       os: linux
-      arch: ppc64le
+      arch: amd64
       language: generic
 
 script:
