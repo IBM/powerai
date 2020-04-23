@@ -14,16 +14,13 @@ source:
     - 0002-Arrow-Fixes-PPC.patch
 
 build:
-  number: 1
+  number: 2
   entry_points:
     - ray=ray.scripts.scripts:main
     - rllib=ray.rllib.scripts:cli [rllib]
     - tune=ray.tune.scripts:cli
 
 requirements:
-  host:
-    - python
-    - cython>=0.29
   build:
     - python
     - cython>=0.29
@@ -33,9 +30,12 @@ requirements:
     - make
     - setuptools
     - unzip
+    - nodejs
+  host:
+    - python
+    - cython>=0.29
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - nodejs
   run:
     - python
     - numpy >=1.16
