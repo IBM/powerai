@@ -36,4 +36,4 @@ matrix:
 
 script:
   -  "travis_wait 60 sleep 3600 &"
-  -  ./conda-recipes/build_scripts/run_docker_build.sh torchtuples-feedstock
+  -  ./conda-recipes/build_scripts/run_docker_build.sh flair-feedstock

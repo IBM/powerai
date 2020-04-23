@@ -1,0 +1,16 @@
+c_compiler:
+- gcc
+c_compiler_version:
+- '8'
+channel_sources:
+- powerai,conda-forge,defaults
+channel_targets:
+- powerai main
+docker_image:
+- ibmcom/powerai:1.6.2-pytorch-ubuntu18.04-py36-x86_64
+pin_run_as_build:
+  python:
+    min_pin: x.x
+    max_pin: x.x
+python:
+- '3.6'
