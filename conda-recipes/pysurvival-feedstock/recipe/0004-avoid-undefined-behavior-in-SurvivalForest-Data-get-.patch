@@ -1,0 +1,38 @@
+From 28fb6380869c3835ccf0102d5e57a198e1149263 Mon Sep 17 00:00:00 2001
+From: "Brian W. Hart" <hartb@us.ibm.com>
+Date: Fri, 24 Apr 2020 21:16:26 +0000
+Subject: [PATCH 4/4] avoid undefined behavior in SurvivalForest Data get() and
+ getIndex()
+
+SurvivalForest Data implementation's get() and getIndex() functions
+can terminate without returning a defined value.
+
+It's not clear what should be returned in the undefined code path
+so throw an exception instead.
+---
+ pysurvival/cpp_extensions/survival_forest_data.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/pysurvival/cpp_extensions/survival_forest_data.h b/pysurvival/cpp_extensions/survival_forest_data.h
+index 8d42dfa..87d3777 100644
+--- a/pysurvival/cpp_extensions/survival_forest_data.h
++++ b/pysurvival/cpp_extensions/survival_forest_data.h
+@@ -40,6 +40,7 @@ namespace ranger {
+ 			if (col < num_cols_no_snp) {
+ 				return data[col * num_rows + row];
+ 			}
++			throw std::runtime_error("get(): col out of bounds");
+ 		};
+ 
+ 		size_t getVariableID(const std::string& variable_name) const;
+@@ -67,6 +68,7 @@ namespace ranger {
+ 			if (col < num_cols_no_snp) {
+ 				return index_data[col * num_rows + row];
+ 			}
++			throw std::runtime_error("getIndex(): col out of bounds");
+ 		}
+ 
+ 		void loadData(std::vector <std::vector<double> > Input_Data, std::vector<std::string> variable_names){
+-- 
+1.8.3.1
+
