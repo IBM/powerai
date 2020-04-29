@@ -1,0 +1,28 @@
+From 65775f8725760e4bc7eb9b6b8ab8f9bdd6a26ed2 Mon Sep 17 00:00:00 2001
+From: "Brian W. Hart" <hartb@us.ibm.com>
+Date: Mon, 16 Mar 2020 20:21:31 +0000
+Subject: [PATCH] add tolerance for ppc64le
+
+numpy's CPU info dictionary does not have a 'flags' field on
+ppc64le. Tolerate a lookup failure when checking for instruction
+set to allow faiss to run on ppc64le.
+---
+ python/faiss.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/python/faiss.py b/python/faiss.py
+index 8973731..163e2cb 100644
+--- a/python/faiss.py
++++ b/python/faiss.py
+@@ -28,7 +28,7 @@ def instruction_set():
+             return "default"
+     elif platform.system() == "Linux":
+         import numpy.distutils.cpuinfo
+-        if "avx2" in numpy.distutils.cpuinfo.cpu.info[0]['flags']:
++        if "avx2" in numpy.distutils.cpuinfo.cpu.info[0].get('flags', ""):
+             return "AVX2"
+         else:
+             return "default"
+-- 
+1.8.3.1
+

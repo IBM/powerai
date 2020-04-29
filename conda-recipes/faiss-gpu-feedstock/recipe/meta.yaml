@@ -1,0 +1,45 @@
+{% set version = "1.6.2" %}
+
+package:
+  name: faiss-gpu
+  version: {{ version }}
+
+source:
+  url: https://github.com/facebookresearch/faiss/archive/v{{ version }}.tar.gz
+  sha256: 8be8fcb943e94a93fb0796cad02a991432c0d912d8ae946f4beb5a8a9c5d4932
+  patches:
+    - 0001-add-tolerance-for-ppc64le.patch
+    - 0001-faiss-update-CUDA-include-path-for-WML-CE-cudatoolki.patch
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    - make
+    - setuptools
+    - swig
+    - patch
+
+  host:
+    - python {{ python }}
+    - numpy 1.17.*
+    - libopenblas # [ppc64le]
+    - mkl >=2018  # [x86_64]
+    - cudatoolkit ==10.2.*
+    - cudatoolkit-dev ==10.2.*
+  run:
+    - python {{ python }}
+    - numpy 1.17.*
+    - libopenblas # [ppc64le]
+    - mkl >=2018 # [x86_64]
+    - blas=*=mkl # [x64_64]
+    - {{ pin_compatible('cudatoolkit', max_pin='x.x') }}
+
+build:
+  number: 0
+
+about:
+  home: https://github.com/facebookresearch/faiss
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: A library for efficient similarity search and clustering of dense vectors.
