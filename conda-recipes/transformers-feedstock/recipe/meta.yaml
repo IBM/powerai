@@ -1,0 +1,54 @@
+{% set name = "transformers" %} 
+{% set version = "2.5.1" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: c4b775ebffce65e1d8f2e5db74c5efdc4426ebecdaee1516c90573aafa1ceaf4
+
+build:
+  noarch: python
+  number: 0
+  script: '{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv '
+
+requirements:
+  host:
+    - pip
+    - python
+  run:
+    - boto3
+    - filelock
+    - numpy
+    - python
+    - regex
+    - requests
+    - sacremoses
+    - sentencepiece
+    - tokenizers
+    - tqdm
+
+test:
+  imports:
+    - transformers
+    - transformers.data
+    - transformers.data.metrics
+    - transformers.data.processors
+  commands:
+    - python $CONDA_PREFIX/bin/transformers-cli --help
+  requires:
+    - pytest
+
+about:
+  home: https://github.com/huggingface/transformers
+  license: Apache-2.0
+  license_family: APACHE
+  license_file: LICENSE
+  summary: State-of-the-art Natural Language Processing for TensorFlow 2.0 and PyTorch
+  doc_url: https://huggingface.co/transformers/
+
+extra:
+  recipe-maintainers:
+    - hartb

@@ -1,4 +1,4 @@
-{% set version = "0.1.84" %}
+{% set version = "0.1.85" %}
 {% set name = "sentencepiece" %}
 
 package:
@@ -7,25 +7,27 @@ package:
 
 source:
   git_url: https://github.com/google/sentencepiece
-  git_rev: v0.1.84
+  git_rev: v{{ version }}
   patches:
     - 0001-Use-CXX11_ABI-to-build-TensorFlow.patch
 
 build:
-  number: 0 
+  number: 1 
 
 requirements:
   build:
     - cmake >=3.1
     - make
     - {{ compiler('cxx') }}
+    - pkg-config
   host:
     - python
     - setuptools
     - tensorflow
+    - libprotobuf ==3.8.0
   run:
     - python
-    - tensorflow
+    - libprotobuf ==3.8.0
 
 test:
   imports:

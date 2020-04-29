@@ -1,0 +1,76 @@
+{% set version = "0.4.5" %}
+
+package:
+  name: flair
+  version: {{ version }}
+
+source:
+  git_url: https://github.com/flairNLP/flair.git
+  git_tag: v{{ version }}
+  patches:
+    - 0001-adjust-requirements-for-compat-with-WML-CE.patch
+
+requirements:
+  host:
+    - python {{ python }}
+    - python-dateutil >=2.6.1
+    - pytorch >=1.2.0
+    - gensim >=3.4.0
+    - pytest
+    - tqdm >=4.26.0
+    - segtok >=1.5.7
+    - matplotlib >=2.2.3
+    - mpld3 ==0.3
+    - scikit-learn >=0.21.3
+    - sqlitedict >=1.6.0
+    - deprecated >=1.2.4
+    - hyperopt >=0.1.1
+    - transformers >=2.3.0
+    - bpemb >=0.2.9
+    - regex
+    - tabulate
+    - urllib3
+    - langdetect
+  run:
+    - python
+    - python-dateutil >=2.6.1
+    - pytorch >=1.2.0
+    - gensim >=3.4.0
+    - pytest
+    - tqdm >=4.26.0
+    - segtok >=1.5.7
+    - matplotlib >=2.2.3
+    - mpld3 ==0.3
+    - scikit-learn >=0.21.3
+    - sqlitedict >=1.6.0
+    - deprecated >=1.2.4
+    - hyperopt >=0.1.1
+    - transformers >=2.3.0
+    - bpemb >=0.2.9
+    - regex
+    - tabulate
+    - urllib3
+    - langdetect
+
+build:
+  number: 0
+  noarch: python
+  string: py3_{{ PKG_BUILDNUM }}  # [py3k]
+  script: {{ PYTHON }} setup.py install --single-version-externally-managed --record=record.txt
+
+test:
+  source_files:
+    - tests
+  requires:
+    - pytest
+  imports:
+    - flair
+  commands:
+    - pytest -v --tb=native tests
+
+about:
+  home: https://github.com/flairNLP/flair
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: A very simple framework for state-of-the-art Natural Language Processing (NLP)

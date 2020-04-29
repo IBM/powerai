@@ -1,0 +1,50 @@
+{% set version = "1.43.0" %}
+
+package:
+  name: rust-nightly
+  version: {{ version }}
+
+source:
+  url: https://static.rust-lang.org/dist/rust-nightly-x86_64-unknown-linux-gnu.tar.gz  # [linux and x86_64]
+  url: https://static.rust-lang.org/dist/rust-nightly-aarch64-unknown-linux-gnu.tar.gz  # [aarch64]
+  url: https://static.rust-lang.org/dist/rust-nightly-powerpc64le-unknown-linux-gnu.tar.gz  # [ppc64le]
+  url: https://static.rust-lang.org/dist/rust-nightly-x86_64-apple-darwin.tar.gz       # [osx]
+  url: https://static.rust-lang.org/dist/rust-nightly-x86_64-pc-windows-msvc.tar.gz    # [win64]
+
+build:
+  number: 0
+  # the distributed binaries are already relocatable
+  binary_relocation: False
+
+requirements:
+  build:
+    - posix  # [win]
+  run:
+    - {{ compiler('c') }}  # [linux] -- rustc needs a toolchain to link executables on Linux
+
+test:
+  files:
+    - forge_test.sh
+  commands:
+    - time bash ./forge_test.sh  # [not win]
+    - bash forge_test.sh  # [win]
+    - rustc -V | grep -q {{ version }}-nightly # [(linux and x86_64) or ppc64le]
+
+about:
+  home: https://www.rust-lang.org
+  license: MIT
+  license_file:
+    - LICENSE-APACHE
+    - LICENSE-MIT
+  summary: |
+    Rust is a systems programming language that runs blazingly fast, prevents segfaults, and guarantees thread safety.
+    This package provides the compiler (rustc) and the documentation utilities rustdoc.
+  dev_url: https://doc.rust-lang.org/std/
+  doc_url: https://www.rust-lang.org/en-US/documentation.html
+
+extra:
+  recipe-maintainers:
+    - johanneskoester
+    - abhi18av
+    - pkgw
+    - dlaehnemann
