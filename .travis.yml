@@ -39,5 +39,5 @@ matrix:
       language: generic
 
 script:
-  -  "travis_wait 60 sleep 3600 &"
+#  -  "travis_wait 60 sleep 3600 &"
   -  ./conda-recipes/build_scripts/run_docker_build.sh ray-feedstock
