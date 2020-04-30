@@ -1,0 +1,56 @@
+From 9e6f4bd9230977318685d63a90261370a44ea786 Mon Sep 17 00:00:00 2001
+From: "Brian W. Hart" <hartb@us.ibm.com>
+Date: Thu, 30 Apr 2020 21:15:33 +0000
+Subject: [PATCH] allow override of dataset storage directory
+
+The `pycox.datasets` module stores datasets under the installation
+directory by default. Add an environment variable to allow a user
+to specify a different directory for data storage.
+
+This would be useful to allow sharing a data store among a user's
+various python venvs, for example. Or to allow a single pycox
+installation to be shared among multiple users, each with their
+own private data store.
+---
+ README.md                         | 2 ++
+ pycox/datasets/_dataset_loader.py | 9 +++++++--
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/README.md b/README.md
+index 6373020..3a0fc7e 100644
+--- a/README.md
++++ b/README.md
+@@ -216,6 +216,8 @@ from pycox import datasets
+ df = datasets.metabric.read_df()
+ ```
+ 
++The `datasets` module will store datasets under the installation directory by default. You can specify a different directory by setting the `PYCOX_DATA_DIR` environment variable.
++
+ ## Real Datasets:
+ <table>
+     <tr>
+diff --git a/pycox/datasets/_dataset_loader.py b/pycox/datasets/_dataset_loader.py
+index 8b5755f..39000f1 100644
+--- a/pycox/datasets/_dataset_loader.py
++++ b/pycox/datasets/_dataset_loader.py
+@@ -1,10 +1,15 @@
+ from pathlib import Path
+ import pandas as pd
+ import pycox
++import os
+ 
+-_PATH_ROOT = Path(pycox.__file__).parent
++_DATA_OVERRIDE = os.environ.get('PYCOX_DATA_DIR', None)
++if _DATA_OVERRIDE:
++    _PATH_ROOT = Path(_DATA_OVERRIDE)
++else:
++    _PATH_ROOT = Path(pycox.__file__).parent
+ _PATH_DATA = _PATH_ROOT / 'datasets' / 'data'
+-_PATH_DATA.mkdir(exist_ok=True)
++_PATH_DATA.mkdir(parents=True, exist_ok=True)
+ 
+ class _DatasetLoader:
+     """Abstract class for loading data sets.
+-- 
+1.8.3.1
+
