@@ -1,0 +1,50 @@
+{% set version = "0.1.2" %}   # see pysurvival/__init__.py in source tree
+
+package:
+  name: pysurvival
+  version: {{ version }}
+
+source:
+  git_url: https://github.com/square/pysurvival
+  git_rev: 841b9bc6ce700ba8898d2a1488aa9cd25ee7a8e6
+  patches:
+    - 0001-quiet-signedness-comparison-build-warnings.patch
+    - 0002-remove-some-unused-variables.patch
+    - 0003-fix-some-logical-vs-bitwise-operator-cases.patch
+    - 0004-avoid-undefined-behavior-in-SurvivalForest-Data-get-.patch
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+  host:
+    - python
+    - numpy
+  run:
+    - python
+    - matplotlib
+    - numpy
+    - pandas
+    - progressbar
+    - pyarrow
+    - scikit-learn 
+    - scipy
+    - pytorch
+
+build:
+  number: 0
+  script: {{ PYTHON }} setup.py install --single-version-externally-managed --record=record.txt
+
+test:
+  imports:
+    - pysurvival
+    - pysurvival.datasets
+    - pysurvival.models
+    - pysurvival.utils
+
+about:
+  home: https://www.pysurvival.io/
+  license: Apache-2.0
+  license_family: APACHE
+  license_file: LICENSE.txt
+  summary: Open source package for Survival Analysis modeling
+  dev_url: https://github.com/square/pysurvival

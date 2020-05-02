@@ -1,0 +1,196 @@
+From a7d77401168d3a6a4b1c721ead18bc86b1cb9ddd Mon Sep 17 00:00:00 2001
+From: "Brian W. Hart" <hartb@us.ibm.com>
+Date: Fri, 24 Apr 2020 19:12:33 +0000
+Subject: [PATCH 1/4] quiet signedness comparison build warnings
+
+Various fixes to avoid build complaints about mixed signedness
+in comparisons (as from g++'s -Wsign-compare), mostly between
+int and size_t.
+---
+ pysurvival/cpp_extensions/functions.cpp       | 16 ++++++++--------
+ pysurvival/cpp_extensions/metrics.cpp         |  2 +-
+ pysurvival/cpp_extensions/non_parametric.cpp  |  8 ++++----
+ pysurvival/cpp_extensions/survival_forest.cpp | 14 +++++++-------
+ 4 files changed, 20 insertions(+), 20 deletions(-)
+
+diff --git a/pysurvival/cpp_extensions/functions.cpp b/pysurvival/cpp_extensions/functions.cpp
+index 1942de7..12e4db3 100644
+--- a/pysurvival/cpp_extensions/functions.cpp
++++ b/pysurvival/cpp_extensions/functions.cpp
+@@ -29,19 +29,19 @@ vector<int>  argsort(vector<double> v, bool descending){
+     vector<double> temp_v;
+ 
+     if(descending){
+-    	for (int i = 0; i < n; ++i){
++    	for (size_t i = 0; i < n; ++i){
+     		temp_v.push_back(-v[i]);
+     	}
+     	v = temp_v;
+     }
+ 
+-    for (int i = 0; i < n; ++i){
++    for (size_t i = 0; i < n; ++i){
+     	a.push_back(make_pair(v[i], i));
+     }
+ 
+     //sort indexes based on comparing values in v
+     sort(a.begin(),a.end());
+-    for (int i = 0; i < n; ++i){
++    for (size_t i = 0; i < n; ++i){
+     	idx.push_back( a[i].second );
+     }
+     return idx;
+@@ -53,7 +53,7 @@ vector<pair<double, double> > get_time_buckets(vector<double> times ){
+     vector<pair<double, double> > results;
+ 
+     // Computing the time buckets
+-    for (int i = 0; i < N-1; ++i){
++    for (size_t i = 0; i < N-1; ++i){
+         results.push_back(make_pair(times[i], times[i+1]));
+     }
+ 
+@@ -103,7 +103,7 @@ vector<double> reverse(vector<double> x){
+ int argmin_buckets(double x, vector<pair<double, double> > buckets){
+ 	size_t index_x = 0, J = buckets.size();
+ 	double a, min_value = numeric_limits<double>::max();
+-	for (int j = 0; j < J; ++j){
++	for (size_t j = 0; j < J; ++j){
+ 		a = buckets[j].first;
+ 		if(fabs(x-a)<= min_value){
+ 			min_value = fabs(x-a);
+@@ -151,7 +151,7 @@ vector<double> cumsum( vector<double> v){
+ 	size_t N = v.size();
+ 	vector<double> results;
+ 	results.resize(N, 0.);
+-	for (int i = 0; i < N; ++i){
++	for (size_t i = 0; i < N; ++i){
+ 		s += v[i];
+ 		results[i] = s;
+ 	}
+@@ -186,7 +186,7 @@ map< int, vector<double> > baseline_functions(vector<double> score,
+     vector<double> times, T_temp, E_temp;
+     vector<int> desc_index = argsort(T, true);
+     int n;
+-    for (int i = 0; i < N; ++i){
++    for (size_t i = 0; i < N; ++i){
+         n = desc_index[i];
+         T_temp.push_back(T[n]);
+         E_temp.push_back(E[n]);
+@@ -195,7 +195,7 @@ map< int, vector<double> > baseline_functions(vector<double> score,
+     E = E_temp;
+ 
+ 	// Calculating the Baseline hazard function
+-    for (int i = 0; i < N; ++i){
++    for (size_t i = 0; i < N; ++i){
+ 
+ 		// Calculating the at risk variables
+ 		sum_theta_risk += score[i];
+diff --git a/pysurvival/cpp_extensions/metrics.cpp b/pysurvival/cpp_extensions/metrics.cpp
+index 5808cb8..6e4cc41 100644
+--- a/pysurvival/cpp_extensions/metrics.cpp
++++ b/pysurvival/cpp_extensions/metrics.cpp
+@@ -129,7 +129,7 @@ map<int, vector<double> > brier_score(vector<vector<double> > Survival,
+ 	size_t i, j, M, N = Survival.size();
+ 	double censored_s, bs, t, S;
+ 	map<int, vector<double> > results;
+-	int n, times_ = 0; //'times'
++	size_t n, times_ = 0; //'times'
+ 	int brier_scores_ = 1; //'brier_scores'
+ 	KaplanMeierModel censored_km;
+ 	vector<double> weights_km, times_to_consider, brier_scores_values;
+diff --git a/pysurvival/cpp_extensions/non_parametric.cpp b/pysurvival/cpp_extensions/non_parametric.cpp
+index 1592e9c..6dac90d 100644
+--- a/pysurvival/cpp_extensions/non_parametric.cpp
++++ b/pysurvival/cpp_extensions/non_parametric.cpp
+@@ -122,7 +122,7 @@ vector<double> KaplanMeierModel::fit(vector<double> T, vector<double> E,
+     vector<double> T_temp, E_temp, weights_temp;
+     vector<int> desc_index = argsort(T, true);
+     int n;
+-    for (int i = 0; i < N; ++i){
++    for (size_t i = 0; i < N; ++i){
+         n = desc_index[i];
+         T_temp.push_back(T[n]);
+ 
+@@ -139,7 +139,7 @@ vector<double> KaplanMeierModel::fit(vector<double> T, vector<double> E,
+ 
+     // Looping through the data to calculate Survival, hazard, 
+     // Cumulative_Hazard and Variance 
+-    for (int i = 0; i < N; ++i){
++    for (size_t i = 0; i < N; ++i){
+ 
+         // Computing the at risk vector
+         nb_at_risk += weights[i];
+@@ -180,7 +180,7 @@ vector<double> KaplanMeierModel::fit(vector<double> T, vector<double> E,
+     cum_std_error = 0.;
+     survival_old = 1.;
+ 
+-    for (int j = 0; j < Nt; ++j){
++    for (size_t j = 0; j < Nt; ++j){
+ 
+         // Calculating hazard
+         hazard_new = events[j]*1./at_risk[j];
+@@ -382,7 +382,7 @@ vector<double> KernelModel::fit(vector<double> T, vector<double> E,
+     	this->survival.push_back(1.-s);
+     }
+ 
+-    for (int i = 0; i < N; ++i){
++    for (size_t i = 0; i < N; ++i){
+     	this->hazard.push_back( this->density[i]/max(this->survival[i], min_survival) );
+     	this->cumulative_hazard.push_back(log(max(this->survival[i], min_survival)));
+     }
+diff --git a/pysurvival/cpp_extensions/survival_forest.cpp b/pysurvival/cpp_extensions/survival_forest.cpp
+index bab2425..7a034a4 100644
+--- a/pysurvival/cpp_extensions/survival_forest.cpp
++++ b/pysurvival/cpp_extensions/survival_forest.cpp
+@@ -1046,8 +1046,8 @@ size_t ForestSurvival::getTreePredictionTerminalNodeID(size_t tree_idx, size_t s
+       }
+ 
+       // Adjusting the number of threads to be <= number of cores
+-      uint max_num_threads = (uint) thread::hardware_concurrency();
+-      if ((num_threads < 0) | (num_threads >= max_num_threads)){
++      uint max_num_threads = thread::hardware_concurrency();
++      if ((num_threads < 0) | ((uint)num_threads >= max_num_threads)){
+         num_threads = max_num_threads; 
+       } else if(num_threads == 0){
+             num_threads = 1; 
+@@ -1157,8 +1157,8 @@ size_t ForestSurvival::getTreePredictionTerminalNodeID(size_t tree_idx, size_t s
+     }
+ 
+     // Adjusting the number of threads to be <= number of cores
+-    uint max_num_threads = (uint) thread::hardware_concurrency();
+-    if ((num_threads < 0) | (num_threads >= max_num_threads)){
++    uint max_num_threads = thread::hardware_concurrency();
++    if ((num_threads < 0) | ((uint)num_threads >= max_num_threads)){
+       num_threads = max_num_threads; 
+     } else if(num_threads == 0){
+           num_threads = 1; 
+@@ -1216,7 +1216,7 @@ size_t ForestSurvival::getTreePredictionTerminalNodeID(size_t tree_idx, size_t s
+      std::string dependent_variable_name = this->variable_names[this->dependent_varID];
+      std::string status_variable_name = this->variable_names[this->status_varID];
+      std::vector<double> case_weights;
+-     for (int i = 0; i < input_data.size(); ++i){
++     for (size_t i = 0; i < input_data.size(); ++i){
+       case_weights.push_back(0.);
+      }
+      
+@@ -1272,7 +1272,7 @@ size_t ForestSurvival::getTreePredictionTerminalNodeID(size_t tree_idx, size_t s
+      std::string dependent_variable_name = this->variable_names[this->dependent_varID];
+      std::string status_variable_name = this->variable_names[this->status_varID];
+      std::vector<double> case_weights;
+-     for (int i = 0; i < input_data.size(); ++i){
++     for (size_t i = 0; i < input_data.size(); ++i){
+       case_weights.push_back(1./input_data.size());
+      }
+      
+@@ -1327,7 +1327,7 @@ size_t ForestSurvival::getTreePredictionTerminalNodeID(size_t tree_idx, size_t s
+      std::string dependent_variable_name = this->variable_names[this->dependent_varID];
+      std::string status_variable_name = this->variable_names[this->status_varID];
+      std::vector<double> case_weights;
+-     for (int i = 0; i < input_data.size(); ++i){
++     for (size_t i = 0; i < input_data.size(); ++i){
+       case_weights.push_back(1./input_data.size());
+      }
+      
+-- 
+1.8.3.1
+

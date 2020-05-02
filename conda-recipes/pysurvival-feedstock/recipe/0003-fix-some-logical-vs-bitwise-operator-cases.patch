@@ -1,0 +1,96 @@
+From d2215e8da9741f34f9b33cac7a767cea9772bb39 Mon Sep 17 00:00:00 2001
+From: "Brian W. Hart" <hartb@us.ibm.com>
+Date: Fri, 24 Apr 2020 20:18:25 +0000
+Subject: [PATCH 3/4] fix some logical vs bitwise operator cases
+
+Update a few comparisons that use bitwise operators (&, |), where
+logical operators (&&, ||) seem intended instead.
+---
+ pysurvival/cpp_extensions/functions.cpp       | 2 +-
+ pysurvival/cpp_extensions/metrics.cpp         | 4 ++--
+ pysurvival/cpp_extensions/non_parametric.cpp  | 4 ++--
+ pysurvival/cpp_extensions/survival_forest.cpp | 4 ++--
+ 4 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/pysurvival/cpp_extensions/functions.cpp b/pysurvival/cpp_extensions/functions.cpp
+index 12e4db3..ce38194 100644
+--- a/pysurvival/cpp_extensions/functions.cpp
++++ b/pysurvival/cpp_extensions/functions.cpp
+@@ -205,7 +205,7 @@ map< int, vector<double> > baseline_functions(vector<double> score,
+ 			nb_fails += 1;
+ 		}
+ 
+-		if (i < N-1 & T[i] == T[i+1]){
++		if (i < N-1 && T[i] == T[i+1]){
+ 			continue;
+ 		}
+ 
+diff --git a/pysurvival/cpp_extensions/metrics.cpp b/pysurvival/cpp_extensions/metrics.cpp
+index aab730d..2d00d3a 100644
+--- a/pysurvival/cpp_extensions/metrics.cpp
++++ b/pysurvival/cpp_extensions/metrics.cpp
+@@ -69,7 +69,7 @@ map<int, double> concordance_index(vector<double> risk, vector<double> T,
+ 					w *= censored_km.predict_survival(T[i], true);
+ 
+ 					// count pairs 
+-					if( (T[i]<T[j]) | (T[j]==T[i] & E[j]==0) ){
++					if( (T[i]<T[j]) || (T[j]==T[i] && E[j]==0) ){
+ 						weightedPairs += 1./w;
+ 
+ 						// concordant pairs
+@@ -78,7 +78,7 @@ map<int, double> concordance_index(vector<double> risk, vector<double> T,
+ 						}
+ 
+ 						// pairs with equal predictions count 1/2 or nothing
+-						if ((risk[i] == risk[j]) & include_ties){
++						if ((risk[i] == risk[j]) && include_ties){
+ 							weightedConcPairs += (1./w)/2.;
+ 						}
+ 
+diff --git a/pysurvival/cpp_extensions/non_parametric.cpp b/pysurvival/cpp_extensions/non_parametric.cpp
+index 6dac90d..21c6124 100644
+--- a/pysurvival/cpp_extensions/non_parametric.cpp
++++ b/pysurvival/cpp_extensions/non_parametric.cpp
+@@ -149,7 +149,7 @@ vector<double> KaplanMeierModel::fit(vector<double> T, vector<double> E,
+             nb_events += weights[i];
+         }
+ 
+-        if (i < N-1 & T[i] == T[i+1]){
++        if (i < N-1 && T[i] == T[i+1]){
+             continue;
+         } else{
+             times.push_back(T[i]);
+@@ -315,7 +315,7 @@ vector<double> KernelModel::fit(vector<double> T, vector<double> E,
+ 
+     // check if the kernel matrix fits in memory
+     size = this->times.size()*km_times.size();
+-    while(k_ < 10 & size/exp(k_*log(10)) > 1.){
++    while(k_ < 10 && size/exp(k_*log(10)) > 1.){
+     	k_+=1;
+     }
+ 
+diff --git a/pysurvival/cpp_extensions/survival_forest.cpp b/pysurvival/cpp_extensions/survival_forest.cpp
+index fc5b2c0..9a6c9f0 100644
+--- a/pysurvival/cpp_extensions/survival_forest.cpp
++++ b/pysurvival/cpp_extensions/survival_forest.cpp
+@@ -1046,7 +1046,7 @@ size_t ForestSurvival::getTreePredictionTerminalNodeID(size_t tree_idx, size_t s
+ 
+       // Adjusting the number of threads to be <= number of cores
+       uint max_num_threads = thread::hardware_concurrency();
+-      if ((num_threads < 0) | ((uint)num_threads >= max_num_threads)){
++      if ((num_threads < 0) || ((uint)num_threads >= max_num_threads)){
+         num_threads = max_num_threads; 
+       } else if(num_threads == 0){
+             num_threads = 1; 
+@@ -1154,7 +1154,7 @@ size_t ForestSurvival::getTreePredictionTerminalNodeID(size_t tree_idx, size_t s
+ 
+     // Adjusting the number of threads to be <= number of cores
+     uint max_num_threads = thread::hardware_concurrency();
+-    if ((num_threads < 0) | ((uint)num_threads >= max_num_threads)){
++    if ((num_threads < 0) || ((uint)num_threads >= max_num_threads)){
+       num_threads = max_num_threads; 
+     } else if(num_threads == 0){
+           num_threads = 1; 
+-- 
+1.8.3.1
+

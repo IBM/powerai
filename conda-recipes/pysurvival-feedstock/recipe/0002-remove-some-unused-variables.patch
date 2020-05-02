@@ -1,0 +1,63 @@
+From 5287c161ef9bdfd0b2d4f8ad2086001375508a11 Mon Sep 17 00:00:00 2001
+From: "Brian W. Hart" <hartb@us.ibm.com>
+Date: Fri, 24 Apr 2020 20:36:21 +0000
+Subject: [PATCH 2/4] remove some unused variables
+
+---
+ pysurvival/cpp_extensions/metrics.cpp         | 1 -
+ pysurvival/cpp_extensions/survival_forest.cpp | 6 ------
+ 2 files changed, 7 deletions(-)
+
+diff --git a/pysurvival/cpp_extensions/metrics.cpp b/pysurvival/cpp_extensions/metrics.cpp
+index 6e4cc41..aab730d 100644
+--- a/pysurvival/cpp_extensions/metrics.cpp
++++ b/pysurvival/cpp_extensions/metrics.cpp
+@@ -141,7 +141,6 @@ map<int, vector<double> > brier_score(vector<vector<double> > Survival,
+ 
+ 	// Initializing/computing the brier score vector
+ 	M = times.size();
+-	size_t Nt = time_buckets.size();
+ 	for (j = 0; j < M; ++j){
+ 		bs = 0.;
+ 
+diff --git a/pysurvival/cpp_extensions/survival_forest.cpp b/pysurvival/cpp_extensions/survival_forest.cpp
+index 7a034a4..fc5b2c0 100644
+--- a/pysurvival/cpp_extensions/survival_forest.cpp
++++ b/pysurvival/cpp_extensions/survival_forest.cpp
+@@ -1006,7 +1006,6 @@ size_t ForestSurvival::getTreePredictionTerminalNodeID(size_t tree_idx, size_t s
+ 
+       // variable names to be always selected
+       std::vector<std::string> always_split_variable_names;
+-      bool use_always_split_variable_names;
+       always_split_variable_names.clear();
+ 
+       // Dealing with unordered factor covariates-> all features are numerical so it doesn't apply
+@@ -1062,8 +1061,6 @@ size_t ForestSurvival::getTreePredictionTerminalNodeID(size_t tree_idx, size_t s
+ 
+       // Data
+       std::unique_ptr<Data> data { };
+-      size_t num_rows = input_data.size();
+-      size_t num_cols = input_data[0].size();
+       data = make_unique<Data>();
+       data->loadData(input_data, variable_names);
+ 
+@@ -1116,7 +1113,6 @@ size_t ForestSurvival::getTreePredictionTerminalNodeID(size_t tree_idx, size_t s
+ 
+     // variable names to be always selected
+     std::vector<std::string> always_split_variable_names;
+-    bool use_always_split_variable_names;
+     always_split_variable_names.clear();
+ 
+     // Dealing with unordered factor covariates-> all features are numerical so it doesn't apply
+@@ -1173,8 +1169,6 @@ size_t ForestSurvival::getTreePredictionTerminalNodeID(size_t tree_idx, size_t s
+ 
+     // Data
+     std::unique_ptr<Data> data { };
+-    size_t num_rows = input_data.size();
+-    size_t num_cols = input_data[0].size();
+     data = make_unique<Data>();
+     data->loadData(input_data, variable_names);
+ 
+-- 
+1.8.3.1
+
