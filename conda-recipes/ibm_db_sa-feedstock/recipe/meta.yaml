@@ -8,6 +8,8 @@ package:
 source:
   git_url: https://github.com/ibmdb/python-ibmdbsa.git
   git_rev: 0b85c013e4a7effc7c57bd752ee570959e23bb6a
+  #latest commit broke setup.py by changing README.md to README.rst
+  #and not informing setup.py
 
 
 build:
