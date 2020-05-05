@@ -21,8 +21,8 @@ requirements:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - make
-    host:
         - patch
+    host:
         - libopencv
         - libopenblas
         - openblas-devel
