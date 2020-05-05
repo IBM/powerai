@@ -29,12 +29,12 @@ branches:
 
 matrix:
   include:
-    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.6.2-tensorflow-ubuntu18.04-py36
+    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-tensorflow-ubuntu18.04-py36
       os: linux-ppc64le
       arch: ppc64le
       language: generic
 
-    - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.6.2-tensorflow-ubuntu18.04-py37
+    - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=ibmcom/powerai:1.7.0-tensorflow-ubuntu18.04-py37
       os: linux-ppc64le
       arch: ppc64le
       language: generic

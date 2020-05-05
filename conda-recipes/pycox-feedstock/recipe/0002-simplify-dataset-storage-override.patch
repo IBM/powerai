@@ -1,0 +1,29 @@
+From 4a3b8b13da997eabb5e15452ebb298c1cfcba744 Mon Sep 17 00:00:00 2001
+From: "Brian W. Hart" <hartb@us.ibm.com>
+Date: Fri, 1 May 2020 16:14:24 +0000
+Subject: [PATCH] simplify dataset storage override
+
+---
+ pycox/datasets/_dataset_loader.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pycox/datasets/_dataset_loader.py b/pycox/datasets/_dataset_loader.py
+index 39000f1..6bccd29 100644
+--- a/pycox/datasets/_dataset_loader.py
++++ b/pycox/datasets/_dataset_loader.py
+@@ -5,10 +5,10 @@ import os
+ 
+ _DATA_OVERRIDE = os.environ.get('PYCOX_DATA_DIR', None)
+ if _DATA_OVERRIDE:
+-    _PATH_ROOT = Path(_DATA_OVERRIDE)
++    _PATH_DATA = Path(_DATA_OVERRIDE)
+ else:
+     _PATH_ROOT = Path(pycox.__file__).parent
+-_PATH_DATA = _PATH_ROOT / 'datasets' / 'data'
++    _PATH_DATA = _PATH_ROOT / 'datasets' / 'data'
+ _PATH_DATA.mkdir(parents=True, exist_ok=True)
+ 
+ class _DatasetLoader:
+-- 
+1.8.3.1
+
