@@ -1,4 +1,4 @@
-{% set version = "0.2.0" %}
+{% set version = "0.2.1" %}
 
 package:
   name: pycox
@@ -8,7 +8,8 @@ source:
   git_url: https://github.com/havakv/pycox.git
   git_tag: v{{ version }}
   patches:
-    - 0001-ensure-test-tensor-on-CPU-before-converting-to-numpy.patch
+    - 0001-allow-override-of-dataset-storage-directory.patch
+    - 0002-simplify-dataset-storage-override.patch
 
 requirements:
   host:
