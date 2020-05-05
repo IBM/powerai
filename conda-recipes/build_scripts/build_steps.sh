@@ -22,10 +22,6 @@ export CI_SUPPORT=/home/conda/feedstock_root/.ci_support
 export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
 export PATH=/opt/anaconda/bin:$PATH
 
-echo "CURRENT DIR: $(pwd)"
-ls $RECIPE_ROOT
-find ../ -name 0001-cuda-stubs-conda-env.patch
-
 cat >~/.condarc <<CONDARC
 
 conda-build:
