@@ -3,11 +3,11 @@ c_compiler:
 c_compiler_version:
 - '7'
 channel_sources:
-- defaults,conda-forge
+- https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/,powerai,defaults 
 channel_targets:
 - powerai main
 docker_image:
-- ibmcom/powerai:1.6.2-tensorflow-ubuntu18.04-py36 
+- ibmcom/powerai:1.7.0-tensorflow-ubuntu18.04-py36 
 pin_run_as_build:
   python:
     min_pin: x.x

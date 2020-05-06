@@ -16,7 +16,7 @@
 
 set -xeuo pipefail
 export PYTHONUNBUFFERED=1
-export FEEDSTOCK_ROOT=$(pwd)
+export FEEDSTOCK_ROOT=$(pwd)/../$1
 export RECIPE_ROOT=$FEEDSTOCK_ROOT/recipe
 export CI_SUPPORT=$FEEDSTOCK_ROOT/.ci_support
 export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
