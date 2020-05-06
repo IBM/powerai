@@ -3,7 +3,7 @@ c_compiler:
 c_compiler_version:
 - '7'
 channel_sources:
-- https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/,powerai,defaults
+- https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/,powerai,defaults,conda-forge
 channel_targets:
 - powerai main
 docker_image:
