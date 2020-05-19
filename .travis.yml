@@ -29,11 +29,26 @@ branches:
 
 matrix:
   include:
-    - env: CONFIG=linux_noarch UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+    - env: CONFIG=linux_ppc64le_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
       os: linux
       arch: ppc64le
       language: generic
 
+    - env: CONFIG=linux_ppc64le_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-ppc64le
+      os: linux
+      arch: ppc64le
+      language: generic
+
+    - env: CONFIG=linux_python3.6 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-comp7
+      os: linux
+      arch: amd64
+      language: generic
+
+    - env: CONFIG=linux_python3.7 UPLOAD_PACKAGES=True DOCKER_IMAGE=condaforge/linux-anvil-comp7
+      os: linux
+      arch: amd64
+      language: generic
+
 script:
   -  "travis_wait 60 sleep 3600 &"
-  -  ./conda-recipes/build_scripts/run_docker_build.sh tensorflow-hub-feedstock
+  -  ./conda-recipes/build_scripts/run_docker_build.sh thinc-feedstock
