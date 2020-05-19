@@ -1,6 +1,6 @@
-{% set version = "2.1.0" %}
+{% set version = "3.1.0" %}
 {% set name = "tensorflow-datasets" %}
-{% set sha256 = "333e6aa16a7f066949460f1a88d19d6c7cb27a7ceb9d3515d77d85b9f5f7afb9" %}
+{% set sha256 = "e59ca00b6307a6c9ba5a940f48172eac839db397405674aea92aa887ae42ddc7" %}
 {% set tensorflow_version = "1.15.0" %}
 
 # This is the recipe for tensorflow-datasets
@@ -34,7 +34,6 @@ requirements:
      - numpy
      - promise
      - protobuf >=3.6.1
-     - psutil
      - requests >=2.19.0
      - six
      - tensorflow-metadata
