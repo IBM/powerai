@@ -1,5 +1,5 @@
 {% set name = "tokenizers" %} 
-{% set version = "0.6.0" %}
+{% set version = "0.7.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/huggingface/tokenizers/archive/python-v{{ version }}.tar.gz
-  sha256: fc27e2f0e39dacf1d14442482874ba2da2f5a48a969bdf8cd1eeffe0e9d46099
+  sha256: dc92c3f46fe03058c495663b1c125ce87722cad69167276465f9d2ce0284edf4
 
 build:
   number: 0
@@ -23,12 +23,20 @@ requirements:
     - python
 
 test:
+  imports:
+    - tokenizers
+    - tokenizers.decoders
+    - tokenizers.implementations
+    - tokenizers.models
+    - tokenizers.normalizers
+    - tokenizers.pre_tokenizers
+    - tokenizers.processors
+    - tokenizers.trainers
   commands:
-    - python -c "import tokenizers"
-    - python -c "from tokenizers import CharBPETokenizer"
-    - python -c "from tokenizers import ByteLevelBPETokenizer"
-    - python -c "from tokenizers import SentencePieceBPETokenizer"
     - python -c "from tokenizers import BertWordPieceTokenizer"
+    - python -c "from tokenizers import ByteLevelBPETokenizer"
+    - python -c "from tokenizers import CharBPETokenizer"
+    - python -c "from tokenizers import SentencePieceBPETokenizer"
 
 about:
   home: https://github.com/huggingface/tokenizers
