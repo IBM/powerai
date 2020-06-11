@@ -1,0 +1,153 @@
+From 1c639bdcd3682f8e0ee59fdfcf8836126e2b4867 Mon Sep 17 00:00:00 2001
+From: "Brian W. Hart" <hartb@us.ibm.com>
+Date: Thu, 23 Apr 2020 20:13:46 +0000
+Subject: [PATCH] rename pytorch_transformers to just transformers
+
+Package 'pytorch_transformers' (originall named
+'pytorch-pretrained-bert') has been further renamed to just
+'transformers'.
+
+Adjust the few references in the code to use the new name.
+---
+ allennlp/data/token_indexers/pretrained_transformer_indexer.py      | 6 +++---
+ allennlp/data/tokenizers/pretrained_transformer_tokenizer.py        | 4 ++--
+ allennlp/modules/language_model_heads/bert.py                       | 4 ++--
+ allennlp/modules/language_model_heads/gpt2.py                       | 4 ++--
+ allennlp/modules/token_embedders/pretrained_transformer_embedder.py | 2 +-
+ allennlp/nn/util.py                                                 | 4 ++--
+ .../data/token_indexers/pretrained_transformer_indexer_test.py      | 2 +-
+ 7 files changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/allennlp/data/token_indexers/pretrained_transformer_indexer.py b/allennlp/data/token_indexers/pretrained_transformer_indexer.py
+index 88e9d70..1a7c41b 100644
+--- a/allennlp/data/token_indexers/pretrained_transformer_indexer.py
++++ b/allennlp/data/token_indexers/pretrained_transformer_indexer.py
+@@ -2,7 +2,7 @@ from typing import Dict, List
+ import logging
+ 
+ from overrides import overrides
+-from pytorch_transformers.tokenization_auto import AutoTokenizer
++from transformers.tokenization_auto import AutoTokenizer
+ import torch
+ 
+ from allennlp.common.util import pad_sequence_to_length
+@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
+ @TokenIndexer.register("pretrained_transformer")
+ class PretrainedTransformerIndexer(TokenIndexer[int]):
+     """
+-    This :class:`TokenIndexer` uses a tokenizer from the ``pytorch_transformers`` repository to
++    This :class:`TokenIndexer` uses a tokenizer from the ``transformers`` repository to
+     index tokens.  This ``Indexer`` is only really appropriate to use if you've also used a
+     corresponding :class:`PretrainedTransformerTokenizer` to tokenize your input.  Otherwise you'll
+     have a mismatch between your tokens and your vocabulary, and you'll get a lot of UNK tokens.
+@@ -25,7 +25,7 @@ class PretrainedTransformerIndexer(TokenIndexer[int]):
+     Parameters
+     ----------
+     model_name : ``str``
+-        The name of the ``pytorch_transformers`` model to use.
++        The name of the ``transformers`` model to use.
+     do_lowercase : ``str``
+         Whether to lowercase the tokens (this should match the casing of the model name that you
+         pass)
+diff --git a/allennlp/data/tokenizers/pretrained_transformer_tokenizer.py b/allennlp/data/tokenizers/pretrained_transformer_tokenizer.py
+index 9aa1f8b..997261f 100644
+--- a/allennlp/data/tokenizers/pretrained_transformer_tokenizer.py
++++ b/allennlp/data/tokenizers/pretrained_transformer_tokenizer.py
+@@ -2,7 +2,7 @@ import logging
+ from typing import List, Tuple
+ 
+ from overrides import overrides
+-from pytorch_transformers.tokenization_auto import AutoTokenizer
++from transformers.tokenization_auto import AutoTokenizer
+ 
+ from allennlp.data.tokenizers.token import Token
+ from allennlp.data.tokenizers.tokenizer import Tokenizer
+@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
+ class PretrainedTransformerTokenizer(Tokenizer):
+     """
+     A ``PretrainedTransformerTokenizer`` uses a model from HuggingFace's
+-    ``pytorch_transformers`` library to tokenize some input text.  This often means wordpieces
++    ``transformers`` library to tokenize some input text.  This often means wordpieces
+     (where ``'AllenNLP is awesome'`` might get split into ``['Allen', '##NL', '##P', 'is',
+     'awesome']``), but it could also use byte-pair encoding, or some other tokenization, depending
+     on the pretrained model that you're using.
+diff --git a/allennlp/modules/language_model_heads/bert.py b/allennlp/modules/language_model_heads/bert.py
+index 85b15d8..430ba04 100644
+--- a/allennlp/modules/language_model_heads/bert.py
++++ b/allennlp/modules/language_model_heads/bert.py
+@@ -1,5 +1,5 @@
+ from overrides import overrides
+-from pytorch_transformers import BertConfig, BertForMaskedLM
++from transformers import BertConfig, BertForMaskedLM
+ import torch
+ 
+ from allennlp.modules.language_model_heads.language_model_head import LanguageModelHead
+@@ -8,7 +8,7 @@ from allennlp.modules.language_model_heads.language_model_head import LanguageMo
+ @LanguageModelHead.register('bert')
+ class BertLanguageModelHead(LanguageModelHead):
+     """
+-    Loads just the LM head from ``pytorch_transformers.BertForMaskedLM``.  It was easiest to load
++    Loads just the LM head from ``transformers.BertForMaskedLM``.  It was easiest to load
+     the entire model before only pulling out the head, so this is a bit slower than it could be,
+     but for practical use in a model, the few seconds of extra loading time is probably not a big
+     deal.
+diff --git a/allennlp/modules/language_model_heads/gpt2.py b/allennlp/modules/language_model_heads/gpt2.py
+index b3ac24d..ec822a5 100644
+--- a/allennlp/modules/language_model_heads/gpt2.py
++++ b/allennlp/modules/language_model_heads/gpt2.py
+@@ -1,5 +1,5 @@
+ from overrides import overrides
+-from pytorch_transformers import GPT2Config, GPT2LMHeadModel
++from transformers import GPT2Config, GPT2LMHeadModel
+ import torch
+ 
+ from allennlp.modules.language_model_heads.language_model_head import LanguageModelHead
+@@ -8,7 +8,7 @@ from allennlp.modules.language_model_heads.language_model_head import LanguageMo
+ @LanguageModelHead.register('gpt2')
+ class Gpt2LanguageModelHead(LanguageModelHead):
+     """
+-    Loads just the LM head from ``pytorch_transformers.GPT2LMHeadModel``.  It was easiest to load
++    Loads just the LM head from ``transformers.GPT2LMHeadModel``.  It was easiest to load
+     the entire model before only pulling out the head, so this is a bit slower than it could be,
+     but for practical use in a model, the few seconds of extra loading time is probably not a big
+     deal.
+diff --git a/allennlp/modules/token_embedders/pretrained_transformer_embedder.py b/allennlp/modules/token_embedders/pretrained_transformer_embedder.py
+index dd48938..0bf6291 100644
+--- a/allennlp/modules/token_embedders/pretrained_transformer_embedder.py
++++ b/allennlp/modules/token_embedders/pretrained_transformer_embedder.py
+@@ -1,5 +1,5 @@
+ from overrides import overrides
+-from pytorch_transformers.modeling_auto import AutoModel
++from transformers.modeling_auto import AutoModel
+ import torch
+ 
+ from allennlp.modules.token_embedders.token_embedder import TokenEmbedder
+diff --git a/allennlp/nn/util.py b/allennlp/nn/util.py
+index 245ff3c..7da100b 100644
+--- a/allennlp/nn/util.py
++++ b/allennlp/nn/util.py
+@@ -1485,8 +1485,8 @@ def find_embedding_layer(model: torch.nn.Module) -> torch.nn.Module:
+     # We'll look for a few special cases in a first pass, then fall back to just finding a
+     # TextFieldEmbedder in a second pass if we didn't find a special case.
+     from pytorch_pretrained_bert.modeling import BertEmbeddings as BertEmbeddingsOld
+-    from pytorch_transformers.modeling_gpt2 import GPT2Model
+-    from pytorch_transformers.modeling_bert import BertEmbeddings as BertEmbeddingsNew
++    from transformers.modeling_gpt2 import GPT2Model
++    from transformers.modeling_bert import BertEmbeddings as BertEmbeddingsNew
+     from allennlp.modules.text_field_embedders.text_field_embedder import TextFieldEmbedder
+     from allennlp.modules.text_field_embedders.basic_text_field_embedder import BasicTextFieldEmbedder
+     from allennlp.modules.token_embedders.embedding import Embedding
+diff --git a/allennlp/tests/data/token_indexers/pretrained_transformer_indexer_test.py b/allennlp/tests/data/token_indexers/pretrained_transformer_indexer_test.py
+index b2dd6a8..9d31e77 100644
+--- a/allennlp/tests/data/token_indexers/pretrained_transformer_indexer_test.py
++++ b/allennlp/tests/data/token_indexers/pretrained_transformer_indexer_test.py
+@@ -1,5 +1,5 @@
+ # pylint: disable=no-self-use,invalid-name
+-from pytorch_transformers.tokenization_auto import AutoTokenizer
++from transformers.tokenization_auto import AutoTokenizer
+ 
+ from allennlp.common.testing import AllenNlpTestCase
+ from allennlp.data import Token, Vocabulary
+-- 
+1.8.3.1
+
