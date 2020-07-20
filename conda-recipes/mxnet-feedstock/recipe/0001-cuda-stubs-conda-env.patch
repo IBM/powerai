@@ -1,0 +1,12 @@
+diff --git a/Makefile b/Makefile
+--- a/Makefile
++++ b/Makefile
+@@ -494,7 +494,7 @@
+ 	endif
+ 	# Make sure to add stubs as fallback in order to be able to build
+ 	# without full CUDA install (especially if run without nvidia-docker)
+-	LDFLAGS += -L/usr/local/cuda/lib64/stubs
++	LDFLAGS += -L$(CUDA_LIBRARY_PATH)
+ 	ifeq ($(USE_NCCL), 1)
+ 		ifneq ($(USE_NCCL_PATH), NONE)
+ 			CFLAGS += -I$(USE_NCCL_PATH)/include
