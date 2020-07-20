@@ -1,0 +1,38 @@
+From 2a28b0d5b3b0ce7aada5f1ca0c1d8e79a2374bea Mon Sep 17 00:00:00 2001
+From: "Brian W. Hart" <hartb@us.ibm.com>
+Date: Mon, 18 May 2020 19:34:16 +0000
+Subject: [PATCH] Avoid calling argmax() on Bool tensor
+
+The match calculation here generates a boolean tensor, and PyTorch
+does not current support use of argmax() with Bool tensors. This
+causes a couple tests to fail with:
+
+RuntimeError: "argmax_cpu" not implemented for 'Bool'
+
+or
+
+RuntimeError: "argmax_cuda" not implemented for 'Bool'
+
+Force the calculated tensor to int type before calling argmax().
+
+See: https://github.com/pytorch/pytorch/issues/35529
+---
+ allennlp/models/encoder_decoders/copynet_seq2seq.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/allennlp/models/encoder_decoders/copynet_seq2seq.py b/allennlp/models/encoder_decoders/copynet_seq2seq.py
+index 8402a56..74a53f1 100644
+--- a/allennlp/models/encoder_decoders/copynet_seq2seq.py
++++ b/allennlp/models/encoder_decoders/copynet_seq2seq.py
+@@ -269,7 +269,7 @@ class CopyNetSeq2Seq(Model):
+         # shape: (batch_size, target_sequence_length)
+         mask = (oov & copied).long()
+         # shape: (batch_size, target_sequence_length)
+-        first_match = ((matches.cumsum(-1) == 1) * matches).argmax(-1)
++        first_match = ((matches.cumsum(-1) == 1) * matches).to(int).argmax(-1)
+         # shape: (batch_size, target_sequence_length)
+         new_target_tokens = target_tokens * (1 - mask) + (first_match.long() + self._target_vocab_size) * mask
+         return new_target_tokens
+-- 
+1.8.3.1
+
