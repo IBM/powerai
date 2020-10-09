@@ -13,11 +13,17 @@ source:
 
 
 build:
-  number: 0
+  number: 1
   script:
-    # xref: https://github.com/explosion/spaCy/issues/1592#issuecomment-360889011
-    - mv {{ SRC_DIR }}/include/numpy $SRC_DIR/include/numpy.bak           # [ppc64le]
-    - ln -s {{ SP_DIR }}/numpy/core/include/numpy $SRC_DIR/include/numpy  # [ppc64le]
+    # For the numpy header replacement here, see:
+    #
+    #    https://github.com/explosion/spaCy/issues/1592#issuecomment-360889011
+    #
+    #    This is only strictly needed for ppc64le, but do it even for x86 to
+    #    ensure we build against common headers (that match our numpy spec)
+    #    on both platforms.
+    - rm -r {{ SRC_DIR }}/include/numpy
+    - ln -s {{ SP_DIR }}/numpy/core/include/numpy {{ SRC_DIR }}/include/numpy
     - {{ PYTHON }} setup.py install --single-version-externally-managed --record=record.txt
   skip: true  # [win and py27]
 

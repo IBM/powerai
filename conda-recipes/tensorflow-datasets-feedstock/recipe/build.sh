@@ -38,8 +38,10 @@ TEST_DATA_DIR_SRC=./tensorflow_datasets/testing/test_data
 TEST_DATA_DIR_DEST="${INSTALLED_DIR}/testing"
 cp -R ${TEST_DATA_DIR_SRC} ${TEST_DATA_DIR_DEST}
 
-cp -R ./tensorflow_datasets/image/*.txt ${INSTALLED_DIR}/image/
+cp -R ./tensorflow_datasets/image_classification/*.txt ${INSTALLED_DIR}/image_classification/
 cp -R ./tensorflow_datasets/video/*.txt ${INSTALLED_DIR}/video/
+cp -R ./tensorflow_datasets/url_checksums/*.txt ${INSTALLED_DIR}/url_checksums
+
 cd ..
 rm -rf datasets
 
