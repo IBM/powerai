@@ -42,6 +42,14 @@ setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 # make the build number clobber
 make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
+# Execute feedstock pre-build steps if they exist
+FEEDSTOCK_HOOK_SCRIPT="${FEEDSTOCK_ROOT}/build_steps_hook.sh"
+if [ -f "${FEEDSTOCK_HOOK_SCRIPT}" ]
+then
+    echo "Executing ${FEEDSTOCK_HOOK_SCRIPT}..."
+    bash "${FEEDSTOCK_HOOK_SCRIPT}"
+fi
+
 conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
     --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"
 
