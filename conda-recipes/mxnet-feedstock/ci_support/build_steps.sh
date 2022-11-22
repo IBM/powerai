@@ -16,22 +16,22 @@
 
 set -xeuo pipefail
 export PYTHONUNBUFFERED=1
-export FEEDSTOCK_ROOT=$(pwd)/../$1
-export RECIPE_ROOT=$FEEDSTOCK_ROOT/recipe
-export CI_SUPPORT=$FEEDSTOCK_ROOT/.ci_support
+export FEEDSTOCK_ROOT=/home/conda/feedstock_root
+export RECIPE_ROOT=/home/conda/recipe_root
+export CI_SUPPORT=/home/conda/feedstock_root/.ci_support
 export CONFIG_FILE="${CI_SUPPORT}/${CONFIG}.yaml"
-
+export PATH=/opt/anaconda/bin:$PATH
 cat >~/.condarc <<CONDARC
 
 conda-build:
- root-dir: $FEEDSTOCK_ROOT/build_artifacts
+ root-dir: /home/conda/feedstock_root/build_artifacts
 
 CONDARC
 
 conda config --prepend channels https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/
 export IBM_POWERAI_LICENSE_ACCEPT=yes
 
-conda install --yes --quiet conda-forge-ci-setup=2 conda-build=3.19.2 -c conda-forge
+conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
 
 # set up the condarc
 setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
